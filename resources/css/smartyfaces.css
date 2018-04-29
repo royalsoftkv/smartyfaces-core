@@ -1,0 +1,323 @@
+.sf-msg-error{
+	font-weight: bold;
+	color:red;
+}
+
+.sf-datatable{
+	background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-collapse: collapse;
+    font-family: Verdana,Arial,Helvetica,sans-serif;
+    margin-bottom: 10px;
+    width: 100%;
+    empty-cells: show;
+}
+
+.sf-datatable td{
+	border: 1px solid #C0C0C0;
+    padding: 2px;
+}
+
+.sf-datatable tbody tr.even-row td {
+	background-color: #FAFAFA;
+}
+
+.sf-tableheader{
+	background-color: #CCCCCC;
+    color: #666666;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+    margin: auto;
+    padding: 2px 5px;
+    text-align: left;
+}
+
+.sf-datatable .sf-columnheader{
+	background-color: #999999;
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 2px;
+    text-align: center;
+}
+
+.sf-datatable .sf-columnheader a {
+	color: #FFFFFF;
+}
+
+.sf-datatable .sf-tablefooter td{
+	background-color: #F0F0F0;
+    border: 1px solid #CCCCCC;
+    padding: 5px;
+}
+
+.sf-tablefooter input[type=submit],
+.sf-tablefooter .button{
+	background-color: #FFF0A5;
+    border: 1px solid #FED22F;
+    color: #336699;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 5px;
+    margin-top: 3px;
+    padding: 2px 5px;
+}
+
+.sf_popup_body{
+	padding:10px;
+}
+
+
+
+.ui-datepicker-trigger{
+	vertical-align: middle;
+	margin-left:3px;
+	margin-top:-2px;
+	cursor: pointer;
+}
+
+#ui-datepicker-div { font-size: 12px; }
+
+.no_border td {
+	border:1px none #fff !important;
+}
+
+.sf-tooltip{
+	background-color: #FAE6B0;
+    border: 1px solid #E5973E;
+    font-size: 11px;
+    padding: 7px;
+    font-weight: normal;
+    color:#000;
+    z-index: 100;
+}
+
+ul.sf-msg-box{
+    cursor: pointer;
+    display: block;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10000;
+}
+
+ul.sf-msg-box li {
+	width:100%;
+}
+
+.sf-msg{
+	border:1px solid;
+	list-style: none outside none;
+    padding: 15px 15px 15px 40px;
+    display:block;
+    font-weight: bold;
+}
+
+.sf-msg-info-global {
+    background: url("lib/smartyfaces/resources/img/msg_info.png") no-repeat scroll 5px center #BDE3F7;
+    color:#1D4D99;
+    border-color:#1D4D99;
+}
+
+.sf-msg-success-global {
+    background: url("lib/smartyfaces/resources/img/msg_success.png") no-repeat scroll 5px center #DDF4BE;
+    color:#4F8B18;
+    border-color:#4F8B18;
+}
+
+.sf-msg-warn-global {
+    background: url("lib/smartyfaces/resources/img/msg_warn.png") no-repeat scroll 5px center #FCF1B2;
+    color:#9C630C;
+    border-color:#9C630C;
+}
+
+.sf-msg-error-global {
+    background: url("lib/smartyfaces/resources/img/msg_error.png") no-repeat scroll 5px center #FEB9B9;
+    color:#D4151C;
+    border-color:#D4151C;
+}
+
+
+
+.sf_err{
+	position:fixed;
+	right: 0px;
+	top:0px;
+	width:400px;
+	border:1px solid red;
+	color:red;
+	background-color: #FFFFCF;
+	padding:10px;
+}
+.ui-sortable-column-icon{
+	float:right;
+}
+.ui-paginator .ui-paginator-page, .ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-last, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-prev {
+    cursor: pointer;
+}
+.ui-paginator .ui-paginator-page, .ui-paginator .ui-paginator-pages, .ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-last, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-prev, .ui-paginator .ui-paginator-current {
+    display: inline-block;
+    margin-left: 1px;
+    margin-right: 1px;
+    outline: medium none;
+    padding: 2px 6px;
+    text-decoration: none;
+}
+.sf-datatable table.ui-paginator {
+	border-collapse: collapse;
+}
+.sf-datatable table.ui-paginator td{
+	border:none;
+	padding:1px;
+}
+a[disabled]{
+	cursor: default;
+}
+a[disabled] img {
+	opacity:0.3;
+}
+
+.sf-log{
+	position:fixed !important;
+	width:300px;
+	height:200px;
+	/*overflow: auto;*/
+	z-index: 1000;
+	background-color: #fff;
+	border:2px solid #ddd;
+	left:0px;
+	bottom:0px;
+}
+.sf-log .ui-widget-header{
+	margin:0px;
+	cursor: move;
+}
+.sf-log-content{
+	height:100%;
+	overflow: auto;
+}
+.sf-inplace .sf-inplace-fld{
+	display:none;
+}
+#sf-status{
+	position:fixed;
+	top:0px;
+	left:0px;
+	background-color: red;
+	color:#fff;
+	padding:5px;
+	font-weight:bold;
+	display:none;
+}
+.ui-paginator a{
+	text-decoration: none;
+}
+.sf-picklist input[type=button]{
+	width:20px;
+	height:20px;
+}
+
+/* bootstrap skin styles */
+.skin-bootstrap .datepicker-group {
+	width:200px;
+}
+.skin-bootstrap .upload-group input[type=file] {
+	font-size:11px;
+	padding:0px;
+	height:30px;
+}
+.skin-bootstrap .upload-group button[type=submit] {
+	height:30px;
+}
+.skin-bootstrap #sf_upload_error .alert{
+	padding:3px;
+	margin-bottom: 0px;
+	height: 30px;
+}
+.skin-bootstrap #sf_upload_process{
+	height: 30px;
+	line-height:30px;
+}
+.skin-bootstrap .pagination li span.glyphicon {
+	padding:3px 0px;
+}
+.skin-bootstrap .paginator .pagination {
+	margin:0px;
+}
+.skin-bootstrap .paginator select {
+	width:auto;
+	float:right;
+	padding:2px;
+	height:auto;
+	margin-left:5px;
+}
+.skin-bootstrap .pl-select {
+	width:44%;
+}
+.skin-bootstrap .pl-buttons {
+	width:auto;
+	padding:0px;
+}
+.skin-bootstrap .pl-select select {
+	padding:2px;	
+	height:80px;
+}
+.skin-bootstrap .non-modal {
+    left: 0;
+    margin-left: 30px;
+    position: fixed;
+    top: 0;
+    z-index: 2000;	
+}
+.skin-bootstrap .non-modal .modal-dialog {
+	position:relative;
+}
+.skin-bootstrap .width-auto {
+	width:auto;
+}
+.trans {
+	cursor: pointer;
+	border-bottom: 1px dashed red;
+}
+.trans:hover {
+	background-color: yellow;
+}
+
+.sf-editor .note-toolbar .btn{
+	height:30px;
+}
+
+.sf-editor-disabled {
+	background-color: #fff;
+}
+
+.translatable {
+	border:1px dotted #333;
+	cursor: pointer;
+}
+.translatable:hover {
+	opacity:0.8;
+}
+.translatable-not-exists {
+	background-color: #F0A2A2;
+	color:#000;
+}
+.translatable-exists {
+	background-color: #C8E1C8;
+	color:#000;
+}
+.combobox-container .dropdown-toggle {
+	cursor: pointer;
+}
+.auto-complete .combobox-container .input-group {
+	width:0;
+}
+.auto-complete.auto-complete-block .combobox-container .input-group {
+	width:auto;
+}

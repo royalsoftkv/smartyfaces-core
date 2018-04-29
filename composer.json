@@ -1,0 +1,11 @@
+{
+    "name": "royalsoft/smartyfaces-core",
+    "description": "PHP Ajax Pages Framework",
+    "authors": [
+        {
+            "name": "RoyalSoft",
+            "email": "royalsoftkv@gmail.com"
+        }
+    ],
+    "require": {}
+}
