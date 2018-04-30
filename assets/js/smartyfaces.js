@@ -57,12 +57,7 @@ SF = {
 		};
 		$( "#"+id ).datepicker(options);
 	},
-	
-	loadTinyMce:function(id,config) {
-		$('#'+id).tinymce(config);
 
-	},
-	
 	isScrolledIntoView:function(elem) {
 	    var docViewTop = $(window).scrollTop();
 	    var docViewBottom = docViewTop + $(window).height();
