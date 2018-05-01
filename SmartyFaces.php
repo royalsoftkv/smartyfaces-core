@@ -17,7 +17,7 @@
 //require_once dirname(__FILE__)."/TagRenderer.php";
 //require_once dirname(__FILE__)."/jQuery.php";
 
-//test1
+//test0
 
 class SmartyFaces {
 
