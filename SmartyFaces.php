@@ -4,18 +4,18 @@
 * NOTE: Modified library file ar marked with ##SmartyFaces-modified##
 */
 
-require_once dirname(__FILE__)."/SmartyFacesComponent.php";
-require_once dirname(__FILE__)."/SmartyFacesContext.php";
-require_once dirname(__FILE__)."/SmartyFacesValidator.php";
-require_once dirname(__FILE__)."/SmartyFacesMessages.php";
-require_once dirname(__FILE__)."/SmartyFacesLogger.php";
-require_once dirname(__FILE__)."/SmartyFacesDataModel.php";
-require_once dirname(__FILE__)."/SmartyFacesObjectDataModel.php";
-require_once dirname(__FILE__)."/SmartyFacesReordableList.php";
-require_once dirname(__FILE__)."/SmartyFacesTrigger.php";
-require_once dirname(__FILE__)."/FileUtils.php";
-require_once dirname(__FILE__)."/TagRenderer.php";
-require_once dirname(__FILE__)."/jQuery.php";
+//require_once dirname(__FILE__)."/SmartyFacesComponent.php";
+//require_once dirname(__FILE__)."/SmartyFacesContext.php";
+//require_once dirname(__FILE__)."/SmartyFacesValidator.php";
+//require_once dirname(__FILE__)."/SmartyFacesMessages.php";
+//require_once dirname(__FILE__)."/SmartyFacesLogger.php";
+//require_once dirname(__FILE__)."/SmartyFacesDataModel.php";
+//require_once dirname(__FILE__)."/SmartyFacesObjectDataModel.php";
+//require_once dirname(__FILE__)."/SmartyFacesReordableList.php";
+//require_once dirname(__FILE__)."/SmartyFacesTrigger.php";
+//require_once dirname(__FILE__)."/FileUtils.php";
+//require_once dirname(__FILE__)."/TagRenderer.php";
+//require_once dirname(__FILE__)."/jQuery.php";
 class SmartyFaces {
 
 	public static $signature="0.4 18.04.2018";
@@ -55,7 +55,6 @@ class SmartyFaces {
 			'resources_exclude'=>array(),
 			'index_file'=>'index.php',
 			'orm_path'=>'lib/php-activerecord/ActiveRecord.php',
-			'tiny_mce_path'=>'js/tiny_mce',
 			'force_compile'=>false,
 			'view_dir'=>'view',
 			'ajax_url_param'=>'?ajax',
@@ -161,7 +160,7 @@ class SmartyFaces {
 	}
 
 	public static function loadSmarty() {
-		require_once SmartyFaces::resolvePath(self::$config['smarty_path']);
+//		require_once SmartyFaces::resolvePath(self::$config['smarty_path']);
 		$smarty=new Smarty();
 		$smarty->compile_dir=SmartyFaces::resolvePath(SmartyFaces::$config['tmp_dir'])."/compile";
 		return $smarty;
@@ -174,8 +173,9 @@ class SmartyFaces {
 		require_once dirname(__FILE__)."/SmartyFacesFilter.php";
 		$smarty->registerFilter("pre",array("SmartyFacesFilter","filter"));
 		$smarty->force_compile=self::$config['force_compile'];
-		$smarty->setCompileDir(self::$config['tmp_dir']."/compile");
+		$smarty->setCompileDir(SmartyFaces::resolvePath(self::$config['tmp_dir'])."/compile");
 		$smarty->use_sub_dirs=false;
+		$smarty->inheritance_merge_compiled_includes = false;
 		self::$smarty=$smarty;
 	}
 
@@ -209,6 +209,7 @@ class SmartyFaces {
 	}
 
 	public static function loadClasses(){
+		$jq = new jQuery();
 		if(!self::$config['load_classes']) return;
 		SmartyFacesLogger::log("Loading classes");
 		require_once dirname(__FILE__)."/FileUtils.php";
@@ -221,14 +222,14 @@ class SmartyFaces {
 	public static function loadJs(){
 		$serverUrl=self::getServerUrl();
 		$resources=array(
-				"jquery-1.11.1.min.js",
-				"jquery.php.js",
-				"smartyfaces.js");
+				["jquery/jquery.min.js",1],
+				["jquery-php/jquery.php.js",1],
+				["smartyfaces/js/smartyfaces.js",1]);
 		if(self::$skin=="default") {
 			$resources[]="jquery-ui-1.10.4.custom.min.js";
 		} else if (self::$skin=="bootstrap") {
-			$resources[]="jquery-ui-1.10.4-notooltip.custom.min.js";
-			$resources[]="bootstrap/js/bootstrap.min.js";
+			$resources[]=["jquery-ui/jquery-ui-notooltip.custom.js",1];
+			$resources[]=["bootstrap/js/bootstrap.min.js",1];
 		}
 		self::loadResources("js", $resources);
 		$index_file=self::$config['index_file'];
@@ -290,12 +291,12 @@ class SmartyFaces {
 	public static function loadCss(){
 		$serverUrl=self::getServerUrl();
 		$resources = array();
-		if(self::$config['skin']=="bootstrap") {
+		if(self::$skin=="bootstrap") {
 			//must done this way because of fonts linking
 			$resources[]=array("bootstrap/css/bootstrap.min.css",1);
 			$resources[]=array("bootstrap/css/bootstrap-theme.min.css",1);
 		}
-		$resources[]="smartyfaces.css";
+		$resources[]=["smartyfaces/css/smartyfaces.css",1];
 		if(self::$config['load_css']) {
 			self::loadResources("css", $resources);
 		}
