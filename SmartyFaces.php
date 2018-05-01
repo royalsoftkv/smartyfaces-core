@@ -17,6 +17,8 @@
 //require_once dirname(__FILE__)."/TagRenderer.php";
 //require_once dirname(__FILE__)."/jQuery.php";
 
+//test
+
 class SmartyFaces {
 
 	public static $signature="0.4 18.04.2018";
