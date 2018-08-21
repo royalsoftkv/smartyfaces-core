@@ -227,7 +227,7 @@ class SmartyFaces {
 				["jquery-php/jquery.php.js",1],
 				["smartyfaces/js/smartyfaces.js",1]);
 		if(self::$skin=="default") {
-			$resources[]="jquery-ui-1.10.4.custom.min.js";
+			$resources[]=["jquery-ui/jquery-ui-custom.min.js",1];
 		} else if (self::$skin=="bootstrap") {
 			$resources[]=["jquery-ui/jquery-ui-notooltip.custom.js",1];
 			$resources[]=["bootstrap/js/bootstrap.min.js",1];
@@ -296,6 +296,7 @@ class SmartyFaces {
 			//must done this way because of fonts linking
 			$resources[]=array("bootstrap/css/bootstrap.min.css",1);
 			$resources[]=array("bootstrap/css/bootstrap-theme.min.css",1);
+//			$resources[]=array("jquery-ui/jquery.ui.theme.css",1);
 		}
 		$resources[]=["smartyfaces/css/smartyfaces.css",1];
 		if(self::$config['load_css']) {

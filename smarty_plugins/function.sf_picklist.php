@@ -117,10 +117,10 @@ function smarty_function_sf_picklist($params, $template)
     	
     }
     
-    $input1=_createButton($id,$buttonclass,$disabled,'ui-icon-arrowthick-1-e', 'move_right', '_bnt_mr');
-    $input2=_createButton($id,$buttonclass,$disabled,'ui-icon-arrowthickstop-1-e', 'move_all_right', '_bnt_mar');
-    $input3=_createButton($id,$buttonclass,$disabled,'ui-icon-arrowthick-1-w', 'move_left', '_bnt_ml');
-    $input4=_createButton($id,$buttonclass,$disabled,'ui-icon-arrowthickstop-1-w', 'move_all_left', '_bnt_mal');
+    $input1=_createButton($id,$buttonclass,$disabled,'&rarr;', 'move_right', '_bnt_mr');
+    $input2=_createButton($id,$buttonclass,$disabled,'&rrarr;', 'move_all_right', '_bnt_mar');
+    $input3=_createButton($id,$buttonclass,$disabled,'&larr;', 'move_left', '_bnt_ml');
+    $input4=_createButton($id,$buttonclass,$disabled,'&llarr;', 'move_all_left', '_bnt_mal');
     
     $select2=new TagRenderer("select",true);
     if($disabled) {
@@ -153,10 +153,10 @@ function smarty_function_sf_picklist($params, $template)
     	
     }
     
-    $input5=_createButton($id,$buttonclass,$disabled,'ui-icon-arrowthickstop-1-n', 'move_top', '_bnt_tp');
-    $input6=_createButton($id,$buttonclass,$disabled,'ui-icon-arrowthick-1-n', 'move_up', '_bnt_up');
-    $input7=_createButton($id,$buttonclass,$disabled,'ui-icon-arrowthick-1-s', 'move_down', '_bnt_dn');
-    $input8=_createButton($id,$buttonclass,$disabled,'ui-icon-arrowthickstop-1-s', 'move_bottom', '_bnt_bt');
+    $input5=_createButton($id,$buttonclass,$disabled,'&UpArrowBar;', 'move_top', '_bnt_tp');
+    $input6=_createButton($id,$buttonclass,$disabled,'&uarr;', 'move_up', '_bnt_up');
+    $input7=_createButton($id,$buttonclass,$disabled,'&darr;', 'move_down', '_bnt_dn');
+    $input8=_createButton($id,$buttonclass,$disabled,'&DownArrowBar;', 'move_bottom', '_bnt_bt');
     
     if(SmartyFaces::$skin=="bootstrap") {
 		$row=new TagRenderer("div",true);
@@ -235,7 +235,7 @@ function smarty_function_sf_picklist($params, $template)
 
     
     $s.=TagRenderer::renderHidden($id, $hidden_val);
-    
+
     $script='SF.ajax.loadPickListHandler(\''.$id.'\');';
     
     $s.=SmartyFaces::addScript($script);
@@ -247,7 +247,7 @@ function smarty_function_sf_picklist($params, $template)
 function _createButton($id,$buttonclass,$disabled,$ui_icon,$title,$id_suffix) {
 	if(SmartyFaces::$skin=="default") $input=new TagRenderer("input");
 	if(SmartyFaces::$skin=="bootstrap") $input=new TagRenderer("button",true);
-	if(SmartyFaces::$skin=="bootstrap") $input->setValue('<span class="ui-icon '.$ui_icon.'"></span>');
+	if(SmartyFaces::$skin=="bootstrap") $input->setValue($ui_icon);
 	$input->setAttribute("title", isset($buttontitles[$title]) ? $buttontitles[$title] : '');
 	$input->setAttribute("type", "button");
 	$input->setId($id.$id_suffix);
