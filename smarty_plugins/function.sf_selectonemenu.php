@@ -52,6 +52,11 @@ function smarty_function_sf_selectonemenu($params, $template)
     		"desc"=>"If render as autocomplete allow free entry to input box"
     );
     if($params==null and $template==null) return $attributes;
+
+	if(!isset($params['attachMessage']) && isset($params['required']) && $params['required']===true) {
+		$params['attachMessage']=true;
+	}
+
     $attributes_values=SmartyFacesComponent::proccessAttributes($tag, $attributes, $params);
     extract($attributes_values);
     

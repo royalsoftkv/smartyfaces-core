@@ -92,44 +92,51 @@ function smarty_function_sf_editor($params, $template)
     
     if($attachMessage and !$disabled) $s.=SmartyFacesComponent::renderMessage($id);
     $serverUrl=SmartyFaces::getServerUrl();
-    
-    if(!$disabled) {
-        static $attached_ext_editor;
-        if($editor=="ckeditor") {
-            if(!$attached_ext_editor) {
-                $url = $ckeditorpath;
-                $s.=SmartyFaces::addScript($url, true);
-                $attached_ext_editor = true;
-            }
-            $s.=SmartyFaces::addScript('SF.loadCKEditor("'.$id.'",'.json_encode($editorconfig).');');
-        } else {
-	        if(!$attached_ext_editor) {
-		        $url = SmartyFaces::getResourcesUrl() ."/summernote/summernote.min.js";
-		        $s.=SmartyFaces::addScript($url, true);
-		        if($summernotePlugins) {
-		            foreach($summernotePlugins as $summernotePlugin) {
-				        $url = SmartyFaces::getResourcesUrl() ."/summernote/summernote-$summernotePlugin.js";
-				        $s.=SmartyFaces::addScript($url, true);
-		            }
-		        }
-		        $url = SmartyFaces::getResourcesUrl() ."/font-awesome/css/font-awesome.min.css";
-		        $s.='<link type="text/css" rel="stylesheet" href="'.$url.'">';
-		        $url = SmartyFaces::getResourcesUrl() ."/summernote/summernote.css";
-		        $s.='<link type="text/css" rel="stylesheet" href="'.$url.'">';
-		        $attached_ext_editor = true;
-	        }
-	        $config2=array();
-	        $config2['height']=$height;
-	        if($summernoteOptions) {
-		        foreach ($summernoteOptions as $name=>$summernoteOption) {
-		            $config2[$name]=$summernoteOption;
-		        }
-	        }
-	        $s.=SmartyFaces::addScript('SF.loadSummernote("'.$id.'",'.json_encode($config2).');');
-        }
-    }
 
+    	if(!$disabled) {
+	    	static $attached_ext_editor;
+	    	if($editor=="ckeditor") {
+	    		if(!$attached_ext_editor) {
+	    			$url = $ckeditorpath;
+	    			$s.=SmartyFaces::addScript($url, true);
+	    			$attached_ext_editor = true;
+	    		}
+			    $editorconfig['language']=get_editorlanguage();
+	    		$s.=SmartyFaces::addScript('SF.loadCKEditor("'.$id.'",'.json_encode($editorconfig).');');
+	    	} else {
+		    	if(!$attached_ext_editor) {
+			    	$url = SmartyFaces::getResourcesUrl() ."/summernote/summernote.min.js";
+			    	$s.=SmartyFaces::addScript($url, true);
+			    	if($summernotePlugins) {
+			    		foreach($summernotePlugins as $summernotePlugin) {
+					    	$url = SmartyFaces::getResourcesUrl() ."/summernote/summernote-$summernotePlugin.js";
+					    	$s.=SmartyFaces::addScript($url, true);
+			    		}
+			    	}
+			    	$url = SmartyFaces::getResourcesUrl() ."/font-awesome/css/font-awesome.min.css";
+			    	$s.='<link type="text/css" rel="stylesheet" href="'.$url.'">';
+			    	$url = SmartyFaces::getResourcesUrl() ."/summernote/summernote.css";
+			    	$s.='<link type="text/css" rel="stylesheet" href="'.$url.'">';
+			    	$attached_ext_editor = true;
+		    	}
+		    	$config2=array();
+		    	$config2['height']=$height;
+		    	if($summernoteOptions) {
+			    	foreach ($summernoteOptions as $name=>$summernoteOption) {
+			    		$config2[$name]=$summernoteOption;
+			    	}
+		    	}
+		    	$s.=SmartyFaces::addScript('SF.loadSummernote("'.$id.'",'.json_encode($config2).');');
+	    	}
+    	}
+    
     return $s;
+}
+
+function get_editorlanguage() {
+	$lng = SmartyFaces::getLanguage();
+	if($lng == 'sr') $lng = 'sr-latn';
+	return $lng;
 }
 
 ?>

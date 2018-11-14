@@ -59,9 +59,8 @@ function smarty_function_sf_datepicker($params, $template)
 	    	$value=$converter::toString($value);
 	    }
     }
-    
-    
-    
+
+
     if(strlen($onchange)>0 and substr($onchange, -1, 1)!=";") $onchange.=";";
     if($action) {
 	    $stateless=SmartyFacesComponent::$stateless;
@@ -137,6 +136,7 @@ function smarty_function_sf_datepicker($params, $template)
 	    
 	} else if (SmartyFaces::$skin=="bootstrap") {
 		$options["format"]=$dateFormat;
+		$options["locale"]=SmartyFaces::getLanguage();
 		foreach ($datepickerOptions as $name=>$val) {
 			$options[$name]=$val;
 		}
@@ -146,6 +146,10 @@ function smarty_function_sf_datepicker($params, $template)
 			$s.=SmartyFaces::addScript($url, true);
 			$url = SmartyFaces::getResourcesUrl() ."/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js";
 			$s.=SmartyFaces::addScript($url, true);
+			if(SmartyFaces::getLanguage()!="en") {
+				$url = SmartyFaces::getResourcesUrl() ."/moment/locale/".SmartyFaces::getLanguage().".js";
+				$s.=SmartyFaces::addScript($url, true);
+			}
 			$url = SmartyFaces::getResourcesUrl() ."/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css";
 			$s.='<link type="text/css" rel="stylesheet" href="'.$url.'">';
 			$attached_ext_dtp = true;

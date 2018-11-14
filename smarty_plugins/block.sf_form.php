@@ -58,6 +58,7 @@ function smarty_block_sf_form($params, $content, $template, &$repeat)
     if($stateless) {
     	$form_data['sf_vars']=$this_tag_stack['form_vars'];
     	$form_data['sf_validators']=SmartyFacesContext::$validators;
+    	$form_data['sf_converters']=SmartyFacesContext::$converters;
     	$s.=TagRenderer::renderHidden("sf_state", urlencode(json_encode($form_data)));
     } else {
     	if(SmartyFacesContext::$storestate=="server") {
@@ -72,13 +73,8 @@ function smarty_block_sf_form($params, $content, $template, &$repeat)
     	$s.=TagRenderer::renderHidden("sf_state_store", SmartyFacesContext::$storestate);
     }
     
-    if(isset($_SESSION['SF_AJAX_KEY'])) {
-    	SmartyFaces::$ajaxkey=$_SESSION['SF_AJAX_KEY'];
-    } else {
-	    SmartyFaces::$ajaxkey = uniqid();
-	    //TODO:SESSION-WRITE
-	    $_SESSION['SF_AJAX_KEY']=SmartyFaces::$ajaxkey;
-    }
+	SmartyFaces::$ajaxkey = SFSession::get('SF_AJAX_KEY', uniqid());
+	SFSession::set('SF_AJAX_KEY', SmartyFaces::$ajaxkey);
     $s.=TagRenderer::renderHidden("sf_ajax_key", SmartyFaces::$ajaxkey);
     
     $tr=new TagRenderer('form',true);

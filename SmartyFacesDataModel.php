@@ -279,19 +279,19 @@ abstract class SmartyFacesDataModel {
 			$s.='</tr>';
 			$s.='</table>';
 		} else if (SmartyFaces::$skin=="bootstrap") {
-			$s.='<div class="paginator">';
-			$s.='<div class="col-md-4 text-left status">';
+			$s.='<div class="paginator row">';
+			$s.='<div class="col-md-4 text-left status col-4">';
 			$s.=$status_line;
 			$s.='</div>';
-			$s.='<div class="col-md-4 text-center pages">';
+			$s.='<div class="col-md-4 text-center pages col-4">';
 			
 			$s.='<ul class="pagination pagination-sm">';
 			
-			$s.='<li class="'.($first ? 'disabled' : '').'">';
+			$s.='<li class="page-item '.($first ? 'disabled' : '').'">';
 			if($first) {
-				$s.='<span>';
+				$s.='<span class="page-link">';
 			} else {
-				$s.='<a id="'.$id.'" href="#" onclick="'.(!$first ? 'SF.dm.paginate(this,\'first\'); ' : '').'return false;" title="'.$strings['go_to_first_page'].'">';
+				$s.='<a class="page-link" id="'.$id.'" href="#" onclick="'.(!$first ? 'SF.dm.paginate(this,\'first\'); ' : '').'return false;" title="'.$strings['go_to_first_page'].'">';
 			}
 			$s.='<span class="glyphicon glyphicon-fast-backward"></span>';
 			if($first) {
@@ -301,11 +301,11 @@ abstract class SmartyFacesDataModel {
 			}
 			$s.='</li>';
 			
-			$s.='<li class="'.($first ? 'disabled' : '').'">';
+			$s.='<li class="page-item '.($first ? 'disabled' : '').'">';
 			if($first) {
-				$s.='<span>';
+				$s.='<span class="page-link" >';
 			} else {
-				$s.='<a id="'.$id.'" href="#" onclick="'.(!$first ? 'SF.dm.paginate(this,\'prev\'); ' : '').'return false;" title="'.$strings['go_to_previous_page'].'">';
+				$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="'.(!$first ? 'SF.dm.paginate(this,\'prev\'); ' : '').'return false;" title="'.$strings['go_to_previous_page'].'">';
 			}
 			$s.='<span class="glyphicon glyphicon-step-backward"></span>';
 			if($first) {
@@ -331,8 +331,8 @@ abstract class SmartyFacesDataModel {
 				}
 			}
 			for($i=$start_page;$i<=$end_page;$i++) {
-				$s.='<li class="'.($this->page==$i ? 'active' : '').'">';
-				$s.='<a id="'.$id.'" href="#" onclick="SF.dm.paginate(this,\'page\','.$i.'); return false;">';
+				$s.='<li class="page-item '.($this->page==$i ? 'active' : '').'">';
+				$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="SF.dm.paginate(this,\'page\','.$i.'); return false;">';
 				$s.=$i;
 				$s.='</a>';
 				$s.='</li>';
@@ -340,11 +340,11 @@ abstract class SmartyFacesDataModel {
 			
 			$s.='</li>';
 			
-			$s.='<li class="'.($last ? 'disabled' : '').'">';
+			$s.='<li class="page-item '.($last ? 'disabled' : '').'">';
 			if($last) {
-				$s.='<span>';
+				$s.='<span class="page-link" >';
 			} else {
-				$s.='<a id="'.$id.'" href="#" onclick="'.(!$last ? 'SF.dm.paginate(this,\'next\'); ' : '').'return false;" title="'.$strings['go_to_next_page'].'">';
+				$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="'.(!$last ? 'SF.dm.paginate(this,\'next\'); ' : '').'return false;" title="'.$strings['go_to_next_page'].'">';
 			}
 			$s.='<span class="glyphicon glyphicon-step-forward"></span>';
 			if($last) {
@@ -354,11 +354,11 @@ abstract class SmartyFacesDataModel {
 			}
 			$s.='</li>';
 			
-			$s.='<li class="'.($last ? 'disabled' : '').'">';
+			$s.='<li class="page-item '.($last ? 'disabled' : '').'">';
 			if($last) {
-				$s.='<span>';
+				$s.='<span class="page-link" >';
 			} else {
-				$s.='<a id="'.$id.'" href="#" onclick="'.(!$last ? 'SF.dm.paginate(this,\'last\'); ' : '').'return false;" title="'.$strings['go_to_last_page'].'">';
+				$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="'.(!$last ? 'SF.dm.paginate(this,\'last\'); ' : '').'return false;" title="'.$strings['go_to_last_page'].'">';
 			}
 			$s.='<span class="glyphicon glyphicon-fast-forward"></span>';
 			if($last) {
@@ -372,7 +372,7 @@ abstract class SmartyFacesDataModel {
 			
 			
 			$s.='</div>';
-			$s.='<div class="col-md-4 text-right rpp">';
+			$s.='<div class="col-md-4 text-right rpp col-4">';
 			
 			$s.=$strings['rows_per_page'].': ';
 			$list=$this->rows_per_page_list;
@@ -492,42 +492,42 @@ abstract class SmartyFacesDataModel {
 	}
 	
 	function storeOptions(){
-		//TODO:SESSION-WRITE
 		$session_save_options=$this->session_save_options;
 		if(in_array("page", $session_save_options)) {
-			$_SESSION["datamodel_".$this->name]['page']=$this->page;
+			SFSession::set(["datamodel_".$this->name, 'page'], $this->page);
 		}
 		if(in_array("rpp", $session_save_options)) {
-			$_SESSION["datamodel_".$this->name]['rpp']=$this->rows_per_page;
+			SFSession::set(["datamodel_".$this->name, 'rpp'], $this->rows_per_page);
 		}
 		if(in_array("sort", $session_save_options)) {
-			$_SESSION["datamodel_".$this->name]['sort']=array($this->column,$this->asc);
+			SFSession::set(["datamodel_".$this->name, 'sort'], array($this->column,$this->asc));
 		}
 		if(in_array("filter", $session_save_options)) {
-			$_SESSION["datamodel_".$this->name]['filter']=$this->filter;
+			SFSession::set(["datamodel_".$this->name, 'filter'], $this->filter);
 		}
 	}
 	
 	function restoreOptions() {
-		if(isset($_SESSION["datamodel_".$this->name]['page'])) {
-			$this->page=$_SESSION["datamodel_".$this->name]['page'];
+		if(SFSession::exists(["datamodel_".$this->name, 'page'])) {
+			$this->page = SFSession::get(["datamodel_".$this->name, 'page'],1);
 		}
-		if(isset($_SESSION["datamodel_".$this->name]['rpp'])) {
-			$this->rows_per_page=$_SESSION["datamodel_".$this->name]['rpp'];
+		if(SFSession::exists(["datamodel_".$this->name, 'rpp'])) {
+			$this->rows_per_page = SFSession::get(["datamodel_".$this->name, 'rpp'],10);
 		}
-		if(isset($_SESSION["datamodel_".$this->name]['sort'])) {
-			$arr = $_SESSION["datamodel_".$this->name]['sort'];
+		if(SFSession::exists(["datamodel_".$this->name, 'sort'])) {
+			$arr = SFSession::get(["datamodel_".$this->name, 'sort']);
 			$this->column=$arr[0];
 			$this->asc=$arr[1];
 		}
-		if(isset($_SESSION["datamodel_".$this->name]['filter'])) {
-			$this->filter=$_SESSION["datamodel_".$this->name]['filter'];
+		if(SFSession::exists(["datamodel_".$this->name, 'filter'])) {
+			$this->filter = SFSession::get(["datamodel_".$this->name, 'filter']);
 		}
+
+
 	}
 	
 	function resetOptions() {
-		//TODO:SESSION-WRITE
-		unset($_SESSION["datamodel_".$this->name]);
+		SFSession::delete("datamodel_".$this->name);
 	}
 	
 	function getFilterValue($name) {

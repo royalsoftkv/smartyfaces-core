@@ -58,9 +58,8 @@ class SmartyFacesContext {
 	}
 
 	public static function storeSessionState() {
-		//TODO:SESSION-WRITE
-		if(isset(self::$components['session'])) {
-			$_SESSION['SF_SESSION']['components']=self::$components['session'];
+		if(isset(self::$components['session']) && count(self::$components['session'])>0) {
+			SFSession::set(['SF_SESSION','components'], self::$components['session']);
 		}
 	}
 
@@ -75,8 +74,7 @@ class SmartyFacesContext {
 				self::$state=$state[$view][$sf_view_id][$state_id];
 			} else {
 				jQuery::addMessage("Your view is expired. Page will be reloaded!");
-				unset($_SESSION['SF_SESSION']);
-				session_write_close();
+				SFSession::delete('SF_SESSION');
 				SmartyFaces::reload();
 				jQuery::getResponse();
 				exit();
@@ -97,9 +95,11 @@ class SmartyFacesContext {
 
 		if(is_array(self::$components) and count(self::$components)>0) {
 			foreach(self::$components as $scope=>$components) {
-				foreach($components as $name => $component) {
-					if(is_object($component)) {
-						SmartyFaces::$GLOBALS[$name]=$component;
+				if(is_array($components)) {
+					foreach($components as $name => $component) {
+						if(is_object($component)) {
+							SmartyFaces::$GLOBALS[$name]=$component;
+						}
 					}
 				}
 			}
@@ -108,14 +108,13 @@ class SmartyFacesContext {
 	}
 
 	public static function restoreSessionState(){
-		SmartyFaces::startSession();
-		if(isset($_SESSION['SF_SESSION']['components'])) {
-			$components = $_SESSION['SF_SESSION']['components'];
-			if(isset(self::$components['session'])) {
-				self::$components['session']=array_merge(self::$components['session'],$components);
-			} else {
-				self::$components['session']=$components;
-			}
+		$components = SFSession::get(['session','components'], []);
+		if(isset(self::$components['session'])) {
+			self::$components['session']=array_merge(self::$components['session'],$components);
+		} else {
+			self::$components['session']=$components;
+		}
+		if(is_array($components)) {
 			foreach($components as $name=>$component){
 				if(is_object($component)) {
 					SmartyFaces::$GLOBALS[$name]=$component;
@@ -208,8 +207,9 @@ class SmartyFacesContext {
 			}
 		}
 		if(SmartyFaces::$config['compress_state']) {
-			$data['size']=strlen($_SESSION['SF_SESSION']['state']);
-			$data['compress_state']['show']=$_SESSION['SF_SESSION']['state'];
+			$rawState = SFSession::get(['SF_SESSION'],['state']);
+			$data['size']=strlen($rawState);
+			$data['compress_state']['show']=$rawState;
 		} else {
 			$data['size']=strlen(serialize($state));
 			$data['compress_state']="";
@@ -231,29 +231,20 @@ class SmartyFacesContext {
 
 	static function getState() {
 		if(SmartyFaces::$config['compress_state']) {
-			if(isset($_SESSION['SF_SESSION']['state'])) {
-				$state=$_SESSION['SF_SESSION']['state'];
-				if(is_array($state)) return array();
-				return unserialize(gzinflate($state));
-			} else {
-				return array();
-			}
+			$state = SFSession::get(['SF_SESSION','state'],[]);
+			if(is_array($state)) return array();
+			return unserialize(gzinflate($state));
 		} else {
-			$state=array();
-			if(isset($_SESSION['SF_SESSION']['state'])) {
-				$state=$_SESSION['SF_SESSION']['state'];
-			}
+			$state = SFSession::get(['SF_SESSION','state'], []);
 			return $state;
 		}
 	}
 
 	static function setState($state) {
-		//TODO:SESSION-WRITE
 		if(SmartyFaces::$config['compress_state']) {
-			$_SESSION['SF_SESSION']['state']=gzdeflate(serialize($state));
-		} else {
-			$_SESSION['SF_SESSION']['state']=$state;
+			$state = gzdeflate(serialize($state));
 		}
+		SFSession::set(['SF_SESSION','state'], $state);
 	}
 
 }

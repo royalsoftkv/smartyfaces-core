@@ -45,7 +45,6 @@ class SmartyFacesFilter {
        		}
        	}
        	// clear sessions
-       	SmartyFaces::startSession();
        	$state=SmartyFacesContext::getState();
        	unset($state[$file_name]);
        	SmartyFacesContext::setState($state);

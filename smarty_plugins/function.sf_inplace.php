@@ -47,7 +47,8 @@ function smarty_function_sf_inplace($params, $template)
     } else {
 	    $value=  SmartyFaces::evalExpression($value);
     }
-    
+
+
     $action_str="";
     if(!is_null($action)){
     	$stateless=SmartyFacesComponent::$stateless;

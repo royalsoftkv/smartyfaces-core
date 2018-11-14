@@ -16,6 +16,11 @@ function smarty_function_sf_inputtext($params, $template)
     		"default"=>false,
     		"type"=>'bool',
     		"desc"=>"Display text input in all avaialable width (Bootstrap skin only)");
+
+    if(!isset($params['attachMessage']) && isset($params['required']) && $params['required']===true) {
+	    $params['attachMessage']=true;
+    }
+
     if($params==null and $template==null) return $attributes;
     
     $attributes_values=SmartyFacesComponent::proccessAttributes($tag, $attributes, $params);
@@ -55,7 +60,7 @@ function smarty_function_sf_inputtext($params, $template)
 	    }
     }
     $value=htmlentities($value,ENT_QUOTES,"UTF-8");
-    
+
     $events=SmartyFacesComponent::encodeEvents($events,$params,$registered_events);
     
     if(SmartyFaces::$skin=="bootstrap") {

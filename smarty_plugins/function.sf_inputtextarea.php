@@ -54,7 +54,8 @@ function smarty_function_sf_inputtextarea($params, $template)
 	    	$value=$converter::toString($value);
 	    }
     }
-    
+
+
     if(SmartyFaces::$skin=="bootstrap") {
     	$span=new TagRenderer("span",true);
     	$span->setAttributeIfExists("class", SmartyFacesComponent::getFormControlValidationClass($id));

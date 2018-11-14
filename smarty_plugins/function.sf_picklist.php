@@ -235,7 +235,7 @@ function smarty_function_sf_picklist($params, $template)
 
     
     $s.=TagRenderer::renderHidden($id, $hidden_val);
-
+    
     $script='SF.ajax.loadPickListHandler(\''.$id.'\');';
     
     $s.=SmartyFaces::addScript($script);

@@ -296,7 +296,6 @@ class SmartyFaces {
 			//must done this way because of fonts linking
 			$resources[]=array("bootstrap/css/bootstrap.min.css",1);
 			$resources[]=array("bootstrap/css/bootstrap-theme.min.css",1);
-//			$resources[]=array("jquery-ui/jquery.ui.theme.css",1);
 		}
 		$resources[]=["smartyfaces/css/smartyfaces.css",1];
 		if(self::$config['load_css']) {
@@ -331,7 +330,6 @@ class SmartyFaces {
 		 
 		self::$ajax=true;
 		self::initAjax();
-		self::startSession();
 
 		if(isset($_POST['sf_event'])) {
 			self::processEvent();
@@ -618,6 +616,14 @@ class SmartyFaces {
 			if($immediate==="false") $immediate=false;
 		}
 		 
+		if(isset($sf_state['sf_converters'])) {
+			foreach($sf_state['sf_converters'] as $id=>$converters){
+				foreach($converters as $converter){
+					self::processConverter($converter,$formData,$id);
+				}
+			}
+		}
+
 		if(!$immediate){
 			 
 			if(isset($sf_state['sf_validators'])) {
@@ -989,7 +995,7 @@ class SmartyFaces {
 				@session_start();
 			} else {
 				if(session_id()==''){
-					@session_start();
+					SFSession::instance()->start();
 				}
 			}
 		}
@@ -1076,7 +1082,9 @@ class SmartyFaces {
 		if(!empty($data)) {
 			self::$lng=new LanguageArray($data);
 		}
-		self::$smarty->assign($lng_var,self::$lng);
+		if(self::$smarty) {
+			self::$smarty->assign($lng_var,self::$lng);
+		}
 	}
 
 	static function translate($key){
@@ -1085,13 +1093,12 @@ class SmartyFaces {
 
 	static function getLanguage() {
 		$lng_def=self::$config['lng_def'];
-		$lng_sel=isset($_SESSION['SF_SESSION'][self::$config['lng_session_var']]) ? $_SESSION['SF_SESSION'][self::$config['lng_session_var']] : $lng_def;
+		$lng_sel=SFSession::get(['SF_SESSION',self::$config['lng_session_var']], $lng_def);
 		return $lng_sel;
 	}
 
 	static function changeLanguage($lng, $reload=true) {
-		//TODO:SESSION-WRITE
-		$_SESSION['SF_SESSION'][self::$config['lng_session_var']]=$lng;
+		SFSession::set(['SF_SESSION', self::$config['lng_session_var']], $lng);
 		if($reload) {
 			self::reload();
 		}
@@ -1163,8 +1170,7 @@ class SmartyFaces {
 	}
 
 	static function clearSession() {
-		//TODO:SESSION-WRITE
-		unset($_SESSION['SF_SESSION']);
+		SFSession::delete('SF_SESSION');
 		self::reload();
 	}
 
@@ -1176,7 +1182,7 @@ class SmartyFaces {
 		}
 
 		$sf_ajax_key = $formData['sf_ajax_key'];
-		if($sf_ajax_key != $_SESSION['SF_AJAX_KEY']) {
+		if($sf_ajax_key != SFSession::get('SF_AJAX_KEY')) {
 			$check = false;
 		}
 

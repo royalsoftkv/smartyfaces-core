@@ -4,6 +4,7 @@
 function smarty_block_sf_view($params, $content, $smarty_template, &$repeat)
 { 
     
+
 	$tag="sf_view";
 	$attributes_list=array("id","class");
 	$attributes=SmartyFacesComponent::resolveAttributtes($attributes_list);

@@ -45,15 +45,11 @@ function smarty_function_sf_messages($params, $template)
     if(SmartyFacesValidator::passed() && !$flash) return;
     
     if($flash) {
-    	//TODO:SESSION-WRITE
-    	if(isset($_SESSION[SmartyFacesMessages::FLASH_MESSAGE_SESSION_KEY])) {
-	    	if(count($_SESSION[SmartyFacesMessages::FLASH_MESSAGE_SESSION_KEY])>0) {
-	    		foreach($_SESSION[SmartyFacesMessages::FLASH_MESSAGE_SESSION_KEY] as $message) {
-	    			SmartyFacesMessages::$messages[null][]=$message;
-	    		}
-	    		unset($_SESSION[SmartyFacesMessages::FLASH_MESSAGE_SESSION_KEY]);
-	    	}
-    	}
+	    $flashMessages = SFSession::get(SmartyFacesMessages::FLASH_MESSAGE_SESSION_KEY, []);
+	    foreach($flashMessages as $message) {
+		    SmartyFacesMessages::$messages[null][]=$message;
+	    }
+	    SFSession::delete(SmartyFacesMessages::FLASH_MESSAGE_SESSION_KEY);
     	
     }    
     if($for==null){

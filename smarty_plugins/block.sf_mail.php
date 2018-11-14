@@ -85,6 +85,8 @@ function smarty_block_sf_mail($params, $content, $template, &$repeat){
         		$message.="Content-Type: text/plain; charset=\"UTF-8\"";
         		$message.="\n";
         		$message.="Content-Transfer-Encoding: base64";
+				$message.="\n";
+        		$message.="MIME-Version: 1.0";
         		$message.="\n\n";
         		$message.=chunk_split(base64_encode($text_message));
         		$message.="\n\n\n";
@@ -93,12 +95,16 @@ function smarty_block_sf_mail($params, $content, $template, &$repeat){
         		$message.="Content-Type: text/html; charset=\"UTF-8\"";
         		$message.="\n";
         		$message.="Content-Transfer-Encoding: base64";
+        		$message.="\n";
+        		$message.="MIME-Version: 1.0";
         		$message.="\n\n";
         		$message.=chunk_split(base64_encode($text_html));
         		$message.="\n\n\n\n";
         		$message.="--$boundary--";
         		$message.="\n";
         	}
+        	
+        	$subject="=?UTF-8?B?".base64_encode($subject)."?=";
         	
         	if(SmartyFaces::$config['mail_enabled']) {
 	        	if($debug) {

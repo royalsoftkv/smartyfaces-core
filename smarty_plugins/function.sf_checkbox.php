@@ -69,7 +69,8 @@ function smarty_function_sf_checkbox($params, $template)
     } else {
 	    $value=  SmartyFaces::evalExpression($value);
     }
-    
+
+
     if(!is_null($action)) {
     	if($stateless) {
     		$action="'".$action."'";

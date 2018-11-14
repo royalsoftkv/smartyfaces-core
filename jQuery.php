@@ -304,7 +304,7 @@ class jQuery
  *
  * @access  public
  * @param   string   $selector
- * @return  jQuery_Element
+ * @return  jQuery_Element|object
  */
 function jQuery($selector) 
 {

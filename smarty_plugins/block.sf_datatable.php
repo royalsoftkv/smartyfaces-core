@@ -122,6 +122,9 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
     	}
     }
     $this_tag_stack['first_pass']=false;
+	if(!is_array($data)) {
+		$data=[];
+	}
     $count=count($data);
     
     if($count>0) {

@@ -80,8 +80,7 @@ class SmartyFacesMessages {
     }
     
     static function addFlashMessage($type, $msg) {
-    	//TODO:SESSION-WRITE
-    	$_SESSION[self::FLASH_MESSAGE_SESSION_KEY][]=array('type'=>$type,'message'=>$msg);
+    	SFSession::addToArray(self::FLASH_MESSAGE_SESSION_KEY, array('type'=>$type,'message'=>$msg));
     }
     
 }

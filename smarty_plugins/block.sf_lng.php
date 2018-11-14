@@ -20,8 +20,9 @@ function smarty_block_sf_lng($params, $content, $template, &$repeat)
     	$repeat=false;
     	return;
     }
-	$lng_var=SmartyFaces::$config['lng_session_var'];
-	$lng_sel=isset($_SESSION['SF_SESSION'][$lng_var]) ? $_SESSION['SF_SESSION'][$lng_var] : $lng_def;
+
+	$lng_sel = SmartyFaces::getLanguage();
+
 	if($lng_sel==$lng){
 		return $content;
 	}

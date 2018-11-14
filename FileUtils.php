@@ -43,13 +43,15 @@ class FileUtils {
     public static function parseLngFile($file) {
     	$lines=file($file, FILE_IGNORE_NEW_LINES);
     	$data=array();
-    	foreach($lines as $line) {
-    		if(trim($line)=="") continue;
-    		$p=strpos($line, "=");
-    		$key=substr($line, 0, $p);
-    		$val=substr($line,$p+1);
-    		$data[$key]=$val;
-    	}
+    	if(is_array($lines)) {
+	        foreach($lines as $line) {
+	            if(trim($line)=="") continue;
+	            $p=strpos($line, "=");
+	            $key=substr($line, 0, $p);
+	            $val=substr($line,$p+1);
+	            $data[$key]=$val;
+	        }
+	    }
     	return $data;
     }
 
