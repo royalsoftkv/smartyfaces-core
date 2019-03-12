@@ -6,7 +6,7 @@
 
 class SmartyFaces {
 
-	public static $signature="0.4 18.04.2018";
+	public static $signature="0.4.1 12.03.2019";
 	public static $versions="Smarty 3.1.18 - jQuery 1.11.1 - jQuery UI 1.10.4 - PHP ActiveRecord 1.0 - Bootstrap 3.3.4";
 
 	const DEFAULT_VIEW_NAME="home";
