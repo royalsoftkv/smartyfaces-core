@@ -33,12 +33,17 @@ function smarty_function_sf_fileupload($params, $template)
     	'default'=>null,
     	'desc'=>'Style class of input file'
     );
+    $attributes['multiple']=array(
+    	'required'=>false,
+    	'default'=>false,
+    	'desc'=>'Allow upload of multiple files'
+    );
     if($params==null and $template==null) return $attributes;
     extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
     
     if(!$rendered) return;
     
-    SmartyFacesComponent::createComponent($id."_f", $tag, $params,array("acceptTypes","maxSize"));
+    SmartyFacesComponent::createComponent($id."_f", $tag, $params,array("acceptTypes","maxSize","multiple"));
     
     $div=new TagRenderer("div",true);
     $div->setId($id."_div");
@@ -50,9 +55,12 @@ function smarty_function_sf_fileupload($params, $template)
     
     $file=new TagRenderer("input");
     $file->setAttribute("type", "file");
-    $file->setIdAndName($id);
+    $file->setIdAndName($id, $multiple);
     if(SmartyFaces::$skin=="bootstrap") $fileClass.=" form-control";
     $file->setAttributeIfExists("class", $fileClass);
+    if($multiple) {
+    	$file->setAttribute("multiple", "multiple");
+    }
     $span->addHtml($file->render());
     
     if(SmartyFaces::$skin=="bootstrap") {

@@ -109,7 +109,7 @@ function _createReorderHeader($id) {
 	$a->setAttribute("href", "#");
 	$a->setAttribute("onclick", "SF.reorder.save(this);return false");
 	$a->setAttribute("class", "btn btn-default btn-xs");
-	$a->setValue('<span class="glyphicon glyphicon-floppy-disk"></span>');
+	$a->setValue('<span class="glyphicon glyphicon-floppy-disk text-primary"></span>');
 	$s= $a->render();
 	return $s;
 }

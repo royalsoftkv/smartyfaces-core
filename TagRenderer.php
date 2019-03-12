@@ -21,9 +21,9 @@ class TagRenderer {
 		if($value!==null && strlen(trim($value))>0) $this->setAttribute($name, $value);
 	}
 	
-	function setIdAndName($id) {
+	function setIdAndName($id, $multiple=false) {
 		$this->setId($id);
-		$this->setAttribute("name", $id);
+		$this->setAttribute("name", $id. ($multiple?"[]":""));
 	}
 	
 	function setId($id) {

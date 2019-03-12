@@ -21,7 +21,7 @@ php.complete = function (){
 
 php.error = function (xmlEr, typeEr, except) {
 	$(".sf_err").remove();
-    SF.onError();
+    SF.onError(xmlEr);
 };
 
 
@@ -101,14 +101,25 @@ SF = {
 	},
 	
 	loadCKEditor: function(id, options) {
+		options.on = {
+			instanceReady: function( evt ) {
+				$('#'+id).closest('.sf-editor').css('height','auto');
+			}
+		};
 		CKEDITOR.replace(id, options);
+
 	},
 	
-	processEditors:function() {
+	processEditors:function(sfData) {
 		if(typeof CKEDITOR !== 'undefined') {
+			sfData.sf_editor_height = {};
 			for(var instid in CKEDITOR.instances) {
 				var data = CKEDITOR.instances[instid].getData();
 				$("#"+instid).val(data);
+				var height = $("#"+instid).closest('.sf-editor').height();
+				var ch = CKEDITOR.instances[instid].ui.space('contents').getStyle('height');
+				ch=parseInt(ch);
+				sfData.sf_editor_height[instid] = height+';'+ch;
 			}
 		}
 	},
@@ -140,7 +151,7 @@ SF = {
 
     onComplete: function() {},
 
-    onError:function() {}
+    onError:function(xmlEr) {}
 	
 };
 
@@ -151,9 +162,9 @@ SF.ajax = {
 	url: '',
 		
 	ajaxAction: function(el,action,actionData,oncomplete){
-		SF.processEditors();
 	    form=$(el).closest("form");
 	    data={};
+		SF.processEditors(data);
 	    data.sf_source=(el==null ? null : el.id);
 	    if(form) data.sf_form_data=form.serialize();
 	    if(action) data.sf_action=action;

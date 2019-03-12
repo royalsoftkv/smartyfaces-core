@@ -26,7 +26,7 @@ class SFSession {
 
 	function registerShutdown() {
 		register_shutdown_function(function() {
-			$a=$_SERVER['REQUEST_URI'];
+			$a=@$_SERVER['REQUEST_URI'];
 			SFSession::write();
 		});
 	}
@@ -135,7 +135,7 @@ class SFSession {
 		if($this->non_blocking) {
 			if($this->write) {
 				
-				session_start();
+				@session_start();
 				if(is_array($this->session_vars)) {
 					foreach($this->session_vars as $session_var) {
 						if(is_array($session_var['path'])) {

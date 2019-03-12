@@ -4,19 +4,6 @@
 * NOTE: Modified library file ar marked with ##SmartyFaces-modified##
 */
 
-//require_once dirname(__FILE__)."/SmartyFacesComponent.php";
-//require_once dirname(__FILE__)."/SmartyFacesContext.php";
-//require_once dirname(__FILE__)."/SmartyFacesValidator.php";
-//require_once dirname(__FILE__)."/SmartyFacesMessages.php";
-//require_once dirname(__FILE__)."/SmartyFacesLogger.php";
-//require_once dirname(__FILE__)."/SmartyFacesDataModel.php";
-//require_once dirname(__FILE__)."/SmartyFacesObjectDataModel.php";
-//require_once dirname(__FILE__)."/SmartyFacesReordableList.php";
-//require_once dirname(__FILE__)."/SmartyFacesTrigger.php";
-//require_once dirname(__FILE__)."/FileUtils.php";
-//require_once dirname(__FILE__)."/TagRenderer.php";
-//require_once dirname(__FILE__)."/jQuery.php";
-
 class SmartyFaces {
 
 	public static $signature="0.4 18.04.2018";
@@ -161,7 +148,6 @@ class SmartyFaces {
 	}
 
 	public static function loadSmarty() {
-//		require_once SmartyFaces::resolvePath(self::$config['smarty_path']);
 		$smarty=new Smarty();
 		$smarty->compile_dir=SmartyFaces::resolvePath(SmartyFaces::$config['tmp_dir'])."/compile";
 		return $smarty;
@@ -174,9 +160,11 @@ class SmartyFaces {
 		require_once dirname(__FILE__)."/SmartyFacesFilter.php";
 		$smarty->registerFilter("pre",array("SmartyFacesFilter","filter"));
 		$smarty->force_compile=self::$config['force_compile'];
+		$smarty->use_sub_dirs = true;
 		$smarty->setCompileDir(SmartyFaces::resolvePath(self::$config['tmp_dir'])."/compile");
-		$smarty->use_sub_dirs=false;
-		$smarty->inheritance_merge_compiled_includes = false;
+		if(property_exists($smarty, 'inheritance_merge_compiled_includes')) {
+			$smarty->inheritance_merge_compiled_includes = false;
+		}
 		self::$smarty=$smarty;
 	}
 
@@ -222,15 +210,19 @@ class SmartyFaces {
 
 	public static function loadJs(){
 		$serverUrl=self::getServerUrl();
-		$resources=array(
-				["jquery/jquery.min.js",1],
-				["jquery-php/jquery.php.js",1],
-				["smartyfaces/js/smartyfaces.js",1]);
-		if(self::$skin=="default") {
-			$resources[]=["jquery-ui/jquery-ui-custom.min.js",1];
-		} else if (self::$skin=="bootstrap") {
-			$resources[]=["jquery-ui/jquery-ui-notooltip.custom.js",1];
-			$resources[]=["bootstrap/js/bootstrap.min.js",1];
+		if(empty(self::$config['resources_overrride_js'])) {
+			$resources=array(
+					["jquery/jquery.min.js",1],
+					["jquery-php/jquery.php.js",1],
+					["smartyfaces/js/smartyfaces.js",1]);
+			if(self::$skin=="default") {
+				$resources[]=["jquery-ui/jquery-ui-custom.min.js",1];
+			} else if (self::$skin=="bootstrap") {
+				$resources[]=["jquery-ui/jquery-ui-notooltip.custom.js",1];
+				$resources[]=["bootstrap/js/bootstrap.min.js",1];
+			}
+		} else {
+			$resources = self::$config['resources_overrride_js'];
 		}
 		self::loadResources("js", $resources);
 		$index_file=self::$config['index_file'];
@@ -251,8 +243,6 @@ class SmartyFaces {
 
 	private static function loadResources($type, $resources) {
 		$serverUrl=self::getServerUrl();
-		$resources_exclude=self::$config['resources_exclude'];
-		if(!is_array($resources_exclude)) $resources_exclude=array($resources_exclude);
 		foreach($resources as $resource) {
 			if(is_array($resource)) {
 				$resource_name = $resource[0];
@@ -873,75 +863,97 @@ class SmartyFaces {
 	public static function processUpload(){
 		$sf_source=$_GET['sf_source'];
 		if(self::$validateFailed) {
-			$files=json_encode($files);
 			echo '<script language="javascript" type="text/javascript">
 	    		window.top.window.SF.upload.stop("'.$_GET['form_id'].'","'.$sf_source.'",'.json_encode(array()).');
 	    	</script> ';
 			exit();
 		}
 		$sf_files_id=substr($sf_source, 0, -2);
-		$error=$_FILES[$sf_files_id]['error'];
-		$size=$_FILES[$sf_files_id]['size'];
 		$sf_action_component=SmartyFacesContext::$components["event"]["component.$sf_source"];
-		$id=$sf_action_component['params']['id'];
+		$multiple = $sf_action_component['params']['multiple'];
+		$filesToCheck=[];
+		if($multiple) {
+			foreach($_FILES[$sf_files_id] as $prop=>$values) {
+				foreach($values as $index=>$val) {
+					$filesToCheck[$index][$prop]=$val;
+				}
+			}
+		} else {
+			$filesToCheck[]=$_FILES[$sf_files_id];
+		}
+
+		$upload_info=null;
+		$wrong_file_type = false;
+		$upload_info['success']=true;
+		$success_cnt = 0;
+		foreach($filesToCheck as &$fileToCheck) {
+			$error=$fileToCheck['error'];
+			$size=$fileToCheck['size'];
+			$name=$fileToCheck['name'];
+			$error_msg = [];
 		if($error>0){
 			switch ($error){
 				case 1:
 				case 2:
-					$error_text=self::translate("file_size_exceed_allowed_limit");
+						$error_msg[] = self::translate("file_size_exceed_allowed_limit");
 					break;
 				case 3:
-					$error_text=self::translate("file_is_not_completely_uploeded");//"Fajl nije uploadovan u celosti";
+						$error_msg[] = self::translate("file_is_not_completely_uploeded");
 					break;
 				case 4:
-					$error_text=self::translate("you_did_not_select_file_for_upload");//"You did not select file for upload";
+						$error_msg[] = self::translate("you_did_not_select_file_for_upload");
 					break;
 				default:
-					$error_text=self::translate("general_upload_error")." [$error]";
+						$error_msg[] = self::translate("general_upload_error")." [$error]";
 			}
-			echo '<script language="javascript" type="text/javascript">
-	    		window.top.window.SF.upload.abort("'.$_GET['form_id'].'","'.$id.'","'.$error_text.'");
-	    	</script> ';
-			exit();
 		}
-		$ext = pathinfo($_FILES[$sf_files_id]['name'], PATHINFO_EXTENSION);
-		$sf_action_component=SmartyFacesContext::$components["event"]["component.$sf_source"];
+			$ext = pathinfo($name, PATHINFO_EXTENSION);
 		$acceptTypes=$sf_action_component['params']['acceptTypes'];
 		$canAccept=self::checkAcceptTypes($ext,$acceptTypes);
 		if(!$canAccept){
-			$msg= self::translate("you_can_upload_only_following_file_types").": ".$acceptTypes;
-			echo '<script language="javascript" type="text/javascript">
-	    		window.top.window.SF.upload.abort("'.$_GET['form_id'].'","'.$id.'","'.$msg.'");
-	    	</script> ';
-			exit();
+				$error_msg[] = self::translate("wrong_file_type")." [$error]";
 		}
 		$maxSize=$sf_action_component['params']['maxSize'];
 		if($maxSize!=null and $size>$maxSize) {
-			echo '<script language="javascript" type="text/javascript">
-    		window.top.window.SF.upload.abort("'.$_GET['form_id'].'","'.$id.'"," '. self::translate("you_must_upload_file_of_maximum_size ") .$maxSize.'B");
-    		</script> ';
-			exit();
+				$error_msg[] = self::translate("you_must_upload_file_of_maximum_size") .' ' .$maxSize.' B';
 		}
-		 
-		error_log($_FILES[$sf_files_id]['tmp_name']);
-		$ret = move_uploaded_file($_FILES[$sf_files_id]['tmp_name'], $_FILES[$sf_files_id]['tmp_name'].".upload");
+			$ret = move_uploaded_file($fileToCheck['tmp_name'], $fileToCheck['tmp_name'].".upload");
 		if(!$ret){
+				$error_msg[] = self::translate("general_upload_error");
+			}
+			$fileToCheck['tmp_name']=$fileToCheck['tmp_name'].".upload";
+
+			if(!empty($error_msg)) {
+				$upload_info['success']=false;
+			} else {
+				$success_cnt++;
+			}
+
+			$fileToCheck['result']=empty($error_msg)?'success':'danger';
+			$fileToCheck['error']=implode(", ", $error_msg);
+
+		}
+		$id=$sf_action_component['params']['id'];
+		if(count($error_msg)>0 && !$multiple) {
 			echo '<script language="javascript" type="text/javascript">
-	    		window.top.window.SF.upload.abort("'.$_GET['form_id'].'","'.$id.'",'.self::translate("general_upload_error").');
+	    		window.top.window.SF.upload.abort("'.$_GET['form_id'].'","'.$id.'","'.$error_msg[0].'");
 	    	</script> ';
 			exit();
 		}
-		$files=$_FILES[$sf_files_id];
-		$files['tmp_name']=$_FILES[$sf_files_id]['tmp_name'].".upload";
-		$files=json_encode($files);
+		$files=json_encode($filesToCheck);
 		echo '<script language="javascript" type="text/javascript">
     		window.top.window.SF.upload.stop("'.$_GET['form_id'].'","'.$sf_source.'",'.$files.');
     	</script> ';
 		exit();
 	}
 
-	public static function getUplaodFiles(){
-		return $_POST['sf_files'];
+	public static function getUplaodFiles($single=true){
+		$files = $_POST['sf_files'];
+		if($single) {
+			return $files[0];
+		} else {
+			return $files;
+		}
 	}
 
 	public static function initCMS($gcms, $params) {
@@ -1142,7 +1154,11 @@ class SmartyFaces {
 	}
 
 	static function isResourceOrImage() {
-		return isset($_GET['resource']) || isset($_GET['image']) || isset($_GET['request']);
+		return isset($_GET['resource']) || isset($_GET['image']);
+	}
+
+	static function isRequest() {
+		return isset($_GET['request']);
 	}
 
 	static function getSmartyVar($name) {

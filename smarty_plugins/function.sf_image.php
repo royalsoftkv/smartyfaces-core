@@ -92,7 +92,7 @@ function smarty_function_sf_image($params, $template)
     
     if($responsive && SmartyFaces::$skin=="bootstrap") $class.=" img-responsive";
     
-    $image=new TagRenderer("image");
+    $image=new TagRenderer("img");
     $image->setAttribute("src", $src);
     if(SmartyFaces::$skin=="bootstrap" && $responsive) {
     	$style="";

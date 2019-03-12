@@ -119,32 +119,6 @@ ul.sf-msg-box li {
     font-weight: bold;
 }
 
-.sf-msg-info-global {
-    background: url("../img/msg_info.png") no-repeat scroll 5px center #BDE3F7;
-    color:#1D4D99;
-    border-color:#1D4D99;
-}
-
-.sf-msg-success-global {
-    background: url("../img/msg_success.png") no-repeat scroll 5px center #DDF4BE;
-    color:#4F8B18;
-    border-color:#4F8B18;
-}
-
-.sf-msg-warn-global {
-    background: url("../img/msg_warn.png") no-repeat scroll 5px center #FCF1B2;
-    color:#9C630C;
-    border-color:#9C630C;
-}
-
-.sf-msg-error-global {
-    background: url("../img/msg_error.png") no-repeat scroll 5px center #FEB9B9;
-    color:#D4151C;
-    border-color:#D4151C;
-}
-
-
-
 .sf_err{
 	position:fixed;
 	right: 0px;
@@ -287,6 +261,7 @@ a[disabled] img {
 }
 .trans:hover {
 	background-color: yellow;
+	color: #333;
 }
 
 .sf-editor .note-toolbar .btn{
