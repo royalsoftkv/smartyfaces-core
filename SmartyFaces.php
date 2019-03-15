@@ -72,6 +72,7 @@ class SmartyFaces {
 	const CALLBACK_LANGUAGE_NOT_FOUND_FUNCTION = 'CALLBACK_LANGUAGE_NOT_FOUND_FUNCTION';
 	const CALLBACK_LANGUAGE_PROCESS_TRANSLATION_FUNCTION = 'CALLBACK_LANGUAGE_PROCESS_TRANSLATION_FUNCTION';
 	public static $callbackFunctions = [];
+	public static $globalAssign = [];
 
 	public static function configure($config=null) {
 		self::$config['root_path']=$_SERVER['DOCUMENT_ROOT'];
@@ -166,6 +167,7 @@ class SmartyFaces {
 			$smarty->inheritance_merge_compiled_includes = false;
 		}
 		self::$smarty=$smarty;
+		self::$smarty->assign(self::$globalAssign);
 	}
 
 	public static function init(){
@@ -1215,6 +1217,10 @@ class SmartyFaces {
 		if(!$check) {
 			SmartyFacesTrigger::trigger(SmartyFacesTrigger::NOT_AUTHORIZED_AJAX, $formData);
 		}
+	}
+
+	static function globalAssign($key, $value) {
+		self::$globalAssign[$key]=$value;
 	}
 
 }
