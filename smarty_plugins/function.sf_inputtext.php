@@ -16,6 +16,11 @@ function smarty_function_sf_inputtext($params, $template)
     		"default"=>false,
     		"type"=>'bool',
     		"desc"=>"Display text input in all avaialable width (Bootstrap skin only)");
+    $attributes['readonly']=array(
+			'required'=>false,
+			'default'=>false,
+			'type'=>'bool',
+			'desc'=>'If set to true renders component as readonly');
 
     if(!isset($params['attachMessage']) && isset($params['required']) && $params['required']===true) {
 	    $params['attachMessage']=true;
@@ -75,6 +80,9 @@ function smarty_function_sf_inputtext($params, $template)
     $input->setAttributeIfExists("size", $size);
     if($disabled){
     	$input->setAttribute("disabled", $disabled);
+    }
+    if($readonly){
+    	$input->setAttribute("readonly", "readonly");
     }
     $input->setAttributeIfExists("title", $title);
     $input->setIdAndName($id);

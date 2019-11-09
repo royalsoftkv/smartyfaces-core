@@ -51,6 +51,8 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 		if($value instanceof SmartyFacesDataModel) {
 			$value=$value->load();
 		}
+		//PHP-7-FIX
+		if(!is_array($value)) $value=[];
 		$this_tag_stack['count']=count($value);
 		$data=$value;
 		if(count($data)==0) $this_tag_stack['empty_data']=true;
@@ -138,7 +140,8 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 	    	$rowKeyVarArr['index']=$this_tag_stack['index'];
 	    	$rowKeyVarArr['iteration']=$this_tag_stack['index']+1;
 	    	$rowKeyVarArr['first']=$this_tag_stack['index']==0;
-	    	$rowKeyVarArr['last']=($this_tag_stack['index']==count($value)-1);
+		    //PHP-7-FIX
+	    	$rowKeyVarArr['last']=($this_tag_stack['index']==count(is_array($value)?$value:[])-1);
 	    	$template->assign($rowKeyVar,$rowKeyVarArr);
 	    }
 	    $even=($this_tag_stack['index'] % 2 == 0) ? "" : "even-row";

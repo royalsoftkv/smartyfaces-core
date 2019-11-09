@@ -5,7 +5,8 @@ class TagRenderer {
 	public $tag;
 	public $block;
 	public $html="";
-	public $attributes;
+	//PHP-7-FIX
+	public $attributes = [];
 	public $custom;
 	
 	public function __construct($tag,$block=false) {

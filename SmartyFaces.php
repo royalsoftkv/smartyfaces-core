@@ -778,6 +778,7 @@ class SmartyFaces {
 		if(substr($el, 0,2)=="#[" and substr($el, -1,1)=="]") {
 			// EL
 			$el=substr($el, 2,-1);
+			self::$SF_ACTION = "updateModelValue: "."$el=\$value;";
 			eval("$el=\$value;");
 			return;
 		}
@@ -819,7 +820,7 @@ class SmartyFaces {
 		if(substr($action, 0,2)=="#[" and substr($action, -1,1)=="]") {
 			// EL
 			$action=substr($action, 2,-1);
-			self::$SF_ACTION = $action;
+			self::$SF_ACTION = "invokeAction: ".$action;
 
 			if(self::$config['eval_with_file']) {
 				$tmp_dir=SmartyFaces::resolvePath(SmartyFaces::$config['tmp_dir']."/eval");
@@ -1206,11 +1207,11 @@ class SmartyFaces {
 
 		$headers = getallheaders();
 
-		if(!isset($headers['SF_AJAX_KEY'])) {
+		if(!isset($headers['Sf-Ajax-Key'])) {
 			$check = false;
 		}
 
-		if($headers['SF_AJAX_KEY'] != $sf_ajax_key) {
+		if($headers['Sf-Ajax-Key'] != $sf_ajax_key) {
 			$check = false;
 		}
 

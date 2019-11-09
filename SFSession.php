@@ -58,7 +58,11 @@ class SFSession {
 			}
 		} else {
 			if(is_array($name)) {
-				return $this->get_array($_SESSION, $name);
+				if($this->exists_array($_SESSION, $name)) {
+				    return $this->get_array($_SESSION, $name);
+				} else {
+					return $default;
+				}
 			} else {
 				if(isset($_SESSION[$name])) {
 					return $_SESSION[$name];
@@ -172,7 +176,7 @@ class SFSession {
 				return isset($this->session[$name]);
 			}
 		} else {
-			return isset($_SESSION[$name]);
+			return @isset($_SESSION[$name]);
 		}
 	}
 	

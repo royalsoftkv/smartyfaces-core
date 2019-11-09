@@ -113,6 +113,8 @@ function smarty_block_sf_mail($params, $content, $template, &$repeat){
 		        	$ret=@mail($to,$subject,$message,$headers);
 		        	return $ret;
 	        	}
+        	} else {
+        		return true;
         	}
         }
     }

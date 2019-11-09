@@ -1,8 +1,11 @@
 
 php.beforeSend = function (XMLHttpRequest){
-	if(typeof SF.ajax.key != 'undefined') {
-		XMLHttpRequest.setRequestHeader("SF_AJAX_KEY",SF.ajax.key);
+	if(typeof SF.ajax.key === 'undefined') {
+		if($('#sf_ajax_key').length>0) {
+			SF.ajax.key = $('#sf_ajax_key').val();
 	}
+	}
+	XMLHttpRequest.setRequestHeader("Sf-Ajax-Key",SF.ajax.key);
     $('.ajax-status').parent().css("display","block");
     $('#sf-status').css("display","block");
     $(document.body).addClass('sf-ajax');
@@ -112,6 +115,7 @@ SF = {
 	
 	processEditors:function(sfData) {
 		if(typeof CKEDITOR !== 'undefined') {
+			try {
 			sfData.sf_editor_height = {};
 			for(var instid in CKEDITOR.instances) {
 				var data = CKEDITOR.instances[instid].getData();
@@ -120,6 +124,8 @@ SF = {
 				var ch = CKEDITOR.instances[instid].ui.space('contents').getStyle('height');
 				ch=parseInt(ch);
 				sfData.sf_editor_height[instid] = height+';'+ch;
+			}
+			} catch (e) {
 			}
 		}
 	},
