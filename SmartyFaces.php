@@ -1201,18 +1201,18 @@ class SmartyFaces {
 		}
 
 		$sf_ajax_key = $formData['sf_ajax_key'];
-		if($sf_ajax_key != SFSession::get('SF_AJAX_KEY')) {
+		if($sf_ajax_key != SFSession::get('sf_ajax_key')) {
 			$check = false;
 		}
 
+		$check = false;
 		$headers = getallheaders();
-
-		if(!isset($headers['Sf-Ajax-Key'])) {
-			$check = false;
-		}
-
-		if($headers['Sf-Ajax-Key'] != $sf_ajax_key) {
-			$check = false;
+		foreach($headers as $key => $val) {
+			if(strtoupper($key)=="sf_ajax_key") {
+				if($val == $sf_ajax_key) {
+					$check = true;
+				}
+			}
 		}
 
 		if(!$check) {

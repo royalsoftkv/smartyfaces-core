@@ -73,8 +73,8 @@ function smarty_block_sf_form($params, $content, $template, &$repeat)
     	$s.=TagRenderer::renderHidden("sf_state_store", SmartyFacesContext::$storestate);
     }
     
-	SmartyFaces::$ajaxkey = SFSession::get('SF_AJAX_KEY', uniqid());
-	SFSession::set('SF_AJAX_KEY', SmartyFaces::$ajaxkey);
+	SmartyFaces::$ajaxkey = SFSession::get('sf_ajax_key', uniqid());
+	SFSession::set('sf_ajax_key', SmartyFaces::$ajaxkey);
     $s.=TagRenderer::renderHidden("sf_ajax_key", SmartyFaces::$ajaxkey);
     
     $tr=new TagRenderer('form',true);
