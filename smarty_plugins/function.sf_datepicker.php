@@ -21,7 +21,7 @@ function smarty_function_sf_datepicker($params, $template)
     $attributes['datepickerOptions']=array(
    				'required'=>false,
    				'default'=>array(),
-   				'desc'=>'Additional date picker options (not used for bootstrap skin)');
+   				'desc'=>'Additional date picker options');
     $attributes['action']['desc']='Ajax action invoked on change event';
     $attributes['size']['desc']='Defines size of input text field for datepicker';
 
@@ -137,6 +137,7 @@ function smarty_function_sf_datepicker($params, $template)
 	} else if (SmartyFaces::$skin=="bootstrap") {
 		$options["format"]=$dateFormat;
 		$options["locale"]=SmartyFaces::getLanguage();
+//		$options['debug']=true;
 		foreach ($datepickerOptions as $name=>$val) {
 			$options[$name]=$val;
 		}

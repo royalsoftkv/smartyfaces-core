@@ -334,6 +334,8 @@ class SmartyFaces {
 			return;
 		}
 		 
+		SmartyFacesTrigger::trigger(SmartyFacesTrigger::CUSTOM_REQUEST_PROCESS);
+
 		$formData=array();
 		$upload=false;
 		// restore view
@@ -1080,10 +1082,14 @@ class SmartyFaces {
 	}
 
 
-	static function loadLanguages() {
+	static function loadLanguages($lng=null) {
 		$lng_dir=SmartyFaces::resolvePath(self::$config['lng_dir']);
 		$lng_var=self::$config['lng_var'];
+		if(empty($lng)) {
 		$lng_sel=self::getLanguage();
+		} else {
+			$lng_sel=$lng;
+		}
 		$lng_file=$lng_dir."/".$lng_sel.".lng";
 		if(file_exists($lng_file)) {
 			$data = FileUtils::parseLngFile($lng_file);
@@ -1205,14 +1211,19 @@ class SmartyFaces {
 			$check = false;
 		}
 
-		$check = false;
 		$headers = getallheaders();
-		foreach($headers as $key => $val) {
-			if(strtoupper($key)=="sf_ajax_key") {
-				if($val == $sf_ajax_key) {
-					$check = true;
+		$found_header= false;
+		foreach ($headers as $key => $val) {
+			if (strtolower($key) == "sf_ajax_key") {
+				if ($val == $sf_ajax_key) {
+					$found_header = true;
+					break;
 				}
 			}
+		}
+
+		if(!$found_header) {
+			$check = false;
 		}
 
 		if(!$check) {

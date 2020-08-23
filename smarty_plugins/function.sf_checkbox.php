@@ -111,7 +111,7 @@ function smarty_function_sf_checkbox($params, $template)
     
     if(SmartyFaces::$skin=="bootstrap") {
     	$label_c->addHtml($c->render());
-    	$label_c->addHtml($label);
+    	$label_c->addHtml('&nbsp;' . $label);
     	$div->addHtml($label_c->render());
     	if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
     		$span=new TagRenderer("span",true);
