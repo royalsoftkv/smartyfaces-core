@@ -218,6 +218,16 @@ SF.ajax = {
 	    $.php(SF.ajax.url,data,oncomplete);
 	},
 	
+	json : function(action, params, oncomplete){
+		data={
+			sf_link_action:true,
+			sf_action:action};
+		if(params!=undefined) data.params=params;
+		$.php(SF.ajax.url,data,function(data, res){
+			oncomplete(JSON.parse(res));
+		});
+	},
+
 	loadPickListHandler:function(id){
 		left=$("#"+id+"_l");
 		right=$("#"+id+"_r");
