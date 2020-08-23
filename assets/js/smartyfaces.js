@@ -457,5 +457,15 @@ SF.reorder = {
 		table.find("> tbody > tr").each(function(index){
 			$(this).attr("order-id",index);
 		});
+
 	}
-}
+};
+
+SF.socket = {
+	connect: function() {
+		var socket = io('http://localhost:2100');
+		socket.on('connect', function (data) {
+			console.log("connected");
+		});
+	}
+};

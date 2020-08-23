@@ -247,6 +247,14 @@ class SmartyFacesContext {
 		SFSession::set(['SF_SESSION','state'], $state);
 	}
 
+	static function startSocket($host, $port) {
+		//TODO check if daemon is running
+		$params = 'SF_SOCKET_HOST='.$host. ' SF_SOCKET_PORT='.$port. ' ';
+		$socket_server_file = __DIR__ . '/socket/server.php';
+		$cmd="$params php $socket_server_file start -d";
+		shell_exec($cmd);
+	}
+
 }
 
 ?>
