@@ -296,3 +296,14 @@ a[disabled] img {
 .auto-complete.auto-complete-block .combobox-container .input-group {
 	width:auto;
 }
+.checkbox label {
+	line-height: 24px;
+}
+.combobox-container .input-group-addon .glyphicon,
+.input-group .input-group-addon .glyphicon{
+	line-height: 10px;
+}
+.input-group.date .bootstrap-datetimepicker-widget table td,
+.input-group.date .bootstrap-datetimepicker-widget table th {
+	border-radius: 0;
+}
