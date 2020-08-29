@@ -157,7 +157,7 @@ class SmartyFaces {
 
 	public static function configureSmarty(Smarty $smarty){
 		$smarty->addTemplateDir(self::resolvePath(self::$config['view_dir']));
-		$smarty->addPluginsDir(dirname(__FILE__)."/smarty_plugins");
+		$smarty->addPluginsDir(dirname(dirname(__FILE__))."/smarty_plugins");
 		require_once dirname(__FILE__)."/SmartyFacesFilter.php";
 		$smarty->registerFilter("pre",array("SmartyFacesFilter","filter"));
 		$smarty->force_compile=self::$config['force_compile'];
