@@ -4,7 +4,7 @@ function smarty_function_sf_checkbox($params, $template)
 {
     $tag="sf_checkbox";
     
-    $attributes_list=array("id","value","required","action","immediate","attachMessage","class","title","disabled","rendered");
+    $attributes_list=array("id","value","required","action","immediate","attachMessage","class","title","disabled","rendered","validator");
     $attributes=SmartyFacesComponent::resolveAttributtes($attributes_list);
     $attributes['checkedValue']=array(
     	'required'=>false,
@@ -55,6 +55,9 @@ function smarty_function_sf_checkbox($params, $template)
     if($required and !$disabled){
         SmartyFacesContext::addRequiredValidator($id);
     }
+	if(!is_null($validator)) {
+		SmartyFacesContext::addValidator($id,$validator);
+	}
     
     SmartyFacesContext::$bindings[$id]=$value;
 	if(SmartyFaces::$validateFailed and !$disabled) {
