@@ -158,6 +158,15 @@ class SmartyFacesContext {
 		return $value;
 	}
 
+	static function getFormData($name, $default=null) {
+		if(isset(SmartyFacesContext::$formData[$name])) {
+			$value=SmartyFacesContext::$formData[$name];
+		} else {
+			$value = $default;
+		}
+		return $value;
+	}
+
 	static function setFormVar($name,$value) {
 		self::$formVars[$name]=$value;
 	}

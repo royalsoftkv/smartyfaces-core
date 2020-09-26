@@ -585,7 +585,7 @@ class SmartyFaces {
 		SmartyFacesLogger::log("Start processing stateless ajax");
 		$sf_form_data=$_POST['sf_form_data'];
 		parse_str($sf_form_data, $formData);
-		SmartyFacesContext::$formData=$formData;
+		SmartyFacesContext::$formData=&$formData;
 		if(isset($formData['sf_view'])) $sf_view=$formData['sf_view'];
 		if(isset($formData['sf_view_id'])) $sf_view_id=$formData['sf_view_id'];
 		if(isset($formData['sf_state'])) $sf_state=json_decode(urldecode($formData['sf_state']), true);
