@@ -60,7 +60,8 @@ class SmartyFaces {
 			'image_dir'=>array('images'),
 			'mail_enabled'=>true,
 			'resources_url'=>'auto',
-			'eval_with_file'=>true
+			'eval_with_file'=>true,
+			'secure_actions'=>[]
 	);
 
 	public static $skins = array("default","none","bootstrap");
@@ -310,6 +311,13 @@ class SmartyFaces {
 
 	public static function processLinkAction(){
 		$sf_action=$_POST['sf_action'];
+
+		if(isset(SmartyFaces::$config['secure_actions']) &&
+			(in_array("link", SmartyFaces::$config['secure_actions']) || in_array("all", SmartyFaces::$config['secure_actions']) )) {
+			SmartyFacesSecurity::checkAction($sf_action);
+		}
+
+
 		//$sf_form_data=$_POST['sf_form_data'];
 		//parse_str($sf_form_data, $formData);
 		//SmartyFacesContext::$formData = $formData;
@@ -394,6 +402,12 @@ class SmartyFaces {
 			$sf_action=$_POST['sf_action'];
 			$immediate=true;
 		}
+
+		if(isset(SmartyFaces::$config['secure_actions']) &&
+			(in_array("action", SmartyFaces::$config['secure_actions']) || in_array("all", SmartyFaces::$config['secure_actions']) )) {
+			SmartyFacesSecurity::checkAction($sf_action);
+		}
+
 		$convertersList=  SmartyFacesContext::$converters;
 		if($convertersList!=null){
 			foreach($convertersList as $id=>$converters){
@@ -516,6 +530,11 @@ class SmartyFaces {
 				$event=$events[$sf_event];
 				$immediate=isset($event['immediate']) ? $event['immediate'] : false;
 				$sf_action=$event['action'];
+
+				if(isset(SmartyFaces::$config['secure_actions']) &&
+					(in_array("event", SmartyFaces::$config['secure_actions']) || in_array("all", SmartyFaces::$config['secure_actions']) )) {
+					SmartyFacesSecurity::checkAction($sf_action);
+				}
 				 
 				$convertersList=  SmartyFacesContext::$converters;
 				if($convertersList!=null){
@@ -597,6 +616,13 @@ class SmartyFaces {
 		 
 		SmartyFacesLogger::log("Form vars=".print_r(SmartyFacesContext::$formVars, true));
 		$sf_action=$_POST['sf_action'];
+
+		if(isset(SmartyFaces::$config['secure_actions']) &&
+			(in_array("stateless", SmartyFaces::$config['secure_actions']) || in_array("all", SmartyFaces::$config['secure_actions']) )) {
+			SmartyFacesSecurity::checkAction($sf_action);
+		}
+
+
 		if(isset($formData['sf_view'])) {
 			SmartyFacesComponent::$current_view=$sf_view;
 			SmartyFacesComponent::$current_view_id=$sf_view_id;
