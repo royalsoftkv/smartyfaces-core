@@ -555,6 +555,16 @@ abstract class SmartyFacesDataModel {
 		}
 	}
 
+	function customFilterSql($name, $sql="1=1") {
+		if($this->isFilter($name)) {
+			$cnt = substr_count($sql, "?");
+			for($i=1; $i<=$cnt; $i++) {
+				$this->params[]=$this->getFilterValue($name);
+			}
+			return " and $sql ";
+		}
+	}
+
 	function isEmptyFilter() {
 		if (count($this->filter)==0)return true;
 		foreach($this->filter as $val) {
