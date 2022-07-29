@@ -125,11 +125,9 @@ class SmartyFaces {
 			if(file_exists($source_file)) {
 				$source=file_get_contents($source_file);
 			} else {
-				if(self::$ajax) {
-					SmartyFaces::reload();
-				} else {
-					return "Unable to load source file: $source_file. Check template attribute in sf_view!";
-				}
+				$file_name = SmartyFaces::$template->compiled->filepath;
+				unlink($file_name);
+				return;
 			}
 
 			$pos=strpos($source, '<sf_view id="'.$sf_view_id);
