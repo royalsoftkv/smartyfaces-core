@@ -38,6 +38,9 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
     $attributes['responsive']=array(
     	'required'=>false,'default'=>true,'type'=>'bool', 'desc'=>'Display table to be responsive for smalled devices'
     );
+    $attributes['visibleColumns']=array(
+    	'required'=>false,'default'=>[],'type'=>'array', 'desc'=>'List if clumns to display. If empty display all'
+    );
     if($params==null and $template==null) return $attributes;
     $params=SmartyFacesComponent::proccessAttributes($tag, $attributes, $params);
     extract($params);
@@ -49,7 +52,8 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 	if (is_null($content)) {
 		$this_tag_stack['table']['attributes']['id']=$id;
 		if($value instanceof SmartyFacesDataModel) {
-			$value=$value->load();
+			$dataModel = $value;
+			$value=$dataModel->load();
 		}
 		//PHP-7-FIX
 		if(!is_array($value)) $value=[];
@@ -109,9 +113,14 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
     	}
     	
     	if(_columnsHasHeaders($columns)) {
+			$visibleColumns = $this_tag_stack['params']['visibleColumns'];
     		$col_index=-1;
+		    $cells = [];
     		foreach($columns as $column){
     			$col_index++;
+				if(count($visibleColumns)>0 && isset($column['id']) && !in_array($column['id'], $visibleColumns)) {
+					continue;
+				}
     			$cell['content']=$column['header'];
     			$cell['attributes']['class']=(SmartyFaces::$skin=="default" ? "sf-columnheader " : "").$column['class'];
     			$cell['attributes']['width']=$column['width'];
@@ -119,8 +128,37 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
     			$cell['attributes']['align']=$column['align'];
     			$cell['sortby']=$column['sortby'];
     			$cell['id']=$column['id'];
-    			$this_tag_stack['table']['head']['cells'][]=$cell;
+			    $cells[]=$cell;
     		}
+		    if($value instanceof SmartyFacesDataModel) {
+			    $dataModel = $value;
+				$availabelColumns = [];
+			    foreach($columns as $col) {
+				    $availabelColumns[$col['id']]=trim(strip_tags($col['header']));
+			    }
+			    $dataModel->availabelColumns=$availabelColumns;
+		    }
+		    if(count($visibleColumns)>0) {
+				$sorted_cells = [];
+				$cells_map = [];
+				$sorted_index = [];
+				foreach($cells as $ix => &$cell) {
+					$cell['index']=$ix;
+					$cells_map[$cell['id']]=$cell;
+				}
+				foreach($visibleColumns as $col_id) {
+					if(isset($cells_map[$col_id])) {
+						$sorted_cells[]=$cells_map[$col_id];
+						$sorted_index[]=$cells_map[$col_id]['index'];
+						unset($cells_map[$col_id]);
+    		}
+				}
+			    $sorted_cells = array_merge($sorted_cells, array_values($cells_map));
+			    $cells = $sorted_cells;
+			    $this_tag_stack['table']['sorted_cells_index']=$sorted_index;
+		    }
+		    $this_tag_stack['table']['head']['cells']=$cells;
+
     	}
     }
     $this_tag_stack['first_pass']=false;
@@ -208,7 +246,11 @@ function _displayTable($this_tag_stack, $template) {
 	$s.="<table"._getAttributes($attributes).">";
 	$hasdata = (count($this_tag_stack['table']['rows'])>0 and !isset($this_tag_stack['empty_data']));
 	if($hasdata) {
-		$colspan=count($this_tag_stack['table']['rows'][0]['cells']);
+		if(isset($this_tag_stack['table']['rows'][0]['cells'])) {
+			$colspan=count($this_tag_stack['table']['rows'][0]['cells']);
+		} else {
+			$colspan="1";
+		}
 	} else {
 		if(isset($this_tag_stack['table']['head']['cells'])) {
 			$colspan=count($this_tag_stack['table']['head']['cells']);
@@ -281,6 +323,14 @@ function _displayTable($this_tag_stack, $template) {
 		    $s.='<tr'._getAttributes($row['attributes']).'>';
 			$cells=$row['cells'];
 			if(!empty($cells)) {
+				if(isset($this_tag_stack['table']['sorted_cells_index'])) {
+					$sorted_cells_index = $this_tag_stack['table']['sorted_cells_index'];
+					$sorted_cells = [];
+					foreach ($sorted_cells_index as $ix) {
+						$sorted_cells[]=$cells[$ix];
+					}
+					$cells = $sorted_cells;
+				}
 				foreach($cells as $cell) {
 					$sortby=isset($cell['sortby']);
 					if(is_object($this_tag_stack['params']['value'])) {

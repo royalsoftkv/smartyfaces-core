@@ -78,7 +78,7 @@ function smarty_function_sf_picklist($params, $template)
 // 		}
 // 	}
 	$source_keys=array_keys($source);
-	$value_keys=array_keys($value);
+	$value_keys=is_array($value) ? array_keys($value) : [];
 	$left_list_keys=array_diff($source_keys, $value_keys);
 	$right_list_keys=$value_keys;
 	
