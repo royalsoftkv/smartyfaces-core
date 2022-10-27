@@ -279,7 +279,7 @@ function _displayTable($this_tag_stack, $template) {
 		if(count($this_tag_stack['table']['head']['cells'])>0) {
 			$s.="<tr>";
 			foreach($this_tag_stack['table']['head']['cells'] as $cell) {
-				$sortby=isset($cell['sortby']);
+				$sortby=isset($cell['sortby']) && strlen($cell['sortby'])>0;
 				if(is_object($this_tag_stack['params']['value'])) {
 					if($sortby && $this_tag_stack['params']['value']->column==$cell['sortby']) {
 						if(isset($cell['attributes']['class'])) {
