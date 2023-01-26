@@ -44,7 +44,8 @@ function smarty_block_sf_column($params, $content, $template, &$repeat)
 	
 	if(strlen($sortby)>0) {
 		$params['action']='#['.$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-2][1]['datamodel'].'->sort()]';
-		SmartyFacesComponent::createComponent($id, $tag, $params, array("sortby"));
+		$col_id=$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-2][2]['table']['attributes']['id']."-".$id;
+		SmartyFacesComponent::createComponent($col_id, $tag, $params, array("sortby"));
 	}
 	
 	if(!$rendered) {

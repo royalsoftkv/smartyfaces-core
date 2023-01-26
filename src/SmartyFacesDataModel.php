@@ -578,6 +578,14 @@ abstract class SmartyFacesDataModel {
 	function isSorted() {
 		return !empty($this->column);
 	}
+
+	function getItemByKey($key) {
+		foreach ($this->_list as $item) {
+			if($this->getRowKey($item) == $key) {
+				return $item;
+			}
+		}
+	}
 }
 
 ?>

@@ -4,6 +4,27 @@
 * NOTE: Modified library file ar marked with ##SmartyFaces-modified##
 */
 
+
+
+function _getallheaders()
+{
+	if (function_exists('getallheaders')) {
+		return getallheaders();
+	} else {
+		if (!is_array($_SERVER)) {
+			return array();
+		}
+		$headers = array();
+		foreach ($_SERVER as $name => $value) {
+			if (substr($name, 0, 5) == 'HTTP_') {
+				$key = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
+				$headers[$key] = $value;
+			}
+		}
+		return $headers;
+	}
+}
+
 class SmartyFaces {
 
 	public static $signature="0.4.1 12.03.2019";
@@ -132,6 +153,9 @@ class SmartyFaces {
 			}
 
 			$pos=strpos($source, '<sf_view id="'.$sf_view_id);
+			if($pos===false) {
+				$pos=strpos($source, '<sf_view id='.$sf_view_id);
+			}
 			$source = substr($source, $pos);
 			$pos2=strpos($source, ">");
 			$source = substr($source, $pos2+1);
@@ -1133,7 +1157,10 @@ class SmartyFaces {
 	}
 
 	static function translate($key){
+		if(isset(self::$lng[$key])) {
 		return self::$lng[$key];
+	}
+		return null;
 	}
 
 	static function getLanguage() {
@@ -1235,7 +1262,7 @@ class SmartyFaces {
 			$check = false;
 		}
 
-		$headers = getallheaders();
+		$headers = _getallheaders();
 		$found_header= false;
 		foreach ($headers as $key => $val) {
 			if (strtolower($key) == "sf_ajax_key") {

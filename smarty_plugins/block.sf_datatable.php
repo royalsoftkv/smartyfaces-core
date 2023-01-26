@@ -134,7 +134,7 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 			    $dataModel = $value;
 				$availabelColumns = [];
 			    foreach($columns as $col) {
-				    $availabelColumns[$col['id']]=trim(strip_tags($col['header']));
+				    $availabelColumns[$col['id']]=str_replace("&nbsp;", "", trim(strip_tags($col['header'])));
 			    }
 			    $dataModel->availabelColumns=$availabelColumns;
 		    }
@@ -293,7 +293,8 @@ function _displayTable($this_tag_stack, $template) {
 					$cell['attributes']['class'].=" sortable";
 				}
 				$s.="<th"._getAttributes($cell['attributes']).">";
-				if($sortby) $s.='<a id="'.$cell['id'].'" href="" onclick="SF.dm.sort(this);return false">';
+				$head_id = $this_tag_stack['table']['attributes']['id']."-".$cell['id'];
+				if($sortby) $s.='<a id="'.$head_id.'" href="" onclick="SF.dm.sort(this);return false">';
 				$content="";
 				if(isset($cell['content'])) $content=trim($cell['content']);
 				$s.=$content;
