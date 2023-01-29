@@ -132,11 +132,11 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
     		}
 		    if($value instanceof SmartyFacesDataModel) {
 			    $dataModel = $value;
-				$availabelColumns = [];
+				$availableColumns = [];
 			    foreach($columns as $col) {
-				    $availabelColumns[$col['id']]=str_replace("&nbsp;", "", trim(strip_tags($col['header'])));
+				    $availableColumns[$col['id']]=str_replace("&nbsp;", "", trim(strip_tags($col['header'])));
 			    }
-			    $dataModel->availabelColumns=$availabelColumns;
+			    $dataModel->availableColumns=$availableColumns;
 		    }
 		    if(count($visibleColumns)>0) {
 				$sorted_cells = [];
