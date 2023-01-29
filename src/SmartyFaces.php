@@ -1157,10 +1157,7 @@ class SmartyFaces {
 	}
 
 	static function translate($key){
-		if(isset(self::$lng[$key])) {
 		return self::$lng[$key];
-	}
-		return null;
 	}
 
 	static function getLanguage() {
