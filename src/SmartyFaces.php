@@ -148,7 +148,7 @@ class SmartyFaces {
 				$source=file_get_contents($source_file);
 			} else {
 				$file_name = SmartyFaces::$template->compiled->filepath;
-				unlink($file_name);
+				@unlink($file_name);
 				return;
 			}
 

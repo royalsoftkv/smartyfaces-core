@@ -31,15 +31,17 @@ class SFSession {
 		});
 	}
 	
-	function start() {
+	function start($writeClose = true) {
 		ob_start();
 		session_start();
 		if($this->non_blocking) {
 			$this->session=$_SESSION;
+			if($writeClose) {
 			session_write_close();
 		}
 	}
-	
+	}
+
 	function get_from_session($name,$default=null) {
 		if($this->non_blocking) {
 			if(is_array($name)) {
