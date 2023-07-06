@@ -77,7 +77,11 @@ class FileUtils {
     }
     
     static function folderIsOnPath($path,$folder) {
-    	return strpos(realpath($folder), realpath($path))===0;
+	$path = realpath($path);
+	if(!$path) {
+		return false;
+	}
+        return strpos(realpath($folder), $path)===0;
     }
 
 }
