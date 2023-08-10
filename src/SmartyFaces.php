@@ -405,9 +405,7 @@ class SmartyFaces {
 		SmartyFacesComponent::$current_view=$sf_view;
 		SmartyFacesComponent::$current_view_id=$sf_view_id;
 		SmartyFacesContext::$storestate=$storestate;
-		if(SmartyFacesContext::$storestate=="server") {
 			if(!empty($sf_state_id)) SmartyFacesComponent::$current_state_id=$sf_state_id;
-		}
 		SmartyFacesContext::$formData = $formData;
 		if(isset($formData['sf_template'])) {
 			SmartyFacesComponent::$current_template_id=$formData['sf_template'];
@@ -535,9 +533,8 @@ class SmartyFaces {
 			SmartyFacesComponent::$current_view=$sf_view;
 			SmartyFacesComponent::$current_view_id=$sf_view_id;
 			SmartyFacesContext::$storestate=$sf_state_store;
-			if(SmartyFacesContext::$storestate=="server") {
 				if(!empty($sf_state_id)) SmartyFacesComponent::$current_state_id=$sf_state_id;
-			}
+
 			SmartyFacesContext::$formData = $formData;
 			SmartyFacesContext::$actionData = $sf_action_data;
 			if(isset($formData['sf_template'])) {

@@ -64,10 +64,11 @@ function smarty_block_sf_form($params, $content, $template, &$repeat)
     	if(SmartyFacesContext::$storestate=="server") {
 	    	$s.=TagRenderer::renderHidden("sf_state_id", $state_id);
     	} else {
+		    $s.=TagRenderer::renderHidden("sf_state_id", $state_id);
     		if(SmartyFaces::$config['compress_state']) {
-		    	$s.=TagRenderer::renderHidden("sf_state_id", base64_encode(gzdeflate(serialize(SmartyFacesContext::$state))));
+		    	$s.=TagRenderer::renderHidden("sf_state_data", base64_encode(gzdeflate(serialize(SmartyFacesContext::$state))));
     		} else {
-		    	$s.=TagRenderer::renderHidden("sf_state_id", base64_encode(serialize(SmartyFacesContext::$state)));
+		    	$s.=TagRenderer::renderHidden("sf_state_data", base64_encode(serialize(SmartyFacesContext::$state)));
     		}
     	}
     	$s.=TagRenderer::renderHidden("sf_state_store", SmartyFacesContext::$storestate);

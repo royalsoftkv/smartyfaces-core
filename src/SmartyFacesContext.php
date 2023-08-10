@@ -81,9 +81,9 @@ class SmartyFacesContext {
 			}
 		} else {
 			if(SmartyFaces::$config['compress_state']) {
-				self::$state=unserialize(gzinflate(base64_decode(self::$formData['sf_state_id'])));
+				self::$state=unserialize(gzinflate(base64_decode(self::$formData['sf_state_data'])));
 			} else {
-				self::$state=unserialize(base64_decode(self::$formData['sf_state_id']));
+				self::$state=unserialize(base64_decode(self::$formData['sf_state_data']));
 			}
 		}
 
