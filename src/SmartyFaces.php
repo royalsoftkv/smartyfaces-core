@@ -510,6 +510,8 @@ class SmartyFaces {
 		if(SmartyFaces::$logging) {
 			jQuery("#sf-log")->html(SmartyFacesLogger::fillLog());
 		}
+		ob_end_clean();
+		ob_start();
 		jQuery::getResponse();
 		exit();
 
