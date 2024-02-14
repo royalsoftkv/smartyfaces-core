@@ -714,8 +714,14 @@ class SmartyFaces {
 			$validator=substr($validator, 2,-1);
 			eval($validator.";");
 		} else {
-			$str=$validator."(\$formData,\$id);";
-			eval($str);
+			if(empty($validator)) {
+				return;
+			}
+			try {
+				$str=$validator."(\$formData,\$id);";
+				eval($str);
+			} catch (Throwable $e) {
+			}
 		}
 	}
 
