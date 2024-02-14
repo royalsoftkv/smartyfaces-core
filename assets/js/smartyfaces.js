@@ -27,7 +27,9 @@ php.error = function (xmlEr, typeEr, except) {
     SF.onError(xmlEr);
 };
 
-
+php.messages.defaultCallBack = function(msg, params) {
+	alert(msg);
+}
 
 SF = {
 		
