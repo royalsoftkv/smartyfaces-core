@@ -44,9 +44,9 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
     if($params==null and $template==null) return $attributes;
     $params=SmartyFacesComponent::proccessAttributes($tag, $attributes, $params);
     extract($params);
-    
-	$this_tag_stack=&$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-1][2];
-	
+
+	$this_tag_stack=&$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][2];
+
 	$this_tag_stack['params']=$params;
 	
 	if (is_null($content)) {
@@ -102,10 +102,10 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
         return "";
     }
     
-    $first_pass=$this_tag_stack['first_pass'];
+    $first_pass=@$this_tag_stack['first_pass'];
     $columns=array();
     if(isset($this_tag_stack['columns'])) $columns=$this_tag_stack['columns'];
-	$data=$this_tag_stack['data'];
+	$data=@$this_tag_stack['data'];
     if($first_pass) {
     	if(isset($this_tag_stack['facets']['header'])) $header=$this_tag_stack['facets']['header']['content'];
     	if($header!=null) {
@@ -227,9 +227,11 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 
 function _getAttributes($attributes) {
 	$attr=array();
-	foreach($attributes as $name=>$value) {
-		if(strlen($value)>0) {
-			$attr[]="$name=\"$value\"";
+	if(is_array($attributes)) {
+		foreach($attributes as $name=>$value) {
+			if(strlen($value)>0) {
+				$attr[]="$name=\"$value\"";
+			}
 		}
 	}
 	if(count($attr)>0) {
@@ -242,14 +244,14 @@ function _getAttributes($attributes) {
 
 function _displayTable($this_tag_stack, $template) {
 	//echo '<pre>'.print_r($this_tag_stack['table'],true).'</pre>';
-	$attributes=$this_tag_stack['table']['attributes'];
+	$attributes=@$this_tag_stack['table']['attributes'];
 	$s="";
 	$responsive=$this_tag_stack['params']['responsive'];
 	if($responsive){
 		$s.='<div class="table-responsive">';
 	}
 	$s.="<table"._getAttributes($attributes).">";
-	$hasdata = (count($this_tag_stack['table']['rows'])>0 and !isset($this_tag_stack['empty_data']));
+	$hasdata = (isset($this_tag_stack['table']['rows']) && count($this_tag_stack['table']['rows'])>0 and !isset($this_tag_stack['empty_data']));
 	if($hasdata) {
 		if(isset($this_tag_stack['table']['rows'][0]['cells'])) {
 			$colspan=count($this_tag_stack['table']['rows'][0]['cells']);

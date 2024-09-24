@@ -11,8 +11,8 @@ function smarty_block_sf_form($params, $content, $template, &$repeat)
     $attributes['class']['default']="";
     if($params==null and $template==null) return $attributes;
     extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
-    
-    $this_tag_stack=&$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-1][2];
+
+    $this_tag_stack=&$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][2];
     //$id=SmartyFacesComponent::getParameter($tag, "id", uniqid(), $params);
     SmartyFacesComponent::createComponent($id, $tag, $params);
     
@@ -88,7 +88,7 @@ function smarty_block_sf_form($params, $content, $template, &$repeat)
     }
     
     if(count(SmartyFacesContext::$default_button)>0) {
-    	$script='SF.setDeafultButton("'.$this_tag_stack['id'].'",'.json_encode(SmartyFacesContext::$default_button).')';
+    	$script='SF.setDeafultButton("'.@$this_tag_stack['id'].'",'.json_encode(SmartyFacesContext::$default_button).')';
     	SmartyFaces::addScript($script);
     }
 
