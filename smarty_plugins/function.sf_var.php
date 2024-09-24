@@ -18,7 +18,7 @@ function smarty_function_sf_var($params, $template)
     if($params==null and $template==null) return $attributes;
     extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
     
-    $parent_tag=&$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-1];
+    $parent_tag=&$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1];
     $parent_tag_name=$parent_tag[0];
    	if($parent_tag_name!="sf_form") {
    		throw new Exception("sf_var tag must be within sf_form tag!");

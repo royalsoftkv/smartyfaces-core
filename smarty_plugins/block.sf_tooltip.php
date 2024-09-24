@@ -28,6 +28,7 @@ function smarty_block_sf_tooltip($params, $content, $template, &$repeat) {
     
     $div=new TagRenderer("div",true);
     $div->setAttribute("class", "ui-helper-hidden");
+    $div->setAttribute("style", "display: none;");
     $div->setId("$for-content");
     $div->setValue($content);
     $s=$div->render();

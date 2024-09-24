@@ -24,17 +24,17 @@ function smarty_block_sf_repeat($params, $content, $template, &$repeat)
     		$count=$value;
     	}
 	    $index=0;
-	    $template->smarty->_tag_stack[count($template->smarty->_tag_stack)-1][2]['count']=$count;
-	    $template->smarty->_tag_stack[count($template->smarty->_tag_stack)-1][2]['index']=$index;
+	    $template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][2]['count']=$count;
+	    $template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][2]['index']=$index;
 	    $template->assign($var,$value[$index]);
 	    $repeat=true;
         return;
     }
-    $count=$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-1][2]['count'];
-    $index=$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-1][2]['index'];
+    $count=$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][2]['count'];
+    $index=$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][2]['index'];
     //echo "[$index/$count]";
     $index++;
-    $template->smarty->_tag_stack[count($template->smarty->_tag_stack)-1][2]['index']=$index;
+    $template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][2]['index']=$index;
    
     $repeat=($index<$count);
     if($repeat==false){

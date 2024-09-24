@@ -42,9 +42,9 @@ function smarty_block_sf_column($params, $content, $template, &$repeat)
 	extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
 	
 	
-	if(strlen($sortby ?? "")>0) {
-		$params['action']='#['.$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-2][1]['datamodel'].'->sort()]';
-		$col_id=$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-2][2]['table']['attributes']['id']."-".$id;
+	if(strlen($sortby)>0) {
+		$params['action']='#['.$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-2][1]['datamodel'].'->sort()]';
+		$col_id=$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-2][2]['table']['attributes']['id']."-".$id;
 		SmartyFacesComponent::createComponent($col_id, $tag, $params, array("sortby"));
 	}
 	
@@ -53,8 +53,8 @@ function smarty_block_sf_column($params, $content, $template, &$repeat)
 		return;
 	}
 	
-	$parent_tag_stack=&$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-2][2];
-	$this_tag_stack=&$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-1][2];
+	$parent_tag_stack=&$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-2][2];
+	$this_tag_stack=&$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][2];
     $first_pass=$parent_tag_stack['first_pass'];
 	$visibleColumns = $parent_tag_stack['params']['visibleColumns'];
     

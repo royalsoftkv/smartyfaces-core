@@ -20,10 +20,10 @@ function smarty_function_sf_paginator($params, $template)
     
 
     if($value==null) {
-    	$value=$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-2][1]['value'];
+    	$value=$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-2][1]['value'];
     }
     if($datamodel==null) {
-    	$datamodel=$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-2][1]['datamodel'];
+    	$datamodel=$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-2][1]['datamodel'];
     }
     
     $params['action']='#['.$datamodel.'->paginate()]';

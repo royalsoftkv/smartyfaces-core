@@ -23,7 +23,7 @@ function smarty_block_sf_tabs($params, $content, $template, &$repeat)
 	
 	SmartyFacesComponent::createComponent($id, $tag, $params);
 
-	$this_tag_stack=&$template->smarty->_tag_stack[count($template->smarty->_tag_stack)-1][2];
+	@$this_tag_stack=$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][2];
 	
 	if(is_null($content)){
 		return;
@@ -67,25 +67,27 @@ function smarty_block_sf_tabs($params, $content, $template, &$repeat)
 		$tab_content=new TagRenderer("div",true);
 		$tab_content->setAttribute("class", "tab-content");
 	}
-	
-	foreach($this_tag_stack['tabs'] as $index=>$tab) {
-		$tab_div=new TagRenderer("div",true);
-		$tab_div->setId("$id-tabs-$index");
-		if(SmartyFaces::$skin=="bootstrap") {
-			$tab_div->setAttribute("class", "tab-pane");
-			if($value==$index) {
-				$tab_div->appendAttribute("class", "active");
-			}
-		}
-		if(($action!==null and $value==$index) or $action===null) {
-			$tab_div->setValue($tab['content']);
-		}
-		if(SmartyFaces::$skin=="bootstrap") {
-			$tab_content->addHtml($tab_div->render());
-		} else {
-			$div->addHtml($tab_div->render());
-		}
-	}
+
+    if(isset($this_tag_stack['tabs'])) {
+        foreach ($this_tag_stack['tabs'] as $index => $tab) {
+            $tab_div = new TagRenderer("div", true);
+            $tab_div->setId("$id-tabs-$index");
+            if (SmartyFaces::$skin == "bootstrap") {
+                $tab_div->setAttribute("class", "tab-pane");
+                if ($value == $index) {
+                    $tab_div->appendAttribute("class", "active");
+                }
+            }
+            if (($action !== null and $value == $index) or $action === null) {
+                $tab_div->setValue($tab['content']);
+            }
+            if (SmartyFaces::$skin == "bootstrap") {
+                $tab_content->addHtml($tab_div->render());
+            } else {
+                $div->addHtml($tab_div->render());
+            }
+        }
+    }
 	
 	if(SmartyFaces::$skin=="bootstrap") {
 		$div->addHtml($tab_content->render());
