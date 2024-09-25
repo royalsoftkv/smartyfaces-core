@@ -25,10 +25,15 @@ function _getallheaders()
 	}
 }
 
+class My_Security_Policy extends Smarty_Security {
+	public $static_classes = [];
+	public $php_functions = [];
+}
+
 class SmartyFaces {
 
 	public static $signature="0.4.1 12.03.2019";
-	public static $versions="Smarty 3.1.18 - jQuery 1.11.1 - jQuery UI 1.10.4 - PHP ActiveRecord 1.0 - Bootstrap 3.3.4";
+	public static $versions="Smarty ".Smarty::SMARTY_VERSION." - jQuery 1.11.1 - jQuery UI 1.10.4 - PHP ActiveRecord 1.0 - Bootstrap 3.3.4";
 
 	const DEFAULT_VIEW_NAME="home";
 
@@ -180,6 +185,7 @@ class SmartyFaces {
 
 	public static function configureSmarty(Smarty $smarty){
 		$smarty->addTemplateDir(self::resolvePath(self::$config['view_dir']));
+		$smarty->addTemplateDir(self::resolvePath(self::$config['tmp_dir']."/subview"));
 		$smarty->addPluginsDir(dirname(dirname(__FILE__))."/smarty_plugins");
 		require_once dirname(__FILE__)."/SmartyFacesFilter.php";
 		$smarty->registerFilter("pre",array("SmartyFacesFilter","filter"));
@@ -189,6 +195,8 @@ class SmartyFaces {
 		if(property_exists($smarty, 'inheritance_merge_compiled_includes')) {
 			$smarty->inheritance_merge_compiled_includes = false;
 		}
+//		$smarty->disableSecurity();
+		$smarty->enableSecurity('My_Security_Policy');
 		self::$smarty=$smarty;
 		self::$smarty->assign(self::$globalAssign);
 	}
