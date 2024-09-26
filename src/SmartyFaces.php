@@ -33,7 +33,7 @@ class My_Security_Policy extends Smarty_Security {
 class SmartyFaces {
 
 	public static $signature="0.4.1 12.03.2019";
-	public static $versions="Smarty ".Smarty::SMARTY_VERSION." - jQuery 1.11.1 - jQuery UI 1.10.4 - PHP ActiveRecord 1.0 - Bootstrap 3.3.4";
+	public static $versions="Smarty ".Smarty::SMARTY_VERSION." - jQuery 3.7.1 - jQuery UI 1.10.4 - PHP ActiveRecord 1.0 - Bootstrap 3.3.4";
 
 	const DEFAULT_VIEW_NAME="home";
 
