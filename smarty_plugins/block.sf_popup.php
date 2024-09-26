@@ -38,9 +38,9 @@ function smarty_block_sf_popup($params, $content, $template, &$repeat)
     );
     $attributes['draggable']=array(
     	'required'=>false,
-    	'default'=>true,
+    	'default'=>false,
     	'type'=>'bool',
-    	'desc'=>'Define if modal popup can be dragged by its header'
+    	'desc'=>'(deprecated) Define if modal popup can be dragged by its header'
     );
     if($params==null and $template==null) return $attributes;
     extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
@@ -147,10 +147,7 @@ function smarty_block_sf_popup($params, $content, $template, &$repeat)
 				 $("#'.$id.'").on("hidden.bs.modal", function (e) {
 					'.SmartyFacesComponent::buildJsAction($params).'
 				});';
-		if($draggable) {
-			$script.='$("#'.$id.' .modal-dialog").parent().draggable({handle:".modal-header",cursor: "pointer"});';
-		}
-		
+
 		$s.=SmartyFaces::addScript($script);
 	}
     

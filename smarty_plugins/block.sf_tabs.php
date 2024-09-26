@@ -14,7 +14,7 @@ function smarty_block_sf_tabs($params, $content, $template, &$repeat)
 	);
 	$attributes['load']=array(
 			'required'=>false,
-			'default'=>true,
+			'default'=>false,
 			'type'=>'bool',
 			'desc'=>'Set false to prevent load with javascript'
 	);
