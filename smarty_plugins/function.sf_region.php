@@ -15,7 +15,7 @@ function smarty_function_sf_region($params, $template)
     if($params==null and $template==null) return $attributes;
     extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
     
-	SmartyFacesContext::$regions[$params['id']]=$value;
+	SmartyFacesContext::$regions[$params['id']]=$params;
 	
 	if(!$rendered) return;
 	

@@ -502,9 +502,7 @@ class SmartyFaces {
 			//$output.=$s;
 			jQuery("div#$sf_view_id")->html($output);
 		} else {
-			$region_content=SmartyFacesContext::$regions[$update_id];
-			$output=self::$smarty->fetch("string:".$region_content,null, $update_id);
-			jQuery("div#$sf_view_id #$update_id")->html($output);
+			self::processRegionUpdate($sf_view_id, $update_id);
 		}
 		// handle oncomplete
 		if(SmartyFacesValidator::passed() and isset($sf_action_component['params']['oncomplete'])) {
@@ -521,6 +519,25 @@ class SmartyFaces {
 		jQuery::getResponse();
 		exit();
 
+	}
+
+	static function processRegionUpdate($sf_view_id, $update_id) {
+		$region_content=SmartyFacesContext::$regions[$update_id]['value'];
+		$assign = SmartyFacesContext::$regions[$update_id]['assign'];
+		if($assign!=null) {
+			if(is_array($assign)) {
+				$vars=$assign;
+			} else {
+				$vars[]=$assign;
+			}
+			foreach($vars as $var) {
+				$val = SmartyFacesContext::lookup($var, null);
+				self::$smarty->assign($var,$val);
+			}
+
+		}
+		$output=self::$smarty->fetch("string:".$region_content,null, $update_id);
+		jQuery("div#$sf_view_id #$update_id")->html($output);
 	}
 
 	static function processEvent() {
@@ -597,9 +614,7 @@ class SmartyFaces {
 				$update_id="";
 				if(isset($event['update'])) $update_id=$event['update'];
 				if($update_id) {
-					$region_content=SmartyFacesContext::$regions[$update_id];
-					$output=self::$smarty->fetch("string:".$region_content,null, $update_id);
-					jQuery("div#$sf_view_id #$update_id")->html($output);
+					self::processRegionUpdate($sf_view_id, $update_id);
 				} else {
 					// update whole view
 					if(isset($formData['sf_template'])) {
