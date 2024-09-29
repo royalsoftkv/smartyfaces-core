@@ -195,10 +195,10 @@ class SmartyFacesComponent {
     static function getFormControlValidationClass($id) {
     	if(isset(SmartyFacesMessages::$messages[$id][0])){
     		$type=SmartyFacesMessages::$messages[$id][0]['type'];
-    		if($type==SmartyFacesMessages::ERROR) return "has-error";
-    		if($type==SmartyFacesMessages::WARNING) return "has-warning";
-    		if($type==SmartyFacesMessages::SUCCESS) return "has-success";
-    		if($type==SmartyFacesMessages::INFO) return "has-success";
+    		if($type==SmartyFacesMessages::ERROR) return "has-error text-danger";
+    		if($type==SmartyFacesMessages::WARNING) return "has-warning text-warning";
+    		if($type==SmartyFacesMessages::SUCCESS) return "has-success text-success";
+    		if($type==SmartyFacesMessages::INFO) return "has-success text-info";
     	}
     }
     

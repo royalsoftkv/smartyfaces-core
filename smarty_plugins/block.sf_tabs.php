@@ -43,12 +43,15 @@ function smarty_block_sf_tabs($params, $content, $template, &$repeat)
     if(isset($this_tag_stack['tabs'])) {
         foreach ($this_tag_stack['tabs'] as $index => $tab) {
             $li = new TagRenderer("li", true);
-            $li->setAttributeIfExists("class", $value == $index ? "active" : "");
+            $li->setAttribute("role","presentation");
+            $li->setAttribute("class","nav-item");
             $a = new TagRenderer("a", true);
             $a->setAttribute("href", "#$id-tabs-$index");
+            $a->setAttribute("class", $value == $index ? "nav-link active" : "nav-link");
             if (SmartyFaces::$skin == "bootstrap") {
                 if ($action === null) {
-                    $a->setAttribute("data-toggle", "tab");
+                    $a->setAttribute("data-bs-toggle", "tab");
+                    $a->setAttribute("data-bs-target", "#$id-tabs-$index");
                 } else {
                     $a->setAttribute("onclick", 'SF.tabs.bs_action(\'' . $id . '\',' . $index . '); return false;');
                 }
