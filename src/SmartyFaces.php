@@ -316,6 +316,7 @@ class SmartyFaces {
 		if(self::$skin=="bootstrap") {
 			//must done this way because of fonts linking
 			$resources[]=array("bootstrap/css/bootstrap.min.css",1);
+			$resources[]=array("font-awesome/css/font-awesome.min.css",1);
 //			$resources[]=array("bootstrap/css/bootstrap-theme.min.css",1);
 		}
 		$resources[]=["smartyfaces/css/smartyfaces.css",1];

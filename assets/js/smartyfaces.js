@@ -425,9 +425,9 @@ SF.tabs = {
 
 SF.reorder = {
 	save:function(el) {
-		var table=$(el).closest("table.ui-sortable");
-		var order=table.data("order_string");
-		if(order!=undefined){
+		let table=$(el).closest("table.ui-sortable");
+		let order=table.data("order_string");
+		if(order){
 			SF.a(el,null,{action:'save',param:{order:order}});
 		}
 	},
@@ -435,41 +435,28 @@ SF.reorder = {
 		SF.a(el,null,{action:'move',param:{direction:direction,row:row}});
 	},
 	init:function(id) {
-		var table=$("table#"+id);
-		table.addClass("ui-sortable");
-		table.sortable({
-			items:'tr',
-			axis:'y',
+		let table=$("table#"+id);
+		table.addClass('ui-sortable');
+		let bodyEl = table.find("tbody").get(0);
+
+		let sortable = new Sortable(bodyEl, {
+			direction: 'vertical',
 			handle:'.order_handle',
-			appendTo: document.body,
-			forceHelperSize: true,
-			forcePlaceholderSize: true,
-			stop:function(event, ui){
+			onUpdate: function (/**Event*/evt) {
+				let s = [];
 				table.find("> tbody > tr").each(function(index){
+					let id=$(this).attr("order-id");
 					$(this).find("span.ordinal").html(index+1);
-				});
-			},
-			helper: function(e, ui) {
-				ui.children().each(function() {
-					$(this).width($(this).width());
-				});
-				return ui;
-			},
-			update:function() {
-				var s = new Array();
-				table.find("> tbody > tr").each(function(index){
-					var id=$(this).attr("order-id");
 					s[index]=id;
 				});
-				var order = s.join(",");
+				let order = s.join(",");
 				console.log(order);
 				table.data("order_string",order);
-			}
-		}); 
+			},
+		});
 		table.find("> tbody > tr").each(function(index){
 			$(this).attr("order-id",index);
 		});
-
 	}
 };
 

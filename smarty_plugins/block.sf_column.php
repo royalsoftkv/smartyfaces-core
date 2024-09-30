@@ -62,6 +62,15 @@ function smarty_block_sf_column($params, $content, $template, &$repeat)
     	$repeat=false;
     	return;
     }
+
+	static $attached_sortable_js;
+	if($reorder) {
+		if(!$attached_sortable_js && !SmartyFaces::$ajax) {
+			$url = SmartyFaces::getResourcesUrl() ."/sortablejs/Sortable.min.js";
+			SmartyFaces::addScript($url, true);
+			$attached_sortable_js = true;
+		}
+	}
 	
 	if (is_null($content)) {
     	if($first_pass) {
@@ -113,7 +122,7 @@ function _createReorderHeader($id) {
 	$a->setAttribute("href", "#");
 	$a->setAttribute("onclick", "SF.reorder.save(this);return false");
 	$a->setAttribute("class", "btn btn-default btn-xs");
-	$a->setValue('<span class="glyphicon glyphicon-floppy-disk text-primary"></span>');
+	$a->setValue('<span class="fa fa-save"></span>');
 	$s= $a->render();
 	return $s;
 }
@@ -123,44 +132,45 @@ function _getReorderContent($id,$index,$count) {
 	$last=($index==$count-1);
 	
 	$div_group=new TagRenderer("div",true);
-	$div_group->setAttribute("class", "btn-group");
-	
+	$div_group->setAttribute("class", "btn-group btn-group-sm");
+	$div_group->setAttribute("role", "group");
+
 	$btn_top=new TagRenderer("button",true);
 	$btn_top->setAttribute("id", $id);
-	$btn_top->setAttribute("class", "btn btn-default btn-xs");
+	$btn_top->setAttribute("class", "btn btn-outline-secondary");
 	if($first) $btn_top->appendAttribute("class", "disabled");
 	$btn_top->setAttribute("type", "button");
 	$btn_top->setAttribute("onclick", "SF.reorder.move(this,'top',$index)");
-	$btn_top->setValue('<span class="ui-icon ui-icon-arrowthickstop-1-n"></span>');
+	$btn_top->setValue('<span class="fa fa-angle-double-up"></span>');
 	
 	$btn_up=new TagRenderer("button",true);
 	$btn_up->setAttribute("id", $id);
-	$btn_up->setAttribute("class", "btn btn-default btn-xs");
+	$btn_up->setAttribute("class", "btn btn-outline-secondary");
 	if($first) $btn_up->appendAttribute("class", "disabled");
 	$btn_up->setAttribute("type", "button");
 	$btn_up->setAttribute("onclick", "SF.reorder.move(this,'up',$index)");
-	$btn_up->setValue('<span class="ui-icon ui-icon-arrowthick-1-n"></span>');
+	$btn_up->setValue('<span class="fa fa-angle-up"></span>');
 	
 	$btn_pos=new TagRenderer("div",true);
-	$btn_pos->setAttribute("class", "btn btn-xs");
+	$btn_pos->setAttribute("class", "btn");
 	$btn_pos->setAttribute("style", "width:40px");
-	$btn_pos->setValue('<span class="badge ordinal order_handle">'.($index+1).'</span>');
+	$btn_pos->setValue('<span class="badge bg-secondary ordinal order_handle">'.($index+1).'</span>');
 	
 	$btn_down=new TagRenderer("button",true);
 	$btn_down->setAttribute("id", $id);
-	$btn_down->setAttribute("class", "btn btn-default btn-xs");
+	$btn_down->setAttribute("class", "btn btn-outline-secondary");
 	if($last) $btn_down->appendAttribute("class", "disabled");
 	$btn_down->setAttribute("type", "button");
 	$btn_down->setAttribute("onclick", "SF.reorder.move(this,'down',$index)");
-	$btn_down->setValue('<span class="ui-icon ui-icon-arrowthick-1-s"></span>');	
+	$btn_down->setValue('<span class="fa fa-angle-down"></span>');
 	
 	$btn_bottom=new TagRenderer("button",true);
 	$btn_bottom->setAttribute("id", $id);
-	$btn_bottom->setAttribute("class", "btn btn-default btn-xs");
+	$btn_bottom->setAttribute("class", "btn btn-outline-secondary");
 	if($last) $btn_bottom->appendAttribute("class", "disabled");
 	$btn_bottom->setAttribute("type", "button");
 	$btn_bottom->setAttribute("onclick", "SF.reorder.move(this,'bottom',$index)");
-	$btn_bottom->setValue('<span class="ui-icon ui-icon-arrowthickstop-1-s"></span>');	
+	$btn_bottom->setValue('<span class="fa fa-angle-double-down"></span>');
 	
 	$div_group->addHtml($btn_top->render());
 	$div_group->addHtml($btn_up->render());

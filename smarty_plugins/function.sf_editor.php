@@ -120,8 +120,6 @@ function smarty_function_sf_editor($params, $template)
 						$s.=SmartyFaces::addScript($url, true);
 					}
 				}
-				$url = SmartyFaces::getResourcesUrl() ."/font-awesome/css/font-awesome.min.css";
-				$s.='<link type="text/css" rel="stylesheet" href="'.$url.'">';
 				$url = SmartyFaces::getResourcesUrl() ."/summernote/summernote.css";
 				$s.='<link type="text/css" rel="stylesheet" href="'.$url.'">';
 				$attached_ext_editor = true;
