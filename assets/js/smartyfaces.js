@@ -133,15 +133,15 @@ SF = {
 	},
 	
 	setDeafultButton:function(form_id, button_ids) {
-		var form = $("form#"+form_id);
+		let form = $("form#"+form_id);
 		form.keypress(function (e) {
 			if ($(e.target).is("textarea")) {
 				return true;
 			}
-			if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+			if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
 
-                for(var button_id in button_ids) {
-                	var scope = button_ids[button_id];
+                for(let button_id in button_ids) {
+                	let scope = button_ids[button_id];
                 	if($(e.target).closest(scope).length>0) {
 		        		$('#'+button_id).click();
 		        		return false;

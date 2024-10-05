@@ -532,7 +532,8 @@ class SmartyFaces {
 				$vars[]=$assign;
 			}
 			foreach($vars as $var) {
-				$val = SmartyFacesContext::lookup($var, null);
+//				$val = SmartyFacesContext::lookup($var, null);
+				$val=self::$smarty->getTemplateVars($var);
 				self::$smarty->assign($var,$val);
 			}
 

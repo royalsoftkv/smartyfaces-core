@@ -18,8 +18,8 @@ function smarty_function_sf_commandbutton($params, $template)
     );
     $attributes['btnclass']=array(
     	'required'=>false,
-    	'default'=>'default',
-    	'desc'=>'Additional boostrap context class. Can be default, primary, success, info, warning and danger'		
+    	'default'=>'primary',
+    	'desc'=>'Additional boostrap context class'
     );
     $attributes['button']=array(
     	'required'=>false,
@@ -64,8 +64,7 @@ function smarty_function_sf_commandbutton($params, $template)
 	    $c=new TagRenderer("input",false);
     }
     $c->setCustom($custom);
-    if(SmartyFaces::$skin=="default") $class.=" sf-button";
-    if(SmartyFaces::$skin=="bootstrap") $class.=" btn btn-".$btnclass;
+    $class.=" btn btn-".$btnclass;
     $c->setAttributeIfExists("class", $class);
     $c->setAttributeIfExists("style", $style);
     $c->setAttributeIfExists("title", $title);
@@ -78,5 +77,3 @@ function smarty_function_sf_commandbutton($params, $template)
     $c->setAttribute("onclick", $confirm.$onclick.'SF.a(this,'.$action.','.$data_str.'); return false;');
     return $c->render();
 }
-
-?>
