@@ -17,7 +17,7 @@ function smarty_function_sf_image($params, $template)
     $attributes['type']=array(
     	'required'=>false,
     	'default'=>'gif',
-    	'desc'=>'Type of image to output for Base64 encoded data'		
+    	'desc'=>'(deprecated) Type of image to output for Base64 encoded data'
     );
     $attributes['width']=array(
     	'required'=>false,
@@ -87,25 +87,26 @@ function smarty_function_sf_image($params, $template)
 	    	$src.="&".time();
 	    }
     } else {
-    	$src='data:image/'.$type.';base64,'.$data;
+        if(strpos($data, "data:image/")===0) {
+            $src = $data;
+        } else {
+            $src='data:image/'.$type.';base64,'.$data;
+        }
     }
     
-    if($responsive && SmartyFaces::$skin=="bootstrap") $class.=" img-responsive";
+    if($responsive) $class.=" img-fluid";
     
     $image=new TagRenderer("img");
     $image->setAttribute("src", $src);
-    if(SmartyFaces::$skin=="bootstrap" && $responsive) {
+    if(!$responsive) {
     	$style="";
     	if($width) $style.="width:{$width}px;";
     	if($height) $style.="height:{$height}px;";
     	$image->setAttribute("style", $style);
-    } else {
-	    $image->setAttribute("width", $width);
-	    $image->setAttribute("height", $height);
     }
     $image->setAttributeIfExists("class", $class);
     $image->setAttributeIfExists("style", $style);
-    
+
     return $image->render();
 }
 

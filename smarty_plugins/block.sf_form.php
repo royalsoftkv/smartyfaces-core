@@ -101,4 +101,3 @@ function smarty_block_sf_form($params, $content, $template, &$repeat)
     
 }
 
-?>
