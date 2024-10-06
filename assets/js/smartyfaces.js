@@ -295,24 +295,22 @@ SF.ajax = {
 SF.upload = {
 		
 	submit: function(el,id) {
-		form=$(el).closest("form");
+		let form=$(el).closest("form");
 		form.attr("target","sf_iframe");
 		form.attr("enctype","multipart/form-data");
 		form.attr("action",SF.ajax.url+"&file_upload=true&sf_source="+el.id+"&form_id="+form.attr("id"));
-		form.find("#"+id+"_div #sf_upload_form").css("display","none");
-		form.find("#"+id+"_div #sf_upload_process").css("display","block");
+		form.find("#sf_upload_form").addClass('upload-sending');
 		form.find("#"+id+"_div #sf_upload_data").val(form.serialize());
 		form.submit();
 	},
 
 	stop: function(form_id,sf_source,files) {
-		form=$("#"+form_id);
+		let form=$("#"+form_id);
 		form.removeAttr("target");
 		form.attr("enctype","multipart/form-data");
 		form.attr("action","");
-		form.find("#sf_upload_form").css("display","inline-table");
-		form.find("#sf_upload_process").css("display","none");
-		data={
+		form.find("#sf_upload_form").removeClass('upload-sending');
+		let data={
 				sf_form_data:form.serialize(),
 		        sf_source:sf_source,
 		        sf_files:files
@@ -321,18 +319,19 @@ SF.upload = {
 	},
 	
 	abort:function(form_id,id,error) {
-		form=$("#"+form_id);
+		let form=$("#"+form_id);
 		form.removeAttr("target");
 		form.removeAttr("enctype");
 		form.attr("action","");
 		form.find("#"+id).val("");
-		form.find("#"+id+"_div #sf_upload_process").css("display","none");
-		form.find("#"+id+"_div #sf_upload_error").css("display","block");
+		form.find("#sf_upload_form").removeClass('upload-sending');
+		form.find("#sf_upload_form input[type=file]").addClass('is-invalid');
+		form.find("#"+id+"_div #sf_upload_error").show();
 		form.find("#"+id+"_div #sf_upload_error_msg").html(error);		
 	},
 	
 	reset:function(id) {
-		$("#"+id+"_div #sf_upload_form").css("display","inline-table");
+		$("#"+id+"_div input[type=file]").removeClass('is-invalid');
 		$("#"+id+"_div #sf_upload_error").css("display","none");		
 	}
 		
@@ -466,5 +465,13 @@ SF.socket = {
 		socket.on('connect', function (data) {
 			console.log("connected");
 		});
+	}
+};
+
+SF.popup = {
+	open(id) {
+		let options = {};
+		let modal = new bootstrap.Modal(document.getElementById(id), options);
+		modal.show();
 	}
 };

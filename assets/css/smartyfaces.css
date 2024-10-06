@@ -201,14 +201,6 @@ a[disabled] img {
 .skin-bootstrap .datepicker-group {
 	width:200px;
 }
-.skin-bootstrap .upload-group input[type=file] {
-	font-size:11px;
-	padding:0px;
-	height:30px;
-}
-.skin-bootstrap .upload-group button[type=submit] {
-	height:30px;
-}
 .skin-bootstrap #sf_upload_error .alert{
 	padding:3px;
 	margin-bottom: 0px;
@@ -218,6 +210,43 @@ a[disabled] img {
 	height: 30px;
 	line-height:30px;
 }
+.upload-group.upload-sending input[type=file] {
+	pointer-events: none;
+}
+
+.upload-sending button {
+	position: relative;
+}
+
+.upload-sending button::after {
+	content: '';
+	display: block;
+	width: 1.5em;
+	height: 1.5em;
+	position: absolute;
+	left: calc(50% - 0.75em);
+	top: calc(50% - 0.75em);
+	border: 0.2em solid white;
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: loading-anim 0.7s linear infinite;
+}
+
+@keyframes loading-anim {
+	from {
+		transform: rotate(0);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.upload-sending button {
+	color: transparent;
+	opacity:0.8;
+	pointer-events: none;
+}
+
 .skin-bootstrap .pagination li span.glyphicon {
 	padding:3px 0px;
 }

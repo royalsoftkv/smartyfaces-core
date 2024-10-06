@@ -116,7 +116,7 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 					continue;
 				}
     			$cell['content']=$column['header'];
-    			$cell['attributes']['class']=(SmartyFaces::$skin=="default" ? "sf-columnheader " : "").$column['class'];
+    			$cell['attributes']['class']="aaa".(SmartyFaces::$skin=="default" ? "sf-columnheader " : "").$column['class'];
     			$cell['attributes']['width']=$column['width'];
     			$cell['attributes']['title']=$column['title'];
     			$cell['attributes']['align']=$column['align'];

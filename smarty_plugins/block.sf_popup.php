@@ -148,6 +148,8 @@ function smarty_block_sf_popup($params, $content, $template, &$repeat)
 					'.SmartyFacesComponent::buildJsAction($params).'
 				});';
 
+        $script='SF.popup.open("'.$id.'")';
+
 		$s.=SmartyFaces::addScript($script);
 	}
     

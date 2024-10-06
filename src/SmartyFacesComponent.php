@@ -186,7 +186,7 @@ class SmartyFacesComponent {
     			$m=$message['message'];
     			$msg_class="d-sf-msg-".$type;
 				if($type=="error") {
-					$msg_class.=" invalid-feedback";
+					$msg_class.=" invalid-feedback2";
 				}
     			$errors[]='<span class="'.$msg_class.'">'.$m.'</span>';
     		}
@@ -198,9 +198,9 @@ class SmartyFacesComponent {
     static function getFormControlValidationClass($id) {
     	if(isset(SmartyFacesMessages::$messages[$id][0])){
     		$type=SmartyFacesMessages::$messages[$id][0]['type'];
-    		if($type==SmartyFacesMessages::ERROR) return "invalid-feedback";
+    		if($type==SmartyFacesMessages::ERROR) return "";
     		if($type==SmartyFacesMessages::WARNING) return "";
-    		if($type==SmartyFacesMessages::SUCCESS) return "valid-feedback";
+    		if($type==SmartyFacesMessages::SUCCESS) return "";
     		if($type==SmartyFacesMessages::INFO) return "";
     	}
     }

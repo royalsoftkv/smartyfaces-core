@@ -13,6 +13,7 @@ function smarty_block_sf_facet($params, $content, $template, &$repeat)
     );
     if($params==null and $template==null) return $attributes;
     extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
+    if(!$rendered) return;
     
     $parent_tag_stack=&$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-2][2];
     if(is_null($content)){
@@ -22,5 +23,3 @@ function smarty_block_sf_facet($params, $content, $template, &$repeat)
     $parent_tag_stack['facets'][$name]['params']=$params;
     return;
 }
-
-?>
