@@ -224,13 +224,6 @@ a[disabled] img {
 .skin-bootstrap .paginator .pagination {
 	margin:0px;
 }
-.skin-bootstrap .paginator select {
-	width:auto;
-	float:right;
-	padding:2px;
-	height:auto;
-	margin-left:5px;
-}
 .skin-bootstrap .pl-select {
 	width:44%;
 }
