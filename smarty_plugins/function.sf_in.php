@@ -10,7 +10,7 @@ function smarty_function_sf_in($params, $template)
     	'required'=>true,'desc'=>'Name of the bean instance used in view'		
     );
     $attributes['scope']=array(
-    	'required'=>false,'default'=>'event','desc'=>'Scope of component. Can be: event, session, application'		
+    	'required'=>false,'default'=>'event','desc'=>'Scope of component. Can be: event, session, application (TODO)'
     );
     $attributes['args']=array(
     	'required'=>false,'default'=>null,'desc'=>'Array of arguments that will be passed to bean constructor'		
@@ -26,5 +26,3 @@ function smarty_function_sf_in($params, $template)
     SmartyFaces::$GLOBALS[$name]=$obj;
     $template->assignByRef($name,$obj);
 }
-
-?>

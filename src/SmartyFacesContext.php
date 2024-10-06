@@ -108,7 +108,7 @@ class SmartyFacesContext {
 	}
 
 	public static function restoreSessionState(){
-		$components = SFSession::get(['session','components'], []);
+		$components = SFSession::get(['SF_SESSION','components'], []);
 		if(isset(self::$components['session'])) {
 			self::$components['session']=array_merge(self::$components['session'],$components);
 		} else {
