@@ -9,11 +9,11 @@ function smarty_function_sf_datepicker($params, $template)
     $attributes['dateFormat']=array(
     			'required'=>false,
    				'default'=>"dd.mm.yy",
-   				'desc'=>'(deprecated) Date format used to display date in datepicker (Note: bootstrap theme uses moment.js date formats)');
+   				'desc'=>'(deprecated) Date format used to display date in datepicker');
     $attributes['buttonImage']=array(
    				'required'=>false,
    				'default'=>null,
-   				'desc'=>'(deprecated) Custom path to calendar image (not used for bootstrap skin)');
+   				'desc'=>'(deprecated) Custom path to calendar image');
     $attributes['bootstrapIcon']=array(
     		'required'=>false,
     		'default'=>"calendar",
@@ -21,9 +21,10 @@ function smarty_function_sf_datepicker($params, $template)
     $attributes['datepickerOptions']=array(
    				'required'=>false,
    				'default'=>array(),
-   				'desc'=>'Additional date picker options');
+   				'desc'=>'(deprecated) Additional date picker options');
     $attributes['action']['desc']='Ajax action invoked on change event';
-    $attributes['size']['desc']='Defines size of input text field for datepicker';
+    $attributes['size']['desc']='Defines size of input text field for datepicker (deprecated)';
+    $attributes['onclick']['desc']='(deprecated)';
 	$attributes['time']=array(
 		'required'=>false,
 		'default'=>false,
@@ -56,10 +57,11 @@ function smarty_function_sf_datepicker($params, $template)
     
     
     SmartyFacesContext::$bindings[$id]=$value;
+    $invalid = SmartyFacesComponent::validationFailed($id);
 	if(SmartyFaces::$validateFailed and !$disabled) {
     	$value = SmartyFacesContext::$formData[$id];
-		if(SmartyFacesComponent::validationFailed($id)) {
-			if(SmartyFaces::$skin=="default") $class.=" sf-vf";
+		if($invalid) {
+			$class.=" sf-vf is-invalid";
 		}
     } else {
 	    $value=  SmartyFaces::evalExpression($value);
@@ -84,14 +86,12 @@ function smarty_function_sf_datepicker($params, $template)
     $i=new TagRenderer("input",false);
     $i->setAttribute("type", $time ? "datetime-local" : "date");
     $i->setAttributeIfExists("style", $style);
-    if(Smartyfaces::$skin=="bootstrap") $class.=" form-control";
+    $class.=" form-control";
 	if(!$block) {
 		$class.=" width-auto";
 	}
     $i->setAttributeIfExists("class", $class);
     $i->setAttributeIfExists("title", $title);
-    $i->setAttributeIfExists("onclick", $onclick);
-    $i->setAttributeIfExists("size", $size);
     if($disabled) {
     	$i->setAttribute("disabled", "true");
     }
@@ -102,22 +102,14 @@ function smarty_function_sf_datepicker($params, $template)
 	$i->setValue($value);
     $i->setAttribute("onchange", $action);
     
-    if(SmartyFaces::$skin=="bootstrap") {
-		$s=$i->render();
-    	if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
-    		$m_div=new TagRenderer("div",true);
-    		$m_div->setAttribute("class", SmartyFacesComponent::getFormControlValidationClass($id));
-    		$span=new TagRenderer("span",true);
-    		$span->setAttribute("class", "help-block");
-    		$span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
-    		$m_div->setValue($span->render());
-    		$s.=$m_div->render();
-    	}
-    } else {
-	    $s=$i->render();
-	    if($attachMessage and !$disabled) $s.=SmartyFacesComponent::renderMessage($id);
+    $s=$i->render();
+    if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
+        $m_div=new TagRenderer("div",true);
+        $m_div->setAttribute("class", SmartyFacesComponent::getFormControlValidationClass($id));
+        $m_div->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
+        $s.=$m_div->render();
     }
-    
+
     return $s;
 }
 

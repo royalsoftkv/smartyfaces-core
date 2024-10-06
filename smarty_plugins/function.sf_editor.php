@@ -60,35 +60,29 @@ function smarty_function_sf_editor($params, $template)
 	}
 	SmartyFacesContext::$bindings[$id]=$value;
 
-	if(SmartyFaces::$validateFailed and !$disabled) {
+    $invalid = SmartyFaces::$validateFailed;
+	if($invalid and !$disabled) {
 		$value = SmartyFacesContext::$formData[$id];
-		if(SmartyFacesComponent::validationFailed($id)) {
-			if(SmartyFaces::$skin=="default") $class.=" sf-vf";
-		}
 	} else {
 		$value=  SmartyFaces::evalExpression($value);
 	}
 
 	$div=new TagRenderer("div",true);
-	if(SmartyFaces::$skin == "bootstrap") {
-		if(isset($_POST['sf_editor_height'][$id])) {
-			$heights = $_POST['sf_editor_height'][$id];
-			$heights_arr = explode(";", $heights);
-			$div_height = $heights_arr[0].'px';
-			$height =   $heights_arr[1];
-		} else {
-			$div_height = 'auto';
-		}
-		$div->setAttribute("style", "width:".$width.";height:".$div_height);
-	} else {
-		$div->setAttribute("style", "width:".$width.";height:".$height);
-	}
+    if(isset($_POST['sf_editor_height'][$id])) {
+        $heights = $_POST['sf_editor_height'][$id];
+        $heights_arr = explode(";", $heights);
+        $div_height = $heights_arr[0].'px';
+        $height =   $heights_arr[1];
+    } else {
+        $div_height = 'auto';
+    }
+    $div->setAttribute("style", "width:".$width.";height:".$div_height);
 	$ta=new TagRenderer($disabled ? "div" : "textarea",true);
-	$div->appendAttribute("class", "sf-editor");
-	if($disabled && SmartyFaces::$skin == "bootstrap") {
-		$div->setAttribute("class", "well well-sm sf-editor-disabled");
+    $c_class = $class . " sf-editor " . ($invalid ? "is-invalid" : "");
+	if($disabled) {
+        $c_class.=" well well-sm sf-editor-disabled bg-light border p-2";
 	}
-	$ta->setAttributeIfExists("class", $class);
+    $div->setAttribute("class",$c_class);
 	$ta->setIdAndName($id);
 	$ta->setValue($value);
 	$div->setValue($ta->render());

@@ -102,7 +102,7 @@ function smarty_function_sf_selectonemenu($params, $template)
     
     
     $select=new TagRenderer("select",true);
-    $select->setAttributeIfExists("class", $class);
+    $select->setAttributeIfExists("class", $class. " form-select");
     $select->passAttributes($attributes_values, array("style","title"));
     $select->setDisabled($disabled);
     $select->setIdAndName($id);
