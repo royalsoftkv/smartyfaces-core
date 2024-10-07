@@ -40,13 +40,12 @@ function smarty_function_sf_inputtextarea($params, $template)
     
     SmartyFacesContext::$bindings[$id]=$value;
     
-    if(SmartyFaces::$skin=="default") $class.=" sf-input sf-inputtextarea";
-    if(SmartyFaces::$skin=="bootstrap") $class.=" form-control";
+    $class.=" form-control width-auto";
     
 	if(SmartyFaces::$validateFailed and !$disabled) {
     	$value = SmartyFacesContext::$formData[$id];
 		if(SmartyFacesComponent::validationFailed($id)) {
-    		if(SmartyFaces::$skin=="default") $class.=" sf-vf";
+    		$class.=" sf-vf is-invalid";
     	}
     } else {
 	    $value=  SmartyFaces::evalExpression($value);
@@ -72,24 +71,16 @@ function smarty_function_sf_inputtextarea($params, $template)
     }
     $ta->setValue($value);
     
-    if(SmartyFaces::$skin=="bootstrap") {
-    	$span->addHtml($ta->render());
-    	 
-    	if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
-    		$msg_span=new TagRenderer("span",true);
-    		$msg_span->setAttribute("class", "help-block");
-    		$msg_span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
-    		$span->addHtml($msg_span->render());
-    	}
-    	 
-    	$s=$span->render();
-    	 
-    } else {
-    	$s=$ta->render();
-    	if($attachMessage and !$disabled) $s.=SmartyFacesComponent::renderMessage($id);
+    $span->addHtml($ta->render());
+
+    if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
+        $msg_span=new TagRenderer("span",true);
+        $msg_span->setAttribute("class", "invalid-feedback");
+        $msg_span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
+        $span->addHtml($msg_span->render());
     }
-    
+
+    $s=$span->render();
+
     return $s;
 }
-
-?>

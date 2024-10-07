@@ -9,7 +9,7 @@ function smarty_function_sf_paginator($params, $template)
     $attributes['datamodel']=array(
     	'required'=>false,
     	'default'=>null,
-    	'description'=>'Class of instance SmartyFacesDataModel representing data'		
+    	'desc'=>'Class of instance SmartyFacesDataModel representing data'
     );
     $attributes['value']['required']=false;
     $attributes['value']['default']=null;
@@ -32,5 +32,3 @@ function smarty_function_sf_paginator($params, $template)
     return $value->paginatorTemplate($id);
     
 }
-
-?>

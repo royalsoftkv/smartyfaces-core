@@ -26,7 +26,7 @@ function smarty_function_sf_link($params, $template){
     $attributes['viewvar']=array(
     	"required"=>false,
     	"default"=>SmartyFaces::$config['view_var_name'],
-    	"desc"=>"URL variable for linking view"		
+    	"desc"=>"(deprecated) URL variable for linking view"
     );
     $attributes['confirm']=array(
     		'required'=>false,
@@ -52,7 +52,8 @@ function smarty_function_sf_link($params, $template){
     
     $index_file=SmartyFaces::$config['index_file'];
     $server_url=SmartyFaces::$config['server_url'];
-    
+
+    $viewvar=SmartyFaces::$config['view_var_name'];
     $href="$server_url/$index_file?$viewvar=$view";
     $onclick="";
     if($action!=null){
@@ -63,8 +64,10 @@ function smarty_function_sf_link($params, $template){
     		$actionparams=",".$actionparams;
     	}
         $onclick=$confirm.'SF.l(\''.$action.'\''.$actionparams.'); return false;';
+    } else {
+        $onclick=$confirm;
     }
-    
+
     if($disabled){
         $s=$value;
     } else {
