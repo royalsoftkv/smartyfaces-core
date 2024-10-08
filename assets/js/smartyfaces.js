@@ -170,10 +170,14 @@ SF.ajax = {
 	url: '',
 		
 	ajaxAction: function(el,action,actionData,oncomplete){
-	    form=$(el).closest("form");
-	    data={};
+	    let form=$(el).closest("form");
+	    let data={};
 		SF.processEditors(data);
-	    data.sf_source=(el==null ? null : el.id);
+		let id = (el==null ? null : el.id);
+		if ($(el).is(":radio")) {
+			id = el.name;
+		}
+	    data.sf_source=id;
 	    if(form) data.sf_form_data=form.serialize();
 	    if(action) data.sf_action=action;
 	    if(actionData) data.sf_action_data=actionData;
