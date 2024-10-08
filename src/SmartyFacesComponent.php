@@ -397,7 +397,7 @@ class SmartyFacesComponent {
 			$action="null";
 			$data_str="null";
 		}
-		$s="SF.a(this,".$action.",'".$data_str."');";
+		$s="SF.a(event.target,".$action.",'".$data_str."');";
 		return $s;
 	}
 

@@ -22,7 +22,7 @@ function smarty_block_sf_popup($params, $content, $template, &$repeat)
     $attributes['modal']=array(
     	'required'=>false,
     	'default'=>true,
-    	'desc'=>'If set to true, the dialog will have modal behavior; other items on the page will be disabled, 
+    	'desc'=>'(deprecated) If set to true, the dialog will have modal behavior; other items on the page will be disabled, 
     		i.e., cannot be interacted with. Modal dialogs create an overlay below the dialog but above other page elements.'		
     );
     $attributes['width']=array(
@@ -71,89 +71,55 @@ function smarty_block_sf_popup($params, $content, $template, &$repeat)
 		$footer=$this_tag_stack['facets']['footer']['content'];
 	}
 	
-	if(SmartyFaces::$skin=="default") {
-	
-		$div=new TagRenderer("div",true);
-		$div->setId($id);
-		$div->setAttribute("title", $header);
-		if(SmartyFaces::$skin=="default") {
-			$div->setAttribute("class", "ui-helper-hidden");
-		}
-		$div->setValue($content);
-		$s=$div->render();
-		
-		$modal=$modal ? 'true' : 'false';
-		$config['appendTo']='$("#'.$id.'").closest("form")';
-		$config['modal']="$modal";
-		$config['beforeClose']="function(event, ui){".SmartyFacesComponent::buildJsAction($params)."}";
-		if($fade){
-			$config['show']="'fade'";
-			$config['hide']="'fade'";
-		}
-		if($width) {
-			$config['width']="$width";
-		}
-		$config['draggable']=$draggable ? "true" : "false";
-		$arr=array();
-		foreach($config as $key=>$val) {
-			$arr[]="$key:$val";
-		}
-		$config_str="{".implode(",",$arr)."}";
-		
-		$script='$("#'.$id.'").dialog('.$config_str.');';
-		
-		$s.=SmartyFaces::addScript($script);
-	} else if (SmartyFaces::$skin=="bootstrap") {
-		
-		$modal_fade=new TagRenderer("div",true);
-		$modal_fade->setAttribute("class", ($modal ? "modal" : "non-modal").($fade ? " fade" : ""));
-		$modal_fade->setId($id);
-		$modal_dlg=new TagRenderer("div",true);
-		$modal_dlg->setAttribute("class", "modal-dialog $class");
-		if($width) {
-			$modal_dlg->setAttribute("style", "width:$width");
-		}
-		$modal_cnt=new TagRenderer("div",true);
-		$modal_cnt->setAttribute("class", "modal-content");
-		$modal_hdr=new TagRenderer("div",true);
-		$modal_hdr->setAttribute("class", "modal-header");
-		$modal_hdr->addHtml('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>');
-		$h4=new TagRenderer("h4",true);
-		$h4->setAttribute("class", "modal-title");
-		$h4->setValue($header);
-		$modal_hdr->addHtml($h4->render());
-		$modal_cnt->addHtml($modal_hdr->render());
-		
-		$modal_body=new TagRenderer("div",true);
-		$modal_body->setAttribute("class", "modal-body");
-		$modal_body->setValue($content);
-		$modal_cnt->addHtml($modal_body->render());
-		
-		if($footer) {
-			$modal_footer=new TagRenderer("div",true);
-			$modal_footer->setAttribute("class", "modal-footer");
-			$modal_footer->setValue($footer);
-			$modal_cnt->addHtml($modal_footer->render());
-		}
-		
-		$modal_dlg->setValue($modal_cnt->render());
-		$modal_fade->setValue($modal_dlg->render());
-		
-		$s=$modal_fade->render();
-		
-		$script='$("body").removeClass("modal-open");
-				$(".modal-backdrop").remove();
-				 $("#'.$id.'").modal({backdrop:'.($modal ? '"static"' : 'false').'});
-				 $("#'.$id.'").on("hidden.bs.modal", function (e) {
-					'.SmartyFacesComponent::buildJsAction($params).'
-				});';
 
-        $script='SF.popup.open("'.$id.'")';
+    $modal_fade=new TagRenderer("div",true);
+    $modal_fade->setAttribute("class", "modal".($fade ? " fade" : ""));
+    $modal_fade->setAttribute("data-bs-backdrop","static");
+    $modal_fade->setId($id);
+    $modal_dlg=new TagRenderer("div",true);
+    $modal_dlg->setAttribute("class", "modal-dialog $class");
+    if($width) {
+        $modal_dlg->setAttribute("style", "width:$width");
+    }
+    $modal_cnt=new TagRenderer("div",true);
+    $modal_cnt->setAttribute("class", "modal-content");
+    $modal_hdr=new TagRenderer("div",true);
+    $modal_hdr->setAttribute("class", "modal-header");
+    $h5=new TagRenderer("h5",true);
+    $h5->setAttribute("class", "modal-title");
+    $h5->setValue($header);
+    $modal_hdr->addHtml($h5->render());
+    $modal_hdr->addHtml('<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>');
+    $modal_cnt->addHtml($modal_hdr->render());
 
-		$s.=SmartyFaces::addScript($script);
-	}
-    
+    $modal_body=new TagRenderer("div",true);
+    $modal_body->setAttribute("class", "modal-body");
+    $modal_body->setValue($content);
+    $modal_cnt->addHtml($modal_body->render());
+
+    if($footer) {
+        $modal_footer=new TagRenderer("div",true);
+        $modal_footer->setAttribute("class", "modal-footer");
+        $modal_footer->setValue($footer);
+        $modal_cnt->addHtml($modal_footer->render());
+    }
+
+    $modal_dlg->setValue($modal_cnt->render());
+    $modal_fade->setValue($modal_dlg->render());
+
+    $s=$modal_fade->render();
+
+//    $script='$("body").removeClass("modal-open");
+//            $(".modal-backdrop").remove();
+//             $("#'.$id.'").modal({backdrop:'.($modal ? '"static"' : 'false').'});
+//             $("#'.$id.'").on("hidden.bs.modal", function (e) {
+//                '.SmartyFacesComponent::buildJsAction($params).'
+//            });';
+
+    $script='SF.popup.open("'.$id.'", function() { '.SmartyFacesComponent::buildJsAction($params).' } )';
+
+    $s.=SmartyFaces::addScript($script);
+
     return $s;
 }
 
-?>

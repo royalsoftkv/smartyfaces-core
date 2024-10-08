@@ -54,7 +54,7 @@ function smarty_function_sf_poll($params, $template)
     
     $data=array();
     if(isset($ajaxEvent['actionData'])) $data[]="actionData:".$ajaxEvent['actionData'];
-    if(isset($ajaxEvent['oncomplete'])) $data[]="oncomplete:function(){".$ajaxEvent['oncomplete']."}";
+    if(isset($ajaxEvent['oncomplete'])) $data[]="oncomplete:function(d,r){".$ajaxEvent['oncomplete']."}";
     if(count($data)>0) {
     	$data="{".implode(",", $data)."}";
     	$event_str="SF.p(\"$id\",$data)";
@@ -76,4 +76,3 @@ function smarty_function_sf_poll($params, $template)
     return $s;
 }
 
-?>

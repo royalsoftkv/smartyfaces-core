@@ -469,9 +469,22 @@ SF.socket = {
 };
 
 SF.popup = {
-	open(id) {
+	open(id, cb) {
 		let options = {};
-		let modal = new bootstrap.Modal(document.getElementById(id), options);
+		let modalDiv = document.getElementById(id);
+		$(".modal-backdrop").remove();
+		let modal = new bootstrap.Modal(modalDiv, options);
+		modalDiv.addEventListener('hidden.bs.modal', function (event) {
+			cb();
+		})
 		modal.show();
+	},
+	removeAll() {
+		let body = $("body");
+		body.removeClass("modal-open");
+		body.css("overflow","");
+		body.css("padding-right","");
+		body.removeAttr("data-bs-padding-right");
+		$(".modal-backdrop").remove();
 	}
 };

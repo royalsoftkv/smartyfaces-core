@@ -82,8 +82,7 @@ function smarty_block_sf_form($params, $content, $template, &$repeat)
     $s.=$tr->renderCloseTag();
     
     if(SmartyFacesContext::$hasPopups && SmartyFacesContext::$popupsCount==0) {
-    	$script='$("body").removeClass("modal-open");
-    				$(".modal-backdrop").remove();';
+    	$script='SF.popup.removeAll();';
     	SmartyFaces::addScript($script);
     }
     
