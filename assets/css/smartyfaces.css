@@ -329,3 +329,18 @@ a[disabled] img {
 .input-group.date .bootstrap-datetimepicker-widget table th {
 	border-radius: 0;
 }
+
+.auto-complete .choices__inner {
+	padding: 1px !important;
+	min-height: auto;
+}
+.auto-complete .choices__list--single {
+	padding: 1px;
+}
+.auto-complete .choices__item, .choices__input {
+	padding: 2px 5px !important;
+}
+.auto-complete .choices__item.is-selected, .choices__item.is-highlighted {
+	background-color: var(--bs-primary) !important;
+	color: var(--bs-white);
+}

@@ -1259,9 +1259,9 @@ class SmartyFaces {
 		return self::$smarty->getTemplateVars($name);
 	}
 
-	static function addScript($s,$external=false) {
+	static function addScript($s,$external=false, $module=false) {
 		if($external) {
-			$script='<script type="text/javascript" src="'.$s.'"></script>';
+			$script='<script type="'.($module ? "module" : 'text/javascript').'" src="'.$s.'"></script>';
 		} else {
 			$script =  '<script type="text/javascript">';
 			$script.=$s;

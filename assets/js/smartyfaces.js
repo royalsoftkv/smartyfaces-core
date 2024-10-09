@@ -164,6 +164,22 @@ SF = {
 	updateStateData: function(id, data) {
 		let region = $('#' + id);
 		region.closest('form').find('#sf_state_data').val(data);
+	},
+
+	attachAutocomplete(id) {
+		const choices = new Choices(document.getElementById(id), {
+			searchResultLimit: -1,
+			shouldSort: false,
+			addChoices: true,
+			fuseOptions: {
+				threshold: 0,
+				shouldSort: false,
+				ignoreLocation: true,
+				includeMatches: true,
+				findAllMatches: true,
+				ignoreFieldNorm: true
+			},
+		});
 	}
 	
 };
