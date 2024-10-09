@@ -40,4 +40,3 @@ function smarty_function_sf_region($params, $template)
 
 }
 
-?>

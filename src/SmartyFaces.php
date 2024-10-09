@@ -504,6 +504,14 @@ class SmartyFaces {
 			jQuery("div#$sf_view_id")->html($output);
 		} else {
 			self::processRegionUpdate($sf_view_id, $update_id);
+			if(SmartyFacesContext::$storestate=="client") {
+				if (SmartyFaces::$config['compress_state']) {
+					$s = base64_encode(gzdeflate(serialize(SmartyFacesContext::$state)));
+				} else {
+					$s = base64_encode(serialize(SmartyFacesContext::$state));
+				}
+				jQuery::evalScript('SF.updateStateData(\''.$update_id.'\', \'' . $s . '\')');
+			}
 		}
 		// handle oncomplete
 		if(SmartyFacesValidator::passed() and isset($sf_action_component['params']['oncomplete'])) {

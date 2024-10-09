@@ -29,4 +29,3 @@ function smarty_block_sf_lng($params, $content, $template, &$repeat)
     
 }
 
-?>

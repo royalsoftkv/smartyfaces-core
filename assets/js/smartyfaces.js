@@ -159,7 +159,12 @@ SF = {
 
     onComplete: function() {},
 
-    onError:function(xmlEr) {}
+    onError:function(xmlEr) {},
+
+	updateStateData: function(id, data) {
+		let region = $('#' + id);
+		region.closest('form').find('#sf_state_data').val(data);
+	}
 	
 };
 
