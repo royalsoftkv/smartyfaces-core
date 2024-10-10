@@ -1214,6 +1214,7 @@ class SmartyFaces {
 		if(substr($path,0, 1)!=DIRECTORY_SEPARATOR && substr($path,1, 1)!=":") {
 			$rpath=realpath($root_path."/".$path);
 			if($rpath===false && $error){
+				@mkdir($root_path."/".$path);
 				throw new Exception("Unable to resolve path for: $root_path and $path");
 				exit();
 			}
