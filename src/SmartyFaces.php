@@ -246,7 +246,7 @@ class SmartyFaces {
 		if(empty(self::$config['resources_overrride_js'])) {
 			$resources=array(
 					["jquery/jquery.min.js",1],
-					["jquery-php/jquery.php.js",1],
+					["smartyfaces/js/jquery.php.js",1],
 					["smartyfaces/js/smartyfaces.js",1]);
 			if(self::$skin=="default") {
 			} else if (self::$skin=="bootstrap") {
