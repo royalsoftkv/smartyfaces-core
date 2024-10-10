@@ -250,7 +250,7 @@ class SmartyFaces {
 					["smartyfaces/js/smartyfaces.js",1]);
 			if(self::$skin=="default") {
 			} else if (self::$skin=="bootstrap") {
-				$resources[]=["bootstrap/js/bootstrap.min.js",1];
+				$resources[]=["bootstrap/js/bootstrap.bundle.min.js",1];
 			}
 		} else {
 			$resources = self::$config['resources_overrride_js'];

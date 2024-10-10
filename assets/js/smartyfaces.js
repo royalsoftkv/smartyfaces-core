@@ -88,7 +88,7 @@ SF = {
 	},
 	
 	bs_attachTooltip: function(id, placement) {
-		$("#"+id).tooltip({
+		let tooltip = new bootstrap.Tooltip($("#"+id).get(0), {
 			title:function(a){
 				return $("#"+id+"-content").html();
 			},
