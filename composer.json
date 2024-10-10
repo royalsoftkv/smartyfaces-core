@@ -11,7 +11,8 @@
     ],
     "require": {
         "workerman/phpsocket.io": "^1.1",
-        "smarty/smarty": "^v4.5.4"
+        "smarty/smarty": "^v4.5.4",
+        "anton-shevchuk/jquery-php": "^1.0"
     },
     "autoload": {
         "classmap": ["src"]
