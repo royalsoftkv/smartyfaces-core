@@ -97,7 +97,7 @@ function smarty_function_sf_selectonemenu($params, $template)
     		$action="null";
     		$data_str="null";
     	}
-    	if(strlen($onchange)>0 and substr($onchange, -1, 1)!=";") $onchange.=";";
+    	if(!empty($onchange) and substr($onchange, -1, 1)!=";") $onchange.=";";
     	$onchange=$onchange.'SF.a(this,'.$action.','.$data_str.'); return false;';
     }
     

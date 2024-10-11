@@ -128,7 +128,7 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 			    $dataModel = $value;
 				$availableColumns = [];
 			    foreach($columns as $col) {
-					$header=trim(strip_tags($col['header']));
+					$header=trim(strip_tags($col['header'] ?? ""));
 					$header=str_replace("&nbsp;", "", $header);
 					if(empty($header)) {
 						$header="[".$col['id']."]";
@@ -223,7 +223,7 @@ function _getAttributes($attributes) {
 	$attr=array();
 	if(is_array($attributes)) {
 		foreach($attributes as $name=>$value) {
-			if(strlen($value)>0) {
+			if(!empty($value)) {
 				$attr[]="$name=\"$value\"";
 			}
 		}

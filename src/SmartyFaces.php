@@ -1323,29 +1323,48 @@ class SmartyFaces {
 }
 
 
-class LanguageArray implements ArrayAccess {
+class LanguageArray implements ArrayAccess
+{
 	private $array;
-	public function __construct(array $array){$this->array   = $array;}
-	public function offsetExists($offset){return isset($this->array[$offset]);}
-	public function offsetGet($offset){
-		if(isset($this->array[$offset])) {
-			$val=$this->array[$offset];
+
+	public function __construct(array $array)
+	{
+		$this->array = $array;
+	}
+
+	public function offsetExists($offset): bool
+	{
+		return isset($this->array[$offset]);
+	}
+
+	public function offsetGet($offset): mixed
+	{
+		if (isset($this->array[$offset])) {
+			$val = $this->array[$offset];
 		} else {
-			$val=$offset;
+			$val = $offset;
 			$callbackFunction = @SmartyFaces::$callbackFunctions[SmartyFaces::CALLBACK_LANGUAGE_NOT_FOUND_FUNCTION];
-			if(!empty($callbackFunction) && is_callable($callbackFunction)) {
+			if (!empty($callbackFunction) && is_callable($callbackFunction)) {
 				$callbackFunction($val);
 			}
 		}
 
 		$callbackFunction = @SmartyFaces::$callbackFunctions[SmartyFaces::CALLBACK_LANGUAGE_PROCESS_TRANSLATION_FUNCTION];
-		if(!empty($callbackFunction) && is_callable($callbackFunction)) {
+		if (!empty($callbackFunction) && is_callable($callbackFunction)) {
 			$callbackFunction($offset, $val);
 		}
 		return $val;
 	}
-	public function offsetSet($offset, $value){$this->array[$offset] = $value;}
-	public function offsetUnset($offset){unset($this->array[$offset]);}
+
+	public function offsetSet($offset, $value): void
+	{
+		$this->array[$offset] = $value;
+	}
+
+	public function offsetUnset($offset): void
+	{
+		unset($this->array[$offset]);
+	}
 }
 
 

@@ -53,7 +53,8 @@ function smarty_function_sf_checkbox($params, $template)
 	if(!is_null($validator)) {
 		SmartyFacesContext::addValidator($id,$validator);
 	}
-    
+
+    $invalid=false;
     SmartyFacesContext::$bindings[$id]=$value;
 	if(SmartyFaces::$validateFailed and !$disabled) {
 		if(isset(SmartyFacesContext::$formData[$id])) {
@@ -62,14 +63,14 @@ function smarty_function_sf_checkbox($params, $template)
 			$value=$unCheckedValue;
 		}
 		if(SmartyFacesComponent::validationFailed($id)) {
-			if(SmartyFaces::$skin=="default") $class.= " sf-vf";
+            $invalid = true;
 		}
     } else {
 	    $value=  SmartyFaces::evalExpression($value);
     }
 
 
-    if(!is_null($action)) {
+    if(!is_null($action) && $action != "null") {
     	if($stateless) {
     		$action="'".$action."'";
     		$data=array();
@@ -92,7 +93,7 @@ function smarty_function_sf_checkbox($params, $template)
 
     $c=new TagRenderer("input",false);
     $c->setAttribute("type", "checkbox");
-	$class.=" form-check-input";
+	$class.=" form-check-input".($invalid? " is-invalid":"");
     $c->setAttribute("class", $class);
     $c->setIdAndName($id);
     $c->setValue($checkedValue);
@@ -111,9 +112,9 @@ function smarty_function_sf_checkbox($params, $template)
     $label_c->setAttribute("for", $id);
 	$label_c->addHtml($label);
 	$div->addHtml($label_c->render());
-	if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
+	if($attachMessage and !$disabled and $invalid) {
 		$span=new TagRenderer("div",true);
-		$span->setAttribute("class", "help-block");
+		$span->setAttribute("class", "invalid-feedback");
 		$span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
 		$div->addHtml($span->render());
 	}
