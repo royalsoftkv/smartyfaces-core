@@ -40,8 +40,6 @@ function smarty_function_sf_datepicker($params, $template)
     
     $id=SmartyFacesComponent::checkNested($id,$template);
     
-    if(SmartyFaces::$skin=="default") $class.=" sf-input sf-input-datepicker";
-    
     if($required and !$disabled){
         SmartyFacesContext::addRequiredValidator($id);
     }

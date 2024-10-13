@@ -217,7 +217,7 @@ class SmartyFacesContext {
 		}
 		if(SmartyFaces::$config['compress_state']) {
 			$rawState = SFSession::get(['SF_SESSION'],['state']);
-			$data['size']=strlen($rawState);
+			$data['size']=strlen(json_encode($rawState));
 			$data['compress_state']['show']=$rawState;
 		} else {
 			$data['size']=strlen(serialize($state));

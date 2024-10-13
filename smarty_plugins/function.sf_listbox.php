@@ -36,7 +36,7 @@ function smarty_function_sf_listbox($params, $template)
 	SmartyFacesContext::$bindings[$id]=$value;
 	$value=  SmartyFaces::evalExpression($value);
 	
-	if(SmartyFaces::$skin=="bootstrap") $class.=" form-control";
+	$class.=" form-control";
 	
 	$select=new TagRenderer("select",true);
 	$select->setAttribute("multiple", "multiple");

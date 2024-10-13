@@ -57,7 +57,7 @@ function smarty_function_sf_fileupload($params, $template)
     $file=new TagRenderer("input");
     $file->setAttribute("type", "file");
     $file->setIdAndName($id, $multiple);
-    if(SmartyFaces::$skin=="bootstrap") $fileClass.=" form-control";
+    $fileClass.=" form-control";
     $file->setAttributeIfExists("class", $fileClass);
     if($multiple) {
     	$file->setAttribute("multiple", "multiple");

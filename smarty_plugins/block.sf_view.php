@@ -47,7 +47,7 @@ function smarty_block_sf_view($params, $content, $smarty_template, &$repeat)
         
         $div=new TagRenderer("div",true);
         $div->setId($id);
-        $class.=" skin-".SmartyFaces::$skin;
+        $class.=" skin-bootstrap";
 	    $div->setAttributeIfExists("class", $class);
 	    
         if($template!=null) {

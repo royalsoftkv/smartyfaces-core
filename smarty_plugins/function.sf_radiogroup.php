@@ -73,8 +73,6 @@ function smarty_function_sf_radiogroup($params, $template)
     	$onchange='SF.a(this,'.$action.','.$data_str.'); return false;';
     }
     
-    if(SmartyFaces::$skin=="default") $class.=" sf-radio-group";
-    
     $cont=new TagRenderer("div",true);
     $cont->setAttributeIfExists("class", $class);
     $ix=0;

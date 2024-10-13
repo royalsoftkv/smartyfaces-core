@@ -16,8 +16,6 @@ function smarty_block_sf_form($params, $content, $template, &$repeat)
     //$id=SmartyFacesComponent::getParameter($tag, "id", uniqid(), $params);
     SmartyFacesComponent::createComponent($id, $tag, $params);
     
-    if(SmartyFaces::$skin=="default") $class.=" sf-form";
-    
     if(is_null($content)){
         SmartyFacesComponent::setCurrentStateId();
         $tr=new TagRenderer('form',true);

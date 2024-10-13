@@ -29,8 +29,6 @@ function smarty_function_sf_radio($params, $template)
     if($params==null and $template==null) return $attributes;
     extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
     
-    if(SmartyFaces::$skin=="default") $class.=" sf-input sf-radio";
-    
     SmartyFacesComponent::createComponent($id, $tag, $params);
     
     if($required and !$disabled){

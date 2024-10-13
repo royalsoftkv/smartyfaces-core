@@ -75,7 +75,7 @@ function smarty_function_sf_inplace($params, $template)
 	}
 	$label=new TagRenderer("label",true);
 	$label_class="sf-inplace-lbl";
-	if(SmartyFaces::$skin=="bootstrap") $label_class.=" text-muted";
+	$label_class.=" text-muted";
 	$label->setAttributeIfExists("class", $label_class);
 	$label->setAttribute("onclick", $onclick);
 	$label->setValue(strlen(trim($value))==0 ? $emptytext : $value);
@@ -88,7 +88,7 @@ function smarty_function_sf_inplace($params, $template)
 		$input->setValue($value);
 		$input_class="";
 		$input_class="sf-inplace-fld";
-		if(SmartyFaces::$skin=="bootstrap") $input_class.=" form-control";
+		$input_class.=" form-control";
 		$input->setAttributeIfExists("class", $input_class);
 		$input->setAttribute("onblur", 'SF.inplace.blur(this,\''.$emptytext.'\');'.$action_str);
 		$span->addHtml($input->render());
@@ -97,7 +97,7 @@ function smarty_function_sf_inplace($params, $template)
 		$textarea->setIdAndName($id);
 		$textarea_class="";
 		$textarea_class="sf-inplace-fld";
-		if(SmartyFaces::$skin=="bootstrap") $textarea_class.=" form-control";
+		$textarea_class.=" form-control";
 		$textarea->setAttributeIfExists("class", $textarea_class);
 		$textarea->setAttribute("onblur", 'SF.inplace.blur(this,\''.$emptytext.'\');'.$action_str);
 		$textarea->setValue($value);

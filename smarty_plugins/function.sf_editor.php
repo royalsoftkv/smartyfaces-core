@@ -44,8 +44,6 @@ function smarty_function_sf_editor($params, $template)
 	if($params==null and $template==null) return $attributes;
 	extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
 
-	if(SmartyFaces::$skin=="default") $class.=" sf-input sf-input-editor";
-
 	if(!$rendered) return;
 
 	SmartyFacesComponent::createComponent($id, $tag, $params);

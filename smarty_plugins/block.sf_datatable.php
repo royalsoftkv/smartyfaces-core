@@ -116,7 +116,7 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 					continue;
 				}
     			$cell['content']=$column['header'];
-    			$cell['attributes']['class']="aaa".(SmartyFaces::$skin=="default" ? "sf-columnheader " : "").$column['class'];
+    			$cell['attributes']['class']=$column['class'];
     			$cell['attributes']['width']=$column['width'];
     			$cell['attributes']['title']=$column['title'];
     			$cell['attributes']['align']=$column['align'];
@@ -264,7 +264,7 @@ function _displayTable($this_tag_stack, $template) {
 		$s.="<thead>";
 		$thead_open=true;
 		$s.="<tr>";
-		$class=SmartyFaces::$skin=="default" ? "sf-tableheader" : "sf-caption";
+		$class="sf-caption";
 		if(isset($this_tag_stack['facets']['header']['params']['class'])) {
 			$class.=" ".$this_tag_stack['facets']['header']['params']['class'];
 		}
@@ -360,7 +360,7 @@ function _displayTable($this_tag_stack, $template) {
 	if(isset($this_tag_stack['table']['footer'])) {
 		$s.="<tfoot>";
 		$s.="<tr>";
-		$s.="<td class=\"".(SmartyFaces::$skin=="default" ? "sf-tablefooter" : "")."\" colspan=\"$colspan\">";
+		$s.="<td class=\"\" colspan=\"$colspan\">";
 		$s.=trim($this_tag_stack['table']['footer']);
 		$s.="</td>";
 		$s.="</tr>";

@@ -61,8 +61,7 @@ function smarty_function_sf_selectonemenu($params, $template)
     extract($attributes_values);
     
     $id=SmartyFacesComponent::checkNested($id,$template);
-    if(SmartyFaces::$skin=="default") $class.=" sf-input sf-select";
-    
+
     if(!$rendered) return;
     
     $required=(bool) $required;

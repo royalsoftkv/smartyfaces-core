@@ -40,8 +40,6 @@ function smarty_function_sf_checkbox($params, $template)
     	$confirm='if(!confirm(\''.$confirm.'\')) return false;';
     }
     
-    if(SmartyFaces::$skin=="default") $class.=" sf-input sf-input-checkbox ";
-    
     $id=SmartyFacesComponent::checkNested($id,$template);
     SmartyFacesComponent::createComponent($id, $tag, $params, array("boolean","disabled","unCheckedValue"));
     

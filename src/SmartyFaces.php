@@ -33,7 +33,7 @@ class My_Security_Policy extends Smarty_Security {
 class SmartyFaces {
 
 	public static $signature="1.5.0 25.09.2024";
-	public static $versions="Smarty ".Smarty::SMARTY_VERSION." - jQuery 3.7.1 - PHP ActiveRecord 1.0 - Bootstrap 5.3.3";
+	public static $versions="Smarty ".Smarty::SMARTY_VERSION." - jQuery 3.7.1 - Bootstrap 5.3.3";
 
 	const DEFAULT_VIEW_NAME="home";
 
@@ -81,7 +81,6 @@ class SmartyFaces {
 			'load_css'=>true,
 			'progressive_loading'=>false,
 			'remove_unused_params'=>true,
-			'skin'=>'default',
 			'compress_state'=>false,
 			'image_dir'=>array('images'),
 			'mail_enabled'=>true,
@@ -107,7 +106,6 @@ class SmartyFaces {
 		self::$config=array_merge(self::$config,$config);
 		self::$SF_ROOT=self::resolvePath(self::$config['root_path']);
 		if(!in_array(self::$config['skin'], self::$skins)) self::$config['skin']="default";
-		self::$skin=self::$config['skin'];
 	}
 
 	public static function display($view=null) {
@@ -248,10 +246,7 @@ class SmartyFaces {
 					["jquery/jquery.min.js",1],
 					["smartyfaces/js/jquery.php.js",1],
 					["smartyfaces/js/smartyfaces.js",1]);
-			if(self::$skin=="default") {
-			} else if (self::$skin=="bootstrap") {
-				$resources[]=["bootstrap/js/bootstrap.bundle.min.js",1];
-			}
+			$resources[]=["bootstrap/js/bootstrap.bundle.min.js",1];
 		} else {
 			$resources = self::$config['resources_overrride_js'];
 		}
@@ -311,14 +306,9 @@ class SmartyFaces {
 	}
 
 	public static function loadCss(){
-		$serverUrl=self::getServerUrl();
 		$resources = array();
-		if(self::$skin=="bootstrap") {
-			//must done this way because of fonts linking
-			$resources[]=array("bootstrap/css/bootstrap.min.css",1);
-			$resources[]=array("font-awesome/css/font-awesome.min.css",1);
-//			$resources[]=array("bootstrap/css/bootstrap-theme.min.css",1);
-		}
+		$resources[]=array("bootstrap/css/bootstrap.min.css",1);
+		$resources[]=array("font-awesome/css/font-awesome.min.css",1);
 		$resources[]=["smartyfaces/css/smartyfaces.css",1];
 		if(self::$config['load_css']) {
 			self::loadResources("css", $resources);
@@ -1273,10 +1263,6 @@ class SmartyFaces {
 		} else {
 			return $script;
 		}
-	}
-
-	static function setSkin($skin) {
-		self::$skin=$skin;
 	}
 
 	static function clearSession() {
