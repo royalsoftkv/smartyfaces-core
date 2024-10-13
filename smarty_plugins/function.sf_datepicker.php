@@ -105,7 +105,7 @@ function smarty_function_sf_datepicker($params, $template)
     $s=$i->render();
     if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
         $m_div=new TagRenderer("div",true);
-        $m_div->setAttribute("class", SmartyFacesComponent::getFormControlValidationClass($id));
+        $m_div->setAttribute("class", "invalid-feedback");
         $m_div->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
         $s.=$m_div->render();
     }

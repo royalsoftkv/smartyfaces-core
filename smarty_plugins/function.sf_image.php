@@ -99,7 +99,6 @@ function smarty_function_sf_image($params, $template)
     $image=new TagRenderer("img");
     $image->setAttribute("src", $src);
     if(!$responsive) {
-    	$style="";
     	if($width) $style.="width:{$width}px;";
     	if($height) $style.="height:{$height}px;";
     	$image->setAttribute("style", $style);

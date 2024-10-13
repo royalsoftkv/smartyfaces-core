@@ -186,7 +186,7 @@ class SmartyFacesComponent {
     			$m=$message['message'];
     			$msg_class="d-sf-msg-".$type;
 				if($type=="error") {
-					$msg_class.=" invalid-feedback2";
+					$msg_class.=" invalid-feedback";
 				}
     			$errors[]='<span class="'.$msg_class.'">'.$m.'</span>';
     		}

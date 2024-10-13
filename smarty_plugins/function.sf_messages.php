@@ -100,8 +100,7 @@ function smarty_function_sf_messages($params, $template)
                 $type=$message['type'];
                 $m=$message['message'];
                 $msg_class="";
-                if($styled && SmartyFaces::$skin=="default") $msg_class="sf-msg-".$type;
-                if($styled && SmartyFaces::$skin=="bootstrap") $msg_class=" help-block";
+                if($styled && SmartyFaces::$skin=="bootstrap") $msg_class=" is-invalid";
                 if($customClasses!=null && isset($customClasses[$type])) {
                 	$msg_class=$customClasses[$type];
                 }
