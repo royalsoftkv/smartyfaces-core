@@ -14,6 +14,10 @@
         "smarty/smarty": "^v4.5.4"
     },
     "autoload": {
-        "classmap": ["src"]
+        "classmap": ["src"],
+        "psr-4": {
+            "RoyalSortKv\\SmartyFacesCore\\": "src/"
+        }
     }
+
 }
