@@ -60,7 +60,7 @@ class SmartyFaces {
 	public static $config=array(
 			'tmp_dir'=>'tmp',
 			'session_id'=>null,
-Set			'server_url'=>'',
+			'server_url'=>'',
 			'lng_dir'=>'lng',
 			'lng_def'=>'en',
 			'lng_var'=>'l',
