@@ -60,7 +60,7 @@ class SmartyFaces {
 	public static $config=array(
 			'tmp_dir'=>'tmp',
 			'session_id'=>null,
-			'server_url'=>'/smartyfaces',
+Set			'server_url'=>'',
 			'lng_dir'=>'lng',
 			'lng_def'=>'en',
 			'lng_var'=>'l',
@@ -84,9 +84,9 @@ class SmartyFaces {
 			'compress_state'=>false,
 			'image_dir'=>array('images'),
 			'mail_enabled'=>true,
-			'resources_url'=>'auto',
+			'resources_url'=>'/lib',
 			'eval_with_file'=>true,
-			'secure_actions'=>[]
+			'secure_actions'=>[],
 	);
 
 	public static $skins = array("default","none","bootstrap");
