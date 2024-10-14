@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "workerman/phpsocket.io": "1.1"
+        "workerman/phpsocket.io": "v1.1.18"
     },
     "autoload": {
         "classmap": ["src"]
