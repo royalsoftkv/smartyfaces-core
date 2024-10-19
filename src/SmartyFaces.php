@@ -308,7 +308,7 @@ class SmartyFaces {
 	public static function loadCss(){
 		$resources = array();
 		$resources[]=array("bootstrap/css/bootstrap.min.css",1);
-		$resources[]=array("font-awesome/css/font-awesome.min.css",1);
+		$resources[]=array("font-awesome/css/all.min.css",1);
 		$resources[]=["smartyfaces/css/smartyfaces.css",1];
 		if(self::$config['load_css']) {
 			self::loadResources("css", $resources);

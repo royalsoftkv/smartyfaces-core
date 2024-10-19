@@ -113,10 +113,10 @@ function smarty_function_sf_picklist($params, $template)
     	
     }
     
-    $input1=_createButton($id,$buttonclass,$disabled,'&rarr;', $buttontitles['move_right'], '_bnt_mr');
-    $input2=_createButton($id,$buttonclass,$disabled,'&rrarr;', $buttontitles['move_all_right'], '_bnt_mar');
-    $input3=_createButton($id,$buttonclass,$disabled,'&larr;', $buttontitles['move_left'], '_bnt_ml');
-    $input4=_createButton($id,$buttonclass,$disabled,'&llarr;', $buttontitles['move_all_left'], '_bnt_mal');
+    $input1=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-chevron-right"></span>', $buttontitles['move_right'], '_bnt_mr');
+    $input2=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-angles-right"></span>', $buttontitles['move_all_right'], '_bnt_mar');
+    $input3=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-chevron-left"></span>', $buttontitles['move_left'], '_bnt_ml');
+    $input4=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-angles-left"></span>', $buttontitles['move_all_left'], '_bnt_mal');
     
     $select2=new TagRenderer("select",true);
     if($disabled) {
@@ -148,10 +148,10 @@ function smarty_function_sf_picklist($params, $template)
     	
     }
     
-    $input5=_createButton($id,$buttonclass,$disabled,'&UpArrowBar;', $buttontitles['move_top'], '_bnt_tp');
-    $input6=_createButton($id,$buttonclass,$disabled,'&uarr;', $buttontitles['move_up'], '_bnt_up');
-    $input7=_createButton($id,$buttonclass,$disabled,'&darr;', $buttontitles['move_down'], '_bnt_dn');
-    $input8=_createButton($id,$buttonclass,$disabled,'&DownArrowBar;', $buttontitles['move_bottom'], '_bnt_bt');
+    $input5=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-angles-up"></span>', $buttontitles['move_top'], '_bnt_tp');
+    $input6=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-chevron-up"></span>', $buttontitles['move_up'], '_bnt_up');
+    $input7=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-chevron-down"></span>', $buttontitles['move_down'], '_bnt_dn');
+    $input8=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-angles-down"></span>', $buttontitles['move_bottom'], '_bnt_bt');
 
 	$row=new TagRenderer("div",true);
 	$row->setAttribute("class", "d-flex ".$class);
