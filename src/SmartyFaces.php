@@ -1323,7 +1323,8 @@ class LanguageArray implements ArrayAccess
 		return isset($this->array[$offset]);
 	}
 
-	public function offsetGet($offset): mixed
+	#[\ReturnTypeWillChange]
+	public function offsetGet($offset)
 	{
 		if (isset($this->array[$offset])) {
 			$val = $this->array[$offset];
