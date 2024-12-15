@@ -228,7 +228,7 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 function _getAttributes($attributes) {
 	$attr=array();
 	foreach($attributes as $name=>$value) {
-		if(strlen($value)>0) {
+		if(strlen($value ?? "")>0) {
 			$attr[]="$name=\"$value\"";
 		}
 	}

@@ -789,16 +789,16 @@ class SmartyFaces {
 			$$name=$obj;
 		}
 		//#[EL]
-		if(substr($el, 0,2)=="#[" and substr($el, -1,1)=="]") {
+		if(substr($el ?? "", 0,2)=="#[" and substr($el, -1,1)=="]") {
 			// EL
 			$ret=null;
-			$el=substr($el, 2,-1);
+			$el=substr($el ?? "", 2,-1);
 			@eval("\$ret=$el;");
 			return $ret;
 		}
 		//[bean.property]
-		if(substr($el, 0,1)=="[" and substr($el, -1,1)=="]"){
-			$el=substr($el, 1, -1);
+		if(substr($el ?? "", 0,1)=="[" and substr($el, -1,1)=="]"){
+			$el=substr($el ?? "", 1, -1);
 			$arr=explode(".", $el);
 			if(count($arr)==2){ //[bean.property]]
 				$bean=$arr[0];
@@ -1294,8 +1294,10 @@ class SmartyFaces {
 class LanguageArray implements ArrayAccess {
 	private $array;
 	public function __construct(array $array){$this->array   = $array;}
-	public function offsetExists($offset){return isset($this->array[$offset]);}
-	public function offsetGet($offset){
+	#[\ReturnTypeWillChange]
+	public function offsetExists($offset): bool{return isset($this->array[$offset]);}
+	#[\ReturnTypeWillChange]
+	public function offsetGet($offset): mixed{
 		if(isset($this->array[$offset])) {
 			$val=$this->array[$offset];
 		} else {
@@ -1312,8 +1314,10 @@ class LanguageArray implements ArrayAccess {
 		}
 		return $val;
 	}
-	public function offsetSet($offset, $value){$this->array[$offset] = $value;}
-	public function offsetUnset($offset){unset($this->array[$offset]);}
+	#[\ReturnTypeWillChange]
+	public function offsetSet($offset, $value): void{$this->array[$offset] = $value;}
+	#[\ReturnTypeWillChange]
+	public function offsetUnset($offset): void{unset($this->array[$offset]);}
 }
 
 
