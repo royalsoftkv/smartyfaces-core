@@ -53,7 +53,7 @@ function smarty_block_sf_tabs($params, $content, $template, &$repeat)
 			}
 		}
 		$onclick=$tab['params']['onclick'];
-		if(strlen($onclick)>0) {
+		if(strlen($onclick ?? '')>0) {
 			$a->setAttribute("onclick", $onclick);
 		}
 		$a->setValue($tab['params']['header']);

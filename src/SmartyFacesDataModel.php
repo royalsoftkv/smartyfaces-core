@@ -532,7 +532,7 @@ abstract class SmartyFacesDataModel {
 	
 	function getFilterValue($name) {
 		$val=$this->filter[$name];
-		$val=trim($val);
+		$val=trim($val??'');
 		$val=str_replace("*", "%", $val);
 		return $val;
 	}

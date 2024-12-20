@@ -12,12 +12,12 @@ function smarty_function_sf_outputtext($params, $template)
     
     if(!$rendered) return;
 	
-	if(strlen($converter)>0) {
+	if(strlen($converter ?? "")>0) {
     	SmartyFacesContext::addConverter($id,$converter);
     }
     
     $value=  SmartyFaces::evalExpression($value);
-	if(strlen($converter)>0) {
+	if(strlen($converter ?? "")>0) {
 	    $value=$converter::toString($value);
 	}
     

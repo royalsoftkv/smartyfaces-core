@@ -830,16 +830,16 @@ class SmartyFaces {
 		foreach(SmartyFaces::$GLOBALS as $name=>$obj){
 			$$name=$obj;
 		}
-		if(substr($el, 0,2)=="#[" and substr($el, -1,1)=="]") {
+		if(substr($el ?? "", 0,2)=="#[" and substr($el ?? "", -1,1)=="]") {
 			// EL
-			$el=substr($el, 2,-1);
+			$el=substr($el ?? "", 2,-1);
 			self::$SF_ACTION = "updateModelValue: "."$el=\$value;";
 			eval("$el=\$value;");
 			return;
 		}
 		//[bean.property]
-		if(substr($el, 0,1)=="[" and substr($el, -1,1)=="]"){
-			$el=substr($el, 1, -1);
+		if(substr($el ?? "", 0,1)=="[" and substr($el ?? "", -1,1)=="]"){
+			$el=substr($el ?? "", 1, -1);
 			$arr=explode(".", $el);
 			if(count($arr)==2){
 				$bean=$arr[0];

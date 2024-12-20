@@ -134,7 +134,7 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 			    $dataModel = $value;
 				$availableColumns = [];
 			    foreach($columns as $col) {
-					$header=trim(strip_tags($col['header']));
+					$header=$col['header'] ? trim(strip_tags($col['header'])) : "";
 					$header=str_replace("&nbsp;", "", $header);
 					if(empty($header)) {
 						$header="[".$col['id']."]";
