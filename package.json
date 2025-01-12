@@ -1,0 +1,41 @@
+{
+  "name": "smartyfaces",
+  "version": "2.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "gulp": "./node_modules/.bin/gulp",
+    "clean": "rm -rf node_modules && rm -rf vendor && rm -rf tmp/* && rm composer.lock && rm package-lock.json",
+    "composer": "composer install",
+    "setup-dev": "rm -rf vendor/royalsoftkv/smartyfaces-core && ln -sr ../smartyfaces-core vendor/royalsoftkv/smartyfaces-core",
+    "server": "cd public && php -S 127.0.0.1:5000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/royalsoftkv/smartyfaces.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/royalsoftkv/smartyfaces/issues"
+  },
+  "homepage": "https://github.com/royalsoftkv/smartyfaces#readme",
+  "devDependencies": {
+    "gulp": "^5.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-uglify": "^3.0.2",
+    "jquery": "^3.7.1",
+    "ckeditor": "^4.12.1",
+    "summernote": "^0.8.20",
+    "codemirror": "^5.65.18",
+    "bootstrap": "^5.3.3",
+    "socket.io-client": "^4.8.0",
+    "sortablejs": "^1.15.3",
+    "choices.js": "^11.0.2",
+    "@fortawesome/fontawesome-free": "^6.6.0"
+  },
+  "dependencies": {
+    "fs-extra": "^11.2.0"
+  }
+}

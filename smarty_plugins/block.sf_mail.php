@@ -20,11 +20,11 @@ function smarty_block_sf_mail($params, $content, $template, &$repeat){
 	$attributes['debug']=array(
 		'required'=>false,'default'=>false,'desc'=>'Used to only render email message, not to sent it'		
 	);
-	$attributes['bcc']=array(
-		'required'=>false,'default'=>null,'desc'=>'BCC header field of message'		
-	);
 	$attributes['cc']=array(
-		'required'=>false,'default'=>null,'desc'=>'CC header field of message'		
+		'required'=>false,'default'=>null,'desc'=>'CC header field of message'
+	);
+	$attributes['bcc']=array(
+		'required'=>false,'default'=>null,'desc'=>'BCC header field of message'
 	);
 	if($params==null and $template==null) return $attributes;
 	extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
@@ -105,18 +105,18 @@ function smarty_block_sf_mail($params, $content, $template, &$repeat){
         	}
         	
         	$subject="=?UTF-8?B?".base64_encode($subject)."?=";
-        	
+
+			if($debug) {
+				return $message;
+			}
+
         	if(SmartyFaces::$config['mail_enabled']) {
-	        	if($debug) {
-	        		return $message;
-	        	} else {
-		        	$ret=@mail($to,$subject,$message,$headers);
-		        	return $ret;
-	        	}
+				$ret=@mail($to,$subject,$message,$headers);
+				return $ret;
         	} else {
-        		return true;
+        		return false;
         	}
         }
     }
 }
-?>
+

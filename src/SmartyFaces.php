@@ -25,10 +25,15 @@ function _getallheaders()
 	}
 }
 
+class My_Security_Policy extends Smarty_Security {
+	public $static_classes = [];
+	public $php_functions = [];
+}
+
 class SmartyFaces {
 
-	public static $signature="0.4.1 12.03.2019";
-	public static $versions="Smarty 3.1.18 - jQuery 1.11.1 - jQuery UI 1.10.4 - PHP ActiveRecord 1.0 - Bootstrap 3.3.4";
+	public static $signature="1.5.0 25.09.2024";
+	public static $versions="Smarty ".Smarty::SMARTY_VERSION." - jQuery 3.7.1 - Bootstrap 5.3.3";
 
 	const DEFAULT_VIEW_NAME="home";
 
@@ -55,7 +60,7 @@ class SmartyFaces {
 	public static $config=array(
 			'tmp_dir'=>'tmp',
 			'session_id'=>null,
-			'server_url'=>'/smartyfaces',
+			'server_url'=>'',
 			'lng_dir'=>'lng',
 			'lng_def'=>'en',
 			'lng_var'=>'l',
@@ -76,13 +81,12 @@ class SmartyFaces {
 			'load_css'=>true,
 			'progressive_loading'=>false,
 			'remove_unused_params'=>true,
-			'skin'=>'default',
 			'compress_state'=>false,
 			'image_dir'=>array('images'),
 			'mail_enabled'=>true,
-			'resources_url'=>'auto',
+			'resources_url'=>'/lib',
 			'eval_with_file'=>true,
-			'secure_actions'=>[]
+			'secure_actions'=>[],
 	);
 
 	public static $skins = array("default","none","bootstrap");
@@ -102,7 +106,6 @@ class SmartyFaces {
 		self::$config=array_merge(self::$config,$config);
 		self::$SF_ROOT=self::resolvePath(self::$config['root_path']);
 		if(!in_array(self::$config['skin'], self::$skins)) self::$config['skin']="default";
-		self::$skin=self::$config['skin'];
 	}
 
 	public static function display($view=null) {
@@ -180,6 +183,7 @@ class SmartyFaces {
 
 	public static function configureSmarty(Smarty $smarty){
 		$smarty->addTemplateDir(self::resolvePath(self::$config['view_dir']));
+		$smarty->addTemplateDir(self::resolvePath(self::$config['tmp_dir']."/subview"));
 		$smarty->addPluginsDir(dirname(dirname(__FILE__))."/smarty_plugins");
 		require_once dirname(__FILE__)."/SmartyFacesFilter.php";
 		$smarty->registerFilter("pre",array("SmartyFacesFilter","filter"));
@@ -189,6 +193,8 @@ class SmartyFaces {
 		if(property_exists($smarty, 'inheritance_merge_compiled_includes')) {
 			$smarty->inheritance_merge_compiled_includes = false;
 		}
+//		$smarty->disableSecurity();
+		$smarty->enableSecurity('My_Security_Policy');
 		self::$smarty=$smarty;
 		self::$smarty->assign(self::$globalAssign);
 	}
@@ -238,14 +244,9 @@ class SmartyFaces {
 		if(empty(self::$config['resources_overrride_js'])) {
 			$resources=array(
 					["jquery/jquery.min.js",1],
-					["jquery-php/jquery.php.js",1],
+					["smartyfaces/js/jquery.php.js",1],
 					["smartyfaces/js/smartyfaces.js",1]);
-			if(self::$skin=="default") {
-				$resources[]=["jquery-ui/jquery-ui-custom.min.js",1];
-			} else if (self::$skin=="bootstrap") {
-				$resources[]=["jquery-ui/jquery-ui-notooltip.custom.js",1];
-				$resources[]=["bootstrap/js/bootstrap.min.js",1];
-			}
+			$resources[]=["bootstrap/js/bootstrap.bundle.min.js",1];
 		} else {
 			$resources = self::$config['resources_overrride_js'];
 		}
@@ -305,13 +306,9 @@ class SmartyFaces {
 	}
 
 	public static function loadCss(){
-		$serverUrl=self::getServerUrl();
 		$resources = array();
-		if(self::$skin=="bootstrap") {
-			//must done this way because of fonts linking
-			$resources[]=array("bootstrap/css/bootstrap.min.css",1);
-			$resources[]=array("bootstrap/css/bootstrap-theme.min.css",1);
-		}
+		$resources[]=array("bootstrap/css/bootstrap.min.css",1);
+		$resources[]=array("font-awesome/css/all.min.css",1);
 		$resources[]=["smartyfaces/css/smartyfaces.css",1];
 		if(self::$config['load_css']) {
 			self::loadResources("css", $resources);
@@ -496,9 +493,15 @@ class SmartyFaces {
 			//$output.=$s;
 			jQuery("div#$sf_view_id")->html($output);
 		} else {
-			$region_content=SmartyFacesContext::$regions[$update_id];
-			$output=self::$smarty->fetch("string:".$region_content,null, $update_id);
-			jQuery("div#$sf_view_id #$update_id")->html($output);
+			self::processRegionUpdate($sf_view_id, $update_id);
+			if(SmartyFacesContext::$storestate=="client") {
+				if (SmartyFaces::$config['compress_state']) {
+					$s = base64_encode(gzdeflate(serialize(SmartyFacesContext::$state)));
+				} else {
+					$s = base64_encode(serialize(SmartyFacesContext::$state));
+				}
+				jQuery::evalScript('SF.updateStateData(\''.$update_id.'\', \'' . $s . '\')');
+			}
 		}
 		// handle oncomplete
 		if(SmartyFacesValidator::passed() and isset($sf_action_component['params']['oncomplete'])) {
@@ -515,6 +518,26 @@ class SmartyFaces {
 		jQuery::getResponse();
 		exit();
 
+	}
+
+	static function processRegionUpdate($sf_view_id, $update_id) {
+		$region_content=SmartyFacesContext::$regions[$update_id]['value'];
+		$assign = SmartyFacesContext::$regions[$update_id]['assign'];
+		if($assign!=null) {
+			if(is_array($assign)) {
+				$vars=$assign;
+			} else {
+				$vars[]=$assign;
+			}
+			foreach($vars as $var) {
+//				$val = SmartyFacesContext::lookup($var, null);
+				$val=self::$smarty->getTemplateVars($var);
+				self::$smarty->assign($var,$val);
+			}
+
+		}
+		$output=self::$smarty->fetch("string:".$region_content,null, $update_id);
+		jQuery("div#$sf_view_id #$update_id")->html($output);
 	}
 
 	static function processEvent() {
@@ -591,9 +614,7 @@ class SmartyFaces {
 				$update_id="";
 				if(isset($event['update'])) $update_id=$event['update'];
 				if($update_id) {
-					$region_content=SmartyFacesContext::$regions[$update_id];
-					$output=self::$smarty->fetch("string:".$region_content,null, $update_id);
-					jQuery("div#$sf_view_id #$update_id")->html($output);
+					self::processRegionUpdate($sf_view_id, $update_id);
 				} else {
 					// update whole view
 					if(isset($formData['sf_template'])) {
@@ -1185,6 +1206,7 @@ class SmartyFaces {
 		if(substr($path,0, 1)!=DIRECTORY_SEPARATOR && substr($path,1, 1)!=":") {
 			$rpath=realpath($root_path."/".$path);
 			if($rpath===false && $error){
+				@mkdir($root_path."/".$path);
 				throw new Exception("Unable to resolve path for: $root_path and $path");
 				exit();
 			}
@@ -1230,9 +1252,9 @@ class SmartyFaces {
 		return self::$smarty->getTemplateVars($name);
 	}
 
-	static function addScript($s,$external=false) {
+	static function addScript($s,$external=false, $module=false) {
 		if($external) {
-			$script='<script type="text/javascript" src="'.$s.'"></script>';
+			$script='<script type="'.($module ? "module" : 'text/javascript').'" src="'.$s.'"></script>';
 		} else {
 			$script =  '<script type="text/javascript">';
 			$script.=$s;
@@ -1243,10 +1265,6 @@ class SmartyFaces {
 		} else {
 			return $script;
 		}
-	}
-
-	static function setSkin($skin) {
-		self::$skin=$skin;
 	}
 
 	static function clearSession() {
@@ -1293,7 +1311,8 @@ class SmartyFaces {
 }
 
 
-class LanguageArray implements ArrayAccess {
+class LanguageArray implements ArrayAccess
+{
 	private $array;
 	public function __construct(array $array){$this->array   = $array;}
 	#[\ReturnTypeWillChange]
@@ -1303,15 +1322,15 @@ class LanguageArray implements ArrayAccess {
 		if(isset($this->array[$offset])) {
 			$val=$this->array[$offset];
 		} else {
-			$val=$offset;
+			$val = $offset;
 			$callbackFunction = @SmartyFaces::$callbackFunctions[SmartyFaces::CALLBACK_LANGUAGE_NOT_FOUND_FUNCTION];
-			if(!empty($callbackFunction) && is_callable($callbackFunction)) {
+			if (!empty($callbackFunction) && is_callable($callbackFunction)) {
 				$callbackFunction($val);
 			}
 		}
 
 		$callbackFunction = @SmartyFaces::$callbackFunctions[SmartyFaces::CALLBACK_LANGUAGE_PROCESS_TRANSLATION_FUNCTION];
-		if(!empty($callbackFunction) && is_callable($callbackFunction)) {
+		if (!empty($callbackFunction) && is_callable($callbackFunction)) {
 			$callbackFunction($offset, $val);
 		}
 		return $val;

@@ -88,7 +88,7 @@ SF = {
 	},
 	
 	bs_attachTooltip: function(id, placement) {
-		$("#"+id).tooltip({
+		let tooltip = new bootstrap.Tooltip($("#"+id).get(0), {
 			title:function(a){
 				return $("#"+id+"-content").html();
 			},
@@ -133,15 +133,15 @@ SF = {
 	},
 	
 	setDeafultButton:function(form_id, button_ids) {
-		var form = $("form#"+form_id);
+		let form = $("form#"+form_id);
 		form.keypress(function (e) {
 			if ($(e.target).is("textarea")) {
 				return true;
 			}
-			if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+			if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
 
-                for(var button_id in button_ids) {
-                	var scope = button_ids[button_id];
+                for(let button_id in button_ids) {
+                	let scope = button_ids[button_id];
                 	if($(e.target).closest(scope).length>0) {
 		        		$('#'+button_id).click();
 		        		return false;
@@ -159,7 +159,28 @@ SF = {
 
     onComplete: function() {},
 
-    onError:function(xmlEr) {}
+    onError:function(xmlEr) {},
+
+	updateStateData: function(id, data) {
+		let region = $('#' + id);
+		region.closest('form').find('#sf_state_data').val(data);
+	},
+
+	attachAutocomplete(id) {
+		const choices = new Choices(document.getElementById(id), {
+			searchResultLimit: -1,
+			shouldSort: false,
+			addChoices: true,
+			fuseOptions: {
+				threshold: 0,
+				shouldSort: false,
+				ignoreLocation: true,
+				includeMatches: true,
+				findAllMatches: true,
+				ignoreFieldNorm: true
+			},
+		});
+	}
 	
 };
 
@@ -170,10 +191,14 @@ SF.ajax = {
 	url: '',
 		
 	ajaxAction: function(el,action,actionData,oncomplete){
-	    form=$(el).closest("form");
-	    data={};
+	    let form=$(el).closest("form");
+	    let data={};
 		SF.processEditors(data);
-	    data.sf_source=(el==null ? null : el.id);
+		let id = (el==null ? null : el.id);
+		if ($(el).is(":radio")) {
+			id = el.name;
+		}
+	    data.sf_source=id;
 	    if(form) data.sf_form_data=form.serialize();
 	    if(action) data.sf_action=action;
 	    if(actionData) data.sf_action_data=actionData;
@@ -295,24 +320,22 @@ SF.ajax = {
 SF.upload = {
 		
 	submit: function(el,id) {
-		form=$(el).closest("form");
+		let form=$(el).closest("form");
 		form.attr("target","sf_iframe");
 		form.attr("enctype","multipart/form-data");
 		form.attr("action",SF.ajax.url+"&file_upload=true&sf_source="+el.id+"&form_id="+form.attr("id"));
-		form.find("#"+id+"_div #sf_upload_form").css("display","none");
-		form.find("#"+id+"_div #sf_upload_process").css("display","block");
+		form.find("#sf_upload_form").addClass('upload-sending');
 		form.find("#"+id+"_div #sf_upload_data").val(form.serialize());
 		form.submit();
 	},
 
 	stop: function(form_id,sf_source,files) {
-		form=$("#"+form_id);
+		let form=$("#"+form_id);
 		form.removeAttr("target");
 		form.attr("enctype","multipart/form-data");
 		form.attr("action","");
-		form.find("#sf_upload_form").css("display","inline-table");
-		form.find("#sf_upload_process").css("display","none");
-		data={
+		form.find("#sf_upload_form").removeClass('upload-sending');
+		let data={
 				sf_form_data:form.serialize(),
 		        sf_source:sf_source,
 		        sf_files:files
@@ -321,18 +344,19 @@ SF.upload = {
 	},
 	
 	abort:function(form_id,id,error) {
-		form=$("#"+form_id);
+		let form=$("#"+form_id);
 		form.removeAttr("target");
 		form.removeAttr("enctype");
 		form.attr("action","");
 		form.find("#"+id).val("");
-		form.find("#"+id+"_div #sf_upload_process").css("display","none");
-		form.find("#"+id+"_div #sf_upload_error").css("display","block");
+		form.find("#sf_upload_form").removeClass('upload-sending');
+		form.find("#sf_upload_form input[type=file]").addClass('is-invalid');
+		form.find("#"+id+"_div #sf_upload_error").show();
 		form.find("#"+id+"_div #sf_upload_error_msg").html(error);		
 	},
 	
 	reset:function(id) {
-		$("#"+id+"_div #sf_upload_form").css("display","inline-table");
+		$("#"+id+"_div input[type=file]").removeClass('is-invalid');
 		$("#"+id+"_div #sf_upload_error").css("display","none");		
 	}
 		
@@ -425,9 +449,9 @@ SF.tabs = {
 
 SF.reorder = {
 	save:function(el) {
-		var table=$(el).closest("table.ui-sortable");
-		var order=table.data("order_string");
-		if(order!=undefined){
+		let table=$(el).closest("table.ui-sortable");
+		let order=table.data("order_string");
+		if(order){
 			SF.a(el,null,{action:'save',param:{order:order}});
 		}
 	},
@@ -435,41 +459,28 @@ SF.reorder = {
 		SF.a(el,null,{action:'move',param:{direction:direction,row:row}});
 	},
 	init:function(id) {
-		var table=$("table#"+id);
-		table.addClass("ui-sortable");
-		table.sortable({
-			items:'tr',
-			axis:'y',
+		let table=$("table#"+id);
+		table.addClass('ui-sortable');
+		let bodyEl = table.find("tbody").get(0);
+
+		let sortable = new Sortable(bodyEl, {
+			direction: 'vertical',
 			handle:'.order_handle',
-			appendTo: document.body,
-			forceHelperSize: true,
-			forcePlaceholderSize: true,
-			stop:function(event, ui){
+			onUpdate: function (/**Event*/evt) {
+				let s = [];
 				table.find("> tbody > tr").each(function(index){
+					let id=$(this).attr("order-id");
 					$(this).find("span.ordinal").html(index+1);
-				});
-			},
-			helper: function(e, ui) {
-				ui.children().each(function() {
-					$(this).width($(this).width());
-				});
-				return ui;
-			},
-			update:function() {
-				var s = new Array();
-				table.find("> tbody > tr").each(function(index){
-					var id=$(this).attr("order-id");
 					s[index]=id;
 				});
-				var order = s.join(",");
+				let order = s.join(",");
 				console.log(order);
 				table.data("order_string",order);
-			}
-		}); 
+			},
+		});
 		table.find("> tbody > tr").each(function(index){
 			$(this).attr("order-id",index);
 		});
-
 	}
 };
 
@@ -479,5 +490,26 @@ SF.socket = {
 		socket.on('connect', function (data) {
 			console.log("connected");
 		});
+	}
+};
+
+SF.popup = {
+	open(id, cb) {
+		let options = {};
+		let modalDiv = document.getElementById(id);
+		$(".modal-backdrop").remove();
+		let modal = new bootstrap.Modal(modalDiv, options);
+		modalDiv.addEventListener('hidden.bs.modal', function (event) {
+			cb();
+		})
+		modal.show();
+	},
+	removeAll() {
+		let body = $("body");
+		body.removeClass("modal-open");
+		body.css("overflow","");
+		body.css("padding-right","");
+		body.removeAttr("data-bs-padding-right");
+		$(".modal-backdrop").remove();
 	}
 };

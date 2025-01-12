@@ -108,7 +108,7 @@ class SmartyFacesContext {
 	}
 
 	public static function restoreSessionState(){
-		$components = SFSession::get(['session','components'], []);
+		$components = SFSession::get(['SF_SESSION','components'], []);
 		if(isset(self::$components['session'])) {
 			self::$components['session']=array_merge(self::$components['session'],$components);
 		} else {
@@ -217,7 +217,7 @@ class SmartyFacesContext {
 		}
 		if(SmartyFaces::$config['compress_state']) {
 			$rawState = SFSession::get(['SF_SESSION'],['state']);
-			$data['size']=strlen($rawState);
+			$data['size']=strlen(json_encode($rawState));
 			$data['compress_state']['show']=$rawState;
 		} else {
 			$data['size']=strlen(serialize($state));
@@ -231,7 +231,7 @@ class SmartyFacesContext {
 		$out = @preg_replace('/([ \t]*)(\[[^\]]+\][ \t]*\=\>[ \t]*[a-z0-9 \t_]+)\n[ \t]*\(/iUe',"'\\1<a href=\"javascript:toggleDisplay(\''.(\$id = substr(md5(rand().'\\0'), 0, 7)).'\');\">\\2</a><div id=\"'.\$id.'\" style=\"display: none;\">'", $out);
 		 
 		// replace ')' on its own on a new line (surrounded by whitespace is ok) with '</div>
-		$out = preg_replace('/^\s*\)\s*$/m', '</div>', $out);
+		$out = preg_replace('/^\s*\)\s*$/m', '</div>', $out ?? "");
 		 
 		// print the javascript function toggleDisplay() and then the transformed output
 		return '<script language="Javascript">function toggleDisplay(id) { document.getElementById(id).style.display = (document.getElementById(id).style.display == "block") ? "none" : "block"; }</script>'."\n<pre>$out</pre>";

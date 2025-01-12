@@ -2,7 +2,7 @@
     "name": "royalsoftkv/smartyfaces-core",
     "description": "PHP Ajax Pages Framework",
     "type": "library",
-    "version": "0.4.4",
+    "version": "2.0.0",
     "authors": [
         {
             "name": "RoyalSoft",
@@ -10,9 +10,14 @@
         }
     ],
     "require": {
-        "workerman/phpsocket.io": "1.1.18"
+        "workerman/phpsocket.io": "^1.1",
+        "smarty/smarty": "^v4.5.4"
     },
     "autoload": {
-        "classmap": ["src"]
+        "classmap": ["src"],
+        "psr-4": {
+            "RoyalSortKv\\SmartyFacesCore\\": "src/"
+        }
     }
+
 }

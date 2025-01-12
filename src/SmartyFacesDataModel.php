@@ -205,11 +205,11 @@ abstract class SmartyFacesDataModel {
 	public function icon($column) {
 		if($this->column==$column) {
 			return ($this->asc ?
-					'<span class="ui-sortable-column-icon ui-icon ui-icon-carat-2-n-s ui-icon-triangle-1-n"></span>'
+					'<span class="fa fa-arrow-up"></span>'
 					:
-					'<span class="ui-sortable-column-icon ui-icon ui-icon-carat-2-n-s ui-icon-triangle-1-s"></span>');
+					'<span class="fa fa-arrow-down"></span>');
 		} else {
-			return '<span class="ui-sortable-column-icon ui-icon ui-icon-carat-2-n-s"></span>';
+			return '<span class="fa fa-arrows-v text-muted"></span>';
 		}
 	}
 	
@@ -240,152 +240,111 @@ abstract class SmartyFacesDataModel {
 		$status_line.=' | '.$strings['page'].' <strong>'.$this->page.'</strong> '.$strings['of'].' <strong>'.$this->pages. '</strong>';
 		
 		$s="";
-		if(SmartyFaces::$skin=="default") {		
-			$s.='<table width="100%" class="ui-paginator">';
-			$s.='<tr>';
-			$s.='<td width="33%">';
-			$s.=$status_line;
-			$s.='</td>';
-			$s.='<td width="33%" align="center">';
-			$s.='<a id="'.$id.'" href="" onclick="'.(!$first ? 'SF.dm.paginate(this,\'first\'); ' : '').'return false;" title="'.$strings['go_to_first_page'].'">
-				<span class="ui-paginator-first ui-state-default ui-corner-all'.($first ? ' ui-state-disabled' : '').'">
-					<span class="ui-icon ui-icon-seek-first"></span>
-				</span>
-			</a>';
-			$s.='<a id="'.$id.'" href="" onclick="'.(!$first ? 'SF.dm.paginate(this,\'prev\'); ' : '').'return false;" title="'.$strings['go_to_previous_page'].'">
-				<span class="ui-paginator-prev ui-state-default ui-corner-all'.($first ? ' ui-state-disabled' : '').'">
-					<span class="ui-icon ui-icon-seek-prev"></span>
-				</span>
-			</a>';
-			$s.='<a id="'.$id.'" href="" onclick="'.(!$last ? 'SF.dm.paginate(this,\'next\'); ' : '').'return false;" title="'.$strings['go_to_next_page'].'">
-				<span class="ui-paginator-next ui-state-default ui-corner-all'.($last ? ' ui-state-disabled' : '').'">
-					<span class="ui-icon ui-icon-seek-next"></span>
-				</span>
-			</a>';
-			$s.='<a id="'.$id.'" href="" onclick="'.(!$last ? 'SF.dm.paginate(this,\'last\'); ' : '').'return false;" title="'.$strings['go_to_last_page'].'">
-				<span class="ui-paginator-last ui-state-default ui-corner-all'.($last ? ' ui-state-disabled' : '').'">
-					<span class="ui-icon ui-icon-seek-end"></span>
-				</span>
-			</a>';
-			$s.='</td>';
-			$s.='<td width="33%" align="right">';
-			$s.=$strings['rows_per_page'].': ';
-			$list=$this->rows_per_page_list;
-			$s.='<select id="'.$id.'" onchange="SF.dm.paginate(this,\'rpp\',this.value); return false;">';
-			foreach($list as $val) {
-				$s.='<option value="'.$val.'"'.($val==$this->rows_per_page ? ' selected="selected"' : '').'>'.($val==0 ? $strings['all'] : $val).'</option>';
-			}
-			$s.='</select>';
-			$s.='</td>';
-			$s.='</tr>';
-			$s.='</table>';
-		} else if (SmartyFaces::$skin=="bootstrap") {
-			$s.='<div class="paginator row">';
-			$s.='<div class="col-md-4 text-left status col-4">';
-			$s.=$status_line;
-			$s.='</div>';
-			$s.='<div class="col-md-4 text-center pages col-4">';
-			
-			$s.='<ul class="pagination pagination-sm">';
-			
-			$s.='<li class="page-item '.($first ? 'disabled' : '').'">';
-			if($first) {
-				$s.='<span class="page-link">';
-			} else {
-				$s.='<a class="page-link" id="'.$id.'" href="#" onclick="'.(!$first ? 'SF.dm.paginate(this,\'first\'); ' : '').'return false;" title="'.$strings['go_to_first_page'].'">';
-			}
-			$s.='<span class="glyphicon glyphicon-fast-backward"></span>';
-			if($first) {
-				$s.='</span>';
-			} else {
-				$s.='</a>';
-			}
-			$s.='</li>';
-			
-			$s.='<li class="page-item '.($first ? 'disabled' : '').'">';
-			if($first) {
-				$s.='<span class="page-link" >';
-			} else {
-				$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="'.(!$first ? 'SF.dm.paginate(this,\'prev\'); ' : '').'return false;" title="'.$strings['go_to_previous_page'].'">';
-			}
-			$s.='<span class="glyphicon glyphicon-step-backward"></span>';
-			if($first) {
-				$s.='</span>';
-			} else {
-				$s.='</a>';
-			}
-			$s.='</li>';
-			
-			$max_pages=3;
-			$start_page=1;
-			$end_page=$this->pages;
-			if($this->pages > $max_pages) {
-				$currentPagePositionFromStart = intval($max_pages/2);
-				$start_page =	$this->page - $currentPagePositionFromStart;
-				if($start_page <= 0){
-					$start_page = 1;
-				}
-				$end_page = $start_page + $max_pages - 1;
-				if($end_page > $this->pages){
-					$end_page = $this->pages;
-					$start_page = $end_page - $max_pages + 1;
-				}
-			}
-			for($i=$start_page;$i<=$end_page;$i++) {
-				$s.='<li class="page-item '.($this->page==$i ? 'active' : '').'">';
-				$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="SF.dm.paginate(this,\'page\','.$i.'); return false;">';
-				$s.=$i;
-				$s.='</a>';
-				$s.='</li>';
-			}
-			
-			$s.='</li>';
-			
-			$s.='<li class="page-item '.($last ? 'disabled' : '').'">';
-			if($last) {
-				$s.='<span class="page-link" >';
-			} else {
-				$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="'.(!$last ? 'SF.dm.paginate(this,\'next\'); ' : '').'return false;" title="'.$strings['go_to_next_page'].'">';
-			}
-			$s.='<span class="glyphicon glyphicon-step-forward"></span>';
-			if($last) {
-				$s.='</span>';
-			} else {
-				$s.='</a>';
-			}
-			$s.='</li>';
-			
-			$s.='<li class="page-item '.($last ? 'disabled' : '').'">';
-			if($last) {
-				$s.='<span class="page-link" >';
-			} else {
-				$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="'.(!$last ? 'SF.dm.paginate(this,\'last\'); ' : '').'return false;" title="'.$strings['go_to_last_page'].'">';
-			}
-			$s.='<span class="glyphicon glyphicon-fast-forward"></span>';
-			if($last) {
-				$s.='</span>';
-			} else {
-				$s.='</a>';
-			}
-			$s.='</li>';
-			
-			$s.='</ul>';
-			
-			
-			$s.='</div>';
-			$s.='<div class="col-md-4 text-right rpp col-4">';
-			
-			$s.=$strings['rows_per_page'].': ';
-			$list=$this->rows_per_page_list;
-			$s.='<select id="'.$id.'" onchange="SF.dm.paginate(this,\'rpp\',this.value); return false;" class="form-control">';
-			foreach($list as $val) {
-				$s.='<option value="'.$val.'"'.($val==$this->rows_per_page ? ' selected="selected"' : '').'>'.($val==0 ? $strings['all'] : $val).'</option>';
-			}
-			$s.='</select>';
-			
-			$s.='</div>';
-			$s.='</div>';
+		$s.='<div class="paginator row align-items-center">';
+		$s.='<div class="col-md-4 text-left status col-4">';
+		$s.=$status_line;
+		$s.='</div>';
+		$s.='<div class="col-md-4 text-center pages col-4 d-flex justify-content-center">';
+
+		$s.='<ul class="pagination">';
+
+		$s.='<li class="page-item '.($first ? 'disabled' : '').'">';
+		if($first) {
+			$s.='<span class="page-link">';
+		} else {
+			$s.='<a class="page-link" id="'.$id.'" href="#" onclick="'.(!$first ? 'SF.dm.paginate(this,\'first\'); ' : '').'return false;" title="'.$strings['go_to_first_page'].'">';
 		}
+		$s.='<span class="fa fa-angle-double-left"></span>';
+		if($first) {
+			$s.='</span>';
+		} else {
+			$s.='</a>';
+		}
+		$s.='</li>';
+
+		$s.='<li class="page-item '.($first ? 'disabled' : '').'">';
+		if($first) {
+			$s.='<span class="page-link" >';
+		} else {
+			$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="'.(!$first ? 'SF.dm.paginate(this,\'prev\'); ' : '').'return false;" title="'.$strings['go_to_previous_page'].'">';
+		}
+		$s.='<span class="fa fa-angle-left"></span>';
+		if($first) {
+			$s.='</span>';
+		} else {
+			$s.='</a>';
+		}
+		$s.='</li>';
+
+		$max_pages=3;
+		$start_page=1;
+		$end_page=$this->pages;
+		if($this->pages > $max_pages) {
+			$currentPagePositionFromStart = intval($max_pages/2);
+			$start_page =	$this->page - $currentPagePositionFromStart;
+			if($start_page <= 0){
+				$start_page = 1;
+			}
+			$end_page = $start_page + $max_pages - 1;
+			if($end_page > $this->pages){
+				$end_page = $this->pages;
+				$start_page = $end_page - $max_pages + 1;
+			}
+		}
+		for($i=$start_page;$i<=$end_page;$i++) {
+			$s.='<li class="page-item '.($this->page==$i ? 'active' : '').'">';
+			$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="SF.dm.paginate(this,\'page\','.$i.'); return false;">';
+			$s.=$i;
+			$s.='</a>';
+			$s.='</li>';
+		}
+
+		$s.='</li>';
+
+		$s.='<li class="page-item '.($last ? 'disabled' : '').'">';
+		if($last) {
+			$s.='<span class="page-link" >';
+		} else {
+			$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="'.(!$last ? 'SF.dm.paginate(this,\'next\'); ' : '').'return false;" title="'.$strings['go_to_next_page'].'">';
+		}
+		$s.='<span class="fa fa-angle-right"></span>';
+		if($last) {
+			$s.='</span>';
+		} else {
+			$s.='</a>';
+		}
+		$s.='</li>';
+
+		$s.='<li class="page-item '.($last ? 'disabled' : '').'">';
+		if($last) {
+			$s.='<span class="page-link" >';
+		} else {
+			$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="'.(!$last ? 'SF.dm.paginate(this,\'last\'); ' : '').'return false;" title="'.$strings['go_to_last_page'].'">';
+		}
+		$s.='<span class="fa fa-angle-double-right"></span>';
+		if($last) {
+			$s.='</span>';
+		} else {
+			$s.='</a>';
+		}
+		$s.='</li>';
+
+		$s.='</ul>';
+
+
+		$s.='</div>';
+		$s.='<div class="col-md-4 text-right rpp col-4 d-flex justify-content-end align-items-center gap-3">';
+
+		$s.=$strings['rows_per_page'].': ';
+		$list=$this->rows_per_page_list;
+		$s.='<select id="'.$id.'" onchange="SF.dm.paginate(this,\'rpp\',this.value); return false;" class="form-select w-auto">';
+		foreach($list as $val) {
+			$s.='<option value="'.$val.'"'.($val==$this->rows_per_page ? ' selected="selected"' : '').'>'.($val==0 ? $strings['all'] : $val).'</option>';
+		}
+		$s.='</select>';
+
+		$s.='</div>';
+		$s.='</div>';
 		return $s;
 	}
 	

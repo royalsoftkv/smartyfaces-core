@@ -25,7 +25,7 @@ function smarty_block_sf_view($params, $content, $smarty_template, &$repeat)
 	);
 	$attributes['storestate']=array(
 		'required'=>false,
-		'default'=>'server',
+		'default'=>'client',
 		'desc'=>'Destionation for saving view state. Can be client or server.'	
 	);
 	if($params==null and $smarty_template==null) return $attributes;
@@ -47,7 +47,7 @@ function smarty_block_sf_view($params, $content, $smarty_template, &$repeat)
         
         $div=new TagRenderer("div",true);
         $div->setId($id);
-        $class.=" skin-".SmartyFaces::$skin;
+        $class.=" skin-bootstrap";
 	    $div->setAttributeIfExists("class", $class);
 	    
         if($template!=null) {

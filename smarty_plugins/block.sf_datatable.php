@@ -6,7 +6,7 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
     
     $attributes_list=array("id","value","style","class");
     $attributes=SmartyFacesComponent::resolveAttributtes($attributes_list);
-    $attributes['value']['desc']="Array of data taht will be displayed in table";
+    $attributes['value']['desc']="Array of data that will be displayed in table";
     $attributes['var']=array(
     	'required'=>true,
     	'desc'=>'Name of the row iteration variable'		
@@ -33,7 +33,7 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
     	'required'=>false,'default'=>'','desc'=>'Function that calculates style class for each row'		
     );
     $attributes['styled']=array(
-    	'required'=>false,'default'=>true,'type'=>'bool', 'desc'=>'If set to true table will be styled with some css classes'
+    	'required'=>false,'default'=>true,'type'=>'bool', 'desc'=>'If set to true table will be styled with some css classes (deprecated)'
     );
     $attributes['responsive']=array(
     	'required'=>false,'default'=>true,'type'=>'bool', 'desc'=>'Display table to be responsive for smalled devices'
@@ -64,14 +64,8 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 		
 		if(!isset($this_tag_stack['table'])) $this_tag_stack['table']=array();
 		$table_class=$class;
-		if($styled) {
-			if(SmartyFaces::$skin=="default") {
-				$table_class.=" sf-datatable";
-			} else if (SmartyFaces::$skin=="bootstrap") {
-				$table_class.=" table table-hover table-striped table-condensed";
-			}
-		}
-		
+		$table_class.=" table table-hover table-striped table-condensed";
+
 		$this_tag_stack['table']['attributes']['class']=$table_class;
 		$this_tag_stack['table']['attributes']['style']=$style;
 
@@ -122,7 +116,7 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 					continue;
 				}
     			$cell['content']=$column['header'];
-    			$cell['attributes']['class']=(SmartyFaces::$skin=="default" ? "sf-columnheader " : "").$column['class'];
+    			$cell['attributes']['class']=$column['class'];
     			$cell['attributes']['width']=$column['width'];
     			$cell['attributes']['title']=$column['title'];
     			$cell['attributes']['align']=$column['align'];
@@ -134,7 +128,7 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 			    $dataModel = $value;
 				$availableColumns = [];
 			    foreach($columns as $col) {
-					$header=$col['header'] ? trim(strip_tags($col['header'])) : "";
+					$header=$col['header'] ? trim(strip_tags($col['header'] ?? "")) : "";
 					$header=str_replace("&nbsp;", "", $header);
 					if(empty($header)) {
 						$header="[".$col['id']."]";
@@ -271,7 +265,7 @@ function _displayTable($this_tag_stack, $template) {
 		$s.="<thead>";
 		$thead_open=true;
 		$s.="<tr>";
-		$class=SmartyFaces::$skin=="default" ? "sf-tableheader" : "sf-caption";
+		$class="sf-caption";
 		if(isset($this_tag_stack['facets']['header']['params']['class'])) {
 			$class.=" ".$this_tag_stack['facets']['header']['params']['class'];
 		}
@@ -302,13 +296,14 @@ function _displayTable($this_tag_stack, $template) {
 				}
 				$s.="<th"._getAttributes($cell['attributes']).">";
 				$head_id = $this_tag_stack['table']['attributes']['id']."-".$cell['id'];
-				if($sortby) $s.='<a id="'.$head_id.'" href="" onclick="SF.dm.sort(this);return false">';
+				if($sortby) $s.='<div class="d-flex align-items-center justify-content-between"><a id="'.$head_id.'" href="" onclick="SF.dm.sort(this);return false">';
 				$content="";
 				if(isset($cell['content'])) $content=trim($cell['content']);
 				$s.=$content;
 				if($sortby) $s.='</a>';
 				if($sortby and is_object($this_tag_stack['params']['value'])) {
 					$s.=$this_tag_stack['params']['value']->icon($cell['sortby']);
+                    $s.='</div>';
 				}
 				$s.="</th>";
 			}
@@ -366,7 +361,7 @@ function _displayTable($this_tag_stack, $template) {
 	if(isset($this_tag_stack['table']['footer'])) {
 		$s.="<tfoot>";
 		$s.="<tr>";
-		$s.="<td class=\"".(SmartyFaces::$skin=="default" ? "sf-tablefooter" : "")."\" colspan=\"$colspan\">";
+		$s.="<td class=\"\" colspan=\"$colspan\">";
 		$s.=trim($this_tag_stack['table']['footer']);
 		$s.="</td>";
 		$s.="</tr>";
@@ -387,4 +382,3 @@ function _columnsHasHeaders($columns) {
 	return false;
 }
 
-?>

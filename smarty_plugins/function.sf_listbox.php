@@ -9,7 +9,8 @@ function smarty_function_sf_listbox($params, $template)
     $attributes['value']['required']=false;
     $attributes['values']=array(
     	'required'=>true,
-    	'default'=>null,		
+    	'default'=>[],
+        'desc'=>'List of items that will be displayed'
     );
     $attributes['var']=array(
     	'required'=>false,
@@ -19,12 +20,12 @@ function smarty_function_sf_listbox($params, $template)
     $attributes['val']=array(
     	'required'=>false,
     	'default'=>null,
-    	'description'=>'Value for item in list'
+    	'desc'=>'Value for item in list'
     );
     $attributes['label']=array(
     	'required'=>false,
     	'default'=>null,
-    	'description'=>'Label for value in list'
+    	'desc'=>'Label for value in list'
     );
     if($params==null and $template==null) return $attributes;
     $attributes_values=SmartyFacesComponent::proccessAttributes($tag, $attributes, $params);
@@ -35,7 +36,7 @@ function smarty_function_sf_listbox($params, $template)
 	SmartyFacesContext::$bindings[$id]=$value;
 	$value=  SmartyFaces::evalExpression($value);
 	
-	if(SmartyFaces::$skin=="bootstrap") $class.=" form-control";
+	$class.=" form-control";
 	
 	$select=new TagRenderer("select",true);
 	$select->setAttribute("multiple", "multiple");

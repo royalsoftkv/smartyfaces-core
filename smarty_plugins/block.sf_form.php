@@ -16,8 +16,6 @@ function smarty_block_sf_form($params, $content, $template, &$repeat)
     //$id=SmartyFacesComponent::getParameter($tag, "id", uniqid(), $params);
     SmartyFacesComponent::createComponent($id, $tag, $params);
     
-    if(SmartyFaces::$skin=="default") $class.=" sf-form";
-    
     if(is_null($content)){
         SmartyFacesComponent::setCurrentStateId();
         $tr=new TagRenderer('form',true);
@@ -82,8 +80,7 @@ function smarty_block_sf_form($params, $content, $template, &$repeat)
     $s.=$tr->renderCloseTag();
     
     if(SmartyFacesContext::$hasPopups && SmartyFacesContext::$popupsCount==0) {
-    	$script='$("body").removeClass("modal-open");
-    				$(".modal-backdrop").remove();';
+    	$script='SF.popup.removeAll();';
     	SmartyFaces::addScript($script);
     }
     
@@ -101,4 +98,3 @@ function smarty_block_sf_form($params, $content, $template, &$repeat)
     
 }
 
-?>

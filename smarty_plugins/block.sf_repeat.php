@@ -40,10 +40,9 @@ function smarty_block_sf_repeat($params, $content, $template, &$repeat)
     if($repeat==false){
     	$template->clearAssign($var);
     } else {
-	$template->assign($var,$value[$index]);
+	    $template->assign($var,$value[$index]);
     }
     $s=$content;
     return $s;
 }
 
-?>

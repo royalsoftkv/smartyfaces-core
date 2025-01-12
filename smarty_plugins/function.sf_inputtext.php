@@ -49,14 +49,16 @@ function smarty_function_sf_inputtext($params, $template)
     	SmartyFacesContext::addConverter($id,$converter);
     }
     
-    if(SmartyFaces::$skin=="default") $class.=" sf-input sf-inputtext";
-    if(SmartyFaces::$skin=="bootstrap") $class.=" form-control";
+    $class.=" form-control";
+    if(!$block) {
+        $class.=" width-auto";
+    }
     
     SmartyFacesContext::$bindings[$id]=$value;
     if(SmartyFaces::$validateFailed and !$disabled) {
     	$value = isset(SmartyFacesContext::$formData[$id]) ? SmartyFacesContext::$formData[$id] : null;
     	if(SmartyFacesComponent::validationFailed($id)) {
-    		if(SmartyFaces::$skin=="default") $class.=" sf-vf";
+    		$class.=" sf-vf is-invalid";
     	}
     } else {
     	$value=  SmartyFaces::evalExpression($value);
@@ -67,12 +69,7 @@ function smarty_function_sf_inputtext($params, $template)
     $value=htmlentities($value ?? "",ENT_QUOTES,"UTF-8");
 
     $events=SmartyFacesComponent::encodeEvents($events,$params,$registered_events);
-    
-    if(SmartyFaces::$skin=="bootstrap") {
-    	$span=new TagRenderer("span",true);
-    	$span->setAttributeIfExists("class", SmartyFacesComponent::getFormControlValidationClass($id));
-    }
-    
+
     $input=new TagRenderer("input");
     $input->setCustom($custom);
     $input->setAttributeIfExists("style", $style);
@@ -90,29 +87,15 @@ function smarty_function_sf_inputtext($params, $template)
     $input->setAttributeIfExists("class", $class);
     $input->passAttributes($attributes_values, array("placeholder"));
     $input->setCustom($events);
-    if(SmartyFAces::$skin=="bootstrap" && !$block) {
-    	$input->appendAttribute("class", " width-auto");
+
+    $s=$input->render();
+
+    if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
+        $msg_span=new TagRenderer("div",true);
+        $msg_span->setAttribute("class", "invalid-feedback");
+        $msg_span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
+        $s.=$msg_span->render();
     }
-    
-    if(SmartyFaces::$skin=="bootstrap") {
-    	$span->addHtml($input->render()); 
-    	
-    	if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
-    		$msg_span=new TagRenderer("span",true);
-    		$msg_span->setAttribute("class", "help-block");
-    		$msg_span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
-    		$span->addHtml($msg_span->render());
-    	}
-    	
-    	$s=$span->render();
-    	
-    } else {
-	    $s=$input->render();
-	    if($attachMessage and !$disabled) $s.=SmartyFacesComponent::renderMessage($id);
-    }
-    
-    
+
     return $s;
 }
-
-?>

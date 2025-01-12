@@ -27,11 +27,6 @@ function smarty_function_sf_checkbox($params, $template)
     	'default'=>null,
     	'desc'=>'Label text for checkbox',
     );
-    $attributes['block']=array(
-    	'required'=>false,
-    	'default'=>true,
-    	'desc'=>'Display checkbox as block (not applied for bootstrap skin)',
-    );
     $attributes['confirm']=array(
     	'required'=>false,
     	'default'=>null,
@@ -45,8 +40,6 @@ function smarty_function_sf_checkbox($params, $template)
     	$confirm='if(!confirm(\''.$confirm.'\')) return false;';
     }
     
-    if(SmartyFaces::$skin=="default") $class.=" sf-input sf-input-checkbox ";
-    
     $id=SmartyFacesComponent::checkNested($id,$template);
     SmartyFacesComponent::createComponent($id, $tag, $params, array("boolean","disabled","unCheckedValue"));
     
@@ -58,7 +51,8 @@ function smarty_function_sf_checkbox($params, $template)
 	if(!is_null($validator)) {
 		SmartyFacesContext::addValidator($id,$validator);
 	}
-    
+
+    $invalid=false;
     SmartyFacesContext::$bindings[$id]=$value;
 	if(SmartyFaces::$validateFailed and !$disabled) {
 		if(isset(SmartyFacesContext::$formData[$id])) {
@@ -67,14 +61,14 @@ function smarty_function_sf_checkbox($params, $template)
 			$value=$unCheckedValue;
 		}
 		if(SmartyFacesComponent::validationFailed($id)) {
-			if(SmartyFaces::$skin=="default") $class.= " sf-vf";
+            $invalid = true;
 		}
     } else {
 	    $value=  SmartyFaces::evalExpression($value);
     }
 
 
-    if(!is_null($action)) {
+    if(!is_null($action) && $action != "null") {
     	if($stateless) {
     		$action="'".$action."'";
     		$data=array();
@@ -89,18 +83,16 @@ function smarty_function_sf_checkbox($params, $template)
     	$onchange="";
     }
     
-    if(SmartyFaces::$skin=="bootstrap") {
-    	$div=new TagRenderer("div",true);
-    	$div_class="checkbox";
-    	if(!$disabled) $div_class.=" ".SmartyFacesComponent::getFormControlValidationClass($id);
-    	$div->setAttribute("class", $div_class);
-    	$label_c=new TagRenderer("label", true);
-    }
-    
+	$div=new TagRenderer("div",true);
+	$div_class="checkbox";
+	if(!$disabled) $div_class.=" ".SmartyFacesComponent::getFormControlValidationClass($id);
+	$div->setAttribute("class", $div_class);
+	$div->setAttributeIfExists("title", $title);
+
     $c=new TagRenderer("input",false);
     $c->setAttribute("type", "checkbox");
-    $c->setAttributeIfExists("class", $class);
-    $c->setAttributeIfExists("title", $title);
+	$class.=" form-check-input".($invalid? " is-invalid":"");
+    $c->setAttribute("class", $class);
     $c->setIdAndName($id);
     $c->setValue($checkedValue);
     $c->setAttributeIfExists("onchange", $onchange);
@@ -111,33 +103,21 @@ function smarty_function_sf_checkbox($params, $template)
     if($disabled) {
 	    $c->setAttributeIfExists("disabled", "disabled");
     }
-    
-    if(SmartyFaces::$skin=="bootstrap") {
-    	$label_c->addHtml($c->render());
-    	$label_c->addHtml('&nbsp;' . $label);
-    	$div->addHtml($label_c->render());
-    	if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
-    		$span=new TagRenderer("span",true);
-    		$span->setAttribute("class", "help-block");
-    		$span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
-    		$div->addHtml($span->render());
-    	}
-    	$s=$div->render();
-    } else {
-    	$div=new TagRenderer("div",true);
-	    $div->addHtml($c->render());
-    	$div->addHtml($label);
-	    if($attachMessage and !$disabled) {
-	    	$div->addHtml(SmartyFacesComponent::renderMessage($id));
-	    }
-	    if($block) {
-		    $s=$div->render();
-	    } else {
-	    	$s=$div->html;
-	    }
-    }
-    
+	$div->addHtml($c->render());
+
+	$label_c=new TagRenderer("label", true);
+	$label_c->setAttribute("class","form-check-label");
+    $label_c->setAttribute("for", $id);
+	$label_c->addHtml($label);
+	$div->addHtml($label_c->render());
+	if($attachMessage and !$disabled and $invalid) {
+		$span=new TagRenderer("div",true);
+		$span->setAttribute("class", "invalid-feedback");
+		$span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
+		$div->addHtml($span->render());
+	}
+	$s=$div->render();
+
     return $s;
 }
 
-?>

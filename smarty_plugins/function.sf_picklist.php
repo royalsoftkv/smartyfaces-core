@@ -9,37 +9,36 @@ function smarty_function_sf_picklist($params, $template)
     $attributes['source']=array(
 		'required'=>false,
     	'default'=>null,
-    	'description'=>'Array of source items to be displayed'    		
+    	'desc'=>'Array of source items to be displayed'
     );
     $attributes['value']['default']=null;
     $attributes['value']['required']=false;
     $attributes['var']=array(
 		'required'=>false,
     	'default'=>null,
-    	'description'=>'Name of variable to iterate source and target elements'    		
+    	'desc'=>'Name of variable to iterate source and target elements'
     );
     $attributes['label']=array(
 		'required'=>false,
     	'default'=>null,
-    	'description'=>'Label for value for select list'    		
+    	'desc'=>'Label for value for select list'
     );
     $attributes['buttonclass']=array(
 		'required'=>false,
     	'default'=>null,
-    	'description'=>'Style class that will be applied to picklist buttons'    		
+    	'desc'=>'(deprecated) Style class that will be applied to picklist buttons'
     );
     $attributes['buttontitles']=array(
     		'required'=>false,
     		'default'=>array(),
-    		'description'=>'Array of title strings that will be displayed for picklist buttons'
+    		'desc'=>'(deprecated) Array of title strings that will be displayed for picklist buttons'
     );
     if($params==null and $template==null) return $attributes;
     extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
     
-    if(SmartyFaces::$skin=="default") $class.=" sf-input sf-picklist";
     if(is_null($source)) $source=array();
-    
-    
+
+    $buttontitles = _picklistButtonTitles();
 	
 	SmartyFacesContext::$bindings[$id]=$value;
 	
@@ -55,11 +54,6 @@ function smarty_function_sf_picklist($params, $template)
 		} else {
 			$value=array();
 		}
-		
-		
-		if(SmartyFacesComponent::validationFailed($id)) {
-			if(SmartyFaces::$skin=="default") $class.=" sf-vf";
-		}
 	} else {
 		$value=  SmartyFaces::evalExpression($value);
 	}
@@ -67,6 +61,8 @@ function smarty_function_sf_picklist($params, $template)
 	if($required and !$disabled){
 		SmartyFacesContext::addRequiredValidator($id);
 	}
+
+    $invalid = SmartyFacesComponent::validationFailed($id);
 	
 	SmartyFacesComponent::createComponent($id, $tag, $params, array("source"));
 	
@@ -90,8 +86,8 @@ function smarty_function_sf_picklist($params, $template)
 	}
 	$select1->setAttribute("multiple", "multiple");
 	$select1->setId($id.'_l');
-	$select1->setAttribute("style", "min-width:100px");
-	if(SmartyFaces::$skin=="bootstrap") $select1->setAttribute("class", "form-control");
+    $s_class = "form-select h-100 " . ($invalid ? "is-invalid" : "");
+	$select1->setAttribute("class", $s_class);
     
     $values_map=array();
     
@@ -117,10 +113,10 @@ function smarty_function_sf_picklist($params, $template)
     	
     }
     
-    $input1=_createButton($id,$buttonclass,$disabled,'&rarr;', 'move_right', '_bnt_mr');
-    $input2=_createButton($id,$buttonclass,$disabled,'&rrarr;', 'move_all_right', '_bnt_mar');
-    $input3=_createButton($id,$buttonclass,$disabled,'&larr;', 'move_left', '_bnt_ml');
-    $input4=_createButton($id,$buttonclass,$disabled,'&llarr;', 'move_all_left', '_bnt_mal');
+    $input1=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-chevron-right"></span>', $buttontitles['move_right'], '_bnt_mr');
+    $input2=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-angles-right"></span>', $buttontitles['move_all_right'], '_bnt_mar');
+    $input3=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-chevron-left"></span>', $buttontitles['move_left'], '_bnt_ml');
+    $input4=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-angles-left"></span>', $buttontitles['move_all_left'], '_bnt_mal');
     
     $select2=new TagRenderer("select",true);
     if($disabled) {
@@ -128,8 +124,7 @@ function smarty_function_sf_picklist($params, $template)
     }
     $select2->setAttribute("multiple", "multiple");
     $select2->setId($id.'_r');
-    $select2->setAttribute("style", "min-width:100px");    
-    if(SmartyFaces::$skin=="bootstrap") $select2->setAttribute("class", "form-control");
+    $select2->setAttribute("class", $s_class);
     
     foreach($right_list_keys as $key) {
     	$item=$source[$key];
@@ -153,87 +148,56 @@ function smarty_function_sf_picklist($params, $template)
     	
     }
     
-    $input5=_createButton($id,$buttonclass,$disabled,'&UpArrowBar;', 'move_top', '_bnt_tp');
-    $input6=_createButton($id,$buttonclass,$disabled,'&uarr;', 'move_up', '_bnt_up');
-    $input7=_createButton($id,$buttonclass,$disabled,'&darr;', 'move_down', '_bnt_dn');
-    $input8=_createButton($id,$buttonclass,$disabled,'&DownArrowBar;', 'move_bottom', '_bnt_bt');
-    
-    if(SmartyFaces::$skin=="bootstrap") {
-		$row=new TagRenderer("div",true);
-		$row->setAttribute("class", "row");
-		$col1=new TagRenderer("div",true);
-		$col1->setAttribute("class", "col-md-5 pl-select");
-		$col1->setValue($select1->render());
-		$col2=new TagRenderer("div",true);
-		$col2->setAttribute("class", "col-md-1 pl-buttons");
-		$group1=new TagRenderer("div",true);
-		$group1->setAttribute("class", "btn-group-vertical");
-		$group1->addHtml($input1->render());
-		$group1->addHtml($input2->render());
-		$group1->addHtml($input3->render());
-		$group1->addHtml($input4->render());
-		$col2->setValue($group1->render());
-		$col3=new TagRenderer("div",true);
-		$col3->setAttribute("class", "col-md-5 pl-select");
-		$col3->setValue($select2->render());
-		$col4=new TagRenderer("div",true);
-		$col4->setAttribute("class", "col-md-1 pl-buttons");
-		$group2=new TagRenderer("div",true);
-		$group2->setAttribute("class", "btn-group-vertical");
-		$input5->appendAttribute("class", " btn btn-default btn-lg");
-		$input6->appendAttribute("class", " btn btn-default");
-		$input7->appendAttribute("class", " btn btn-default");
-		$input8->appendAttribute("class", " btn btn-default");
-		$group2->addHtml($input5->render());
-		$group2->addHtml($input6->render());
-		$group2->addHtml($input7->render());
-		$group2->addHtml($input8->render());
-		$col4->setValue($group2->render());
-		$row->addHtml($col1->render());
-		$row->addHtml($col2->render());
-		$row->addHtml($col3->render());
-		$row->addHtml($col4->render());
-    	if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
-    		$msg_row=new TagRenderer("div",true);
-    		$msg_row->appendAttribute("class", SmartyFacesComponent::getFormControlValidationClass($id));
-    		$row->appendAttribute("class", SmartyFacesComponent::getFormControlValidationClass($id));
-    		$span=new TagRenderer("div",true);
-    		$span->setAttribute("class", "help-block");
-    		$span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
-    		$msg_row->addHtml($span->render());
-    		$s=$row->render();
-	    	$s.=$msg_row->render();
-    	} else {
-    		$s=$row->render();
-    	}
-    } else {
-	    $table=new TagRenderer("table",true);
-	    $table->setAttributeIfExists("class", $class);
-	    $tr=new TagRenderer("tr",true);
-	    $td1=new TagRenderer("td",true);
-	    $td1->addHtml($select1->render());
-	    $tr->addHtml($td1->render());
-	    $td2=new TagRenderer("td",true);
-	    $td2->addHtml($input1->render());
-	    $td2->addHtml($input2->render());
-	    $td2->addHtml($input3->render());
-	    $td2->addHtml($input4->render());
-	    $tr->addHtml($td2->render());
-	    $td3=new TagRenderer("td",true);
-	    $td3->addHtml($select2->render());
-	    $tr->addHtml($td3->render());
-	    $td4=new TagRenderer("td",true);
-	    $td4->addHtml($input5->render());   
-	    $td4->addHtml($input6->render());    
-	    $td4->addHtml($input7->render());    
-	    $td4->addHtml($input8->render());
-	    $tr->addHtml($td4->render());
-	    $table->addHtml($tr->render());
-	    $s=$table->render();
-	    if($attachMessage and !$disabled) $s.=SmartyFacesComponent::renderMessage($id);
-    } 
+    $input5=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-angles-up"></span>', $buttontitles['move_top'], '_bnt_tp');
+    $input6=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-chevron-up"></span>', $buttontitles['move_up'], '_bnt_up');
+    $input7=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-chevron-down"></span>', $buttontitles['move_down'], '_bnt_dn');
+    $input8=_createButton($id,$buttonclass,$disabled,'<span class="fa fa-angles-down"></span>', $buttontitles['move_bottom'], '_bnt_bt');
 
-    
+	$row=new TagRenderer("div",true);
+	$row->setAttribute("class", "d-flex ".$class);
+    if($invalid) {
+        $row->appendAttribute("class","is-invalid");
+    }
+	$col1=new TagRenderer("div",true);
+	$col1->setAttribute("class", "flex-grow-1");
+	$col1->setValue($select1->render());
+	$col2=new TagRenderer("div",true);
+	$col2->setAttribute("class", "pl-buttons");
+	$group1=new TagRenderer("div",true);
+	$group1->setAttribute("class", "btn-group-vertical");
+	$group1->addHtml($input1->render());
+	$group1->addHtml($input2->render());
+	$group1->addHtml($input3->render());
+	$group1->addHtml($input4->render());
+	$col2->setValue($group1->render());
+	$col3=new TagRenderer("div",true);
+	$col3->setAttribute("class", "flex-grow-1");
+	$col3->setValue($select2->render());
+	$col4=new TagRenderer("div",true);
+	$col4->setAttribute("class", "pl-buttons");
+	$group2=new TagRenderer("div",true);
+	$group2->setAttribute("class", "btn-group-vertical");
+	$input5->appendAttribute("class", " btn btn-default btn-lg");
+	$input6->appendAttribute("class", " btn btn-default");
+	$input7->appendAttribute("class", " btn btn-default");
+	$input8->appendAttribute("class", " btn btn-default");
+	$group2->addHtml($input5->render());
+	$group2->addHtml($input6->render());
+	$group2->addHtml($input7->render());
+	$group2->addHtml($input8->render());
+	$col4->setValue($group2->render());
+	$row->addHtml($col1->render());
+	$row->addHtml($col2->render());
+	$row->addHtml($col3->render());
+	$row->addHtml($col4->render());
+    $s=$row->render();
+	if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
+		$msg_row=new TagRenderer("div",true);
+		$msg_row->appendAttribute("class", "invalid-feedback");
+        $msg_row->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
+        $s.=$msg_row->render();
+	}
+
     $s.=TagRenderer::renderHidden($id, $hidden_val);
     
     $script='SF.ajax.loadPickListHandler(\''.$id.'\');';
@@ -245,15 +209,12 @@ function smarty_function_sf_picklist($params, $template)
 
 
 function _createButton($id,$buttonclass,$disabled,$ui_icon,$title,$id_suffix) {
-	if(SmartyFaces::$skin=="default") $input=new TagRenderer("input");
-	if(SmartyFaces::$skin=="bootstrap") $input=new TagRenderer("button",true);
-	if(SmartyFaces::$skin=="bootstrap") $input->setValue($ui_icon);
-	$input->setAttribute("title", isset($buttontitles[$title]) ? $buttontitles[$title] : '');
+	$input=new TagRenderer("button",true);
+	$input->setValue($ui_icon);
+	$input->setAttributeIfExists("title", $title);
 	$input->setAttribute("type", "button");
 	$input->setId($id.$id_suffix);
-	$class="";
-	if(SmartyFaces::$skin=="default") $class='pl_mr ui-icon '.$ui_icon.' ';
-	if(SmartyFaces::$skin=="bootstrap") $class='pl_mr btn btn-default btn-xs ';
+	$class='pl_mr btn btn-outline-secondary btn-sm ';
 	$input->setAttribute("class", $class.$buttonclass);
 	if($disabled) {
 		$input->setAttribute("disabled", "disabled");
@@ -261,4 +222,12 @@ function _createButton($id,$buttonclass,$disabled,$ui_icon,$title,$id_suffix) {
 	return $input;
 }
 
-?>
+
+function _picklistButtonTitles() {
+    $list=array("move_right","move_all_right","move_left","move_all_left",
+        "move_top","move_up","move_down","move_bottom");
+    foreach($list as $item) {
+        $list[$item]=SmartyFaces::translate("picklist_".$item);
+    }
+    return $list;
+}

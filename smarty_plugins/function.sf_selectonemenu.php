@@ -36,7 +36,7 @@ function smarty_function_sf_selectonemenu($params, $template)
     		"required"=>false,
     		"default"=>false,
     		"type"=>'bool',
-    		"desc"=>"Display text input in all avaialable width (Bootstrap skin only)");
+    		"desc"=>"Display text input in all avaialable width");
     $attributes['optionClass']=array(
     		"required"=>false,
     		"default"=>"",
@@ -61,8 +61,7 @@ function smarty_function_sf_selectonemenu($params, $template)
     extract($attributes_values);
     
     $id=SmartyFacesComponent::checkNested($id,$template);
-    if(SmartyFaces::$skin=="default") $class.=" sf-input sf-select";
-    
+
     if(!$rendered) return;
     
     $required=(bool) $required;
@@ -75,18 +74,19 @@ function smarty_function_sf_selectonemenu($params, $template)
     }
     
     SmartyFacesContext::$bindings[$id]=$value;
-    
+
+    $invalid = false;
     if(SmartyFaces::$validateFailed and !$disabled) {
     	$value = SmartyFacesContext::$formData[$id];
     	if($value=="null") $value=null;
     	if(SmartyFacesComponent::validationFailed($id)) {
-    		if(SmartyFaces::$skin=="default") $class.=" sf-vf";
+            $invalid = true;
     	}
     } else {
     	$value=  SmartyFaces::evalExpression($value);
     }
     
-    if(!is_null($action)){
+    if(!is_null($action) && $action!="null"){
     	if($stateless) {
     		$action="'".$action."'";
     		$data=array();
@@ -102,12 +102,12 @@ function smarty_function_sf_selectonemenu($params, $template)
     
     
     $select=new TagRenderer("select",true);
-    $select->setAttributeIfExists("class", $class);
+    $select->setAttributeIfExists("class", $class. " form-select");
     $select->passAttributes($attributes_values, array("style","title"));
     $select->setDisabled($disabled);
     $select->setIdAndName($id);
     $select->setAttributeIfExists("onchange", $onchange);
-    if(SmartyFAces::$skin=="bootstrap" && !$block) {
+    if(!$block) {
     	$select->appendAttribute("class", " width-auto");
     }
     
@@ -158,44 +158,39 @@ function smarty_function_sf_selectonemenu($params, $template)
     }
     
     $_s="";
-    if(SmartyFaces::$skin=="default") {
-	    $_s.=$select->render();
-	    if($attachMessage and !$disabled) $_s.=SmartyFacesComponent::renderMessage($id);
-    } else {
-    	static $attached_combobox;
-    	if(!$attached_combobox && $autocomplete) {
-    		$url = SmartyFaces::getResourcesUrl() ."/bootstrap-combobox/bootstrap-combobox.js";
-    		$_s.=SmartyFaces::addScript($url, true);
-    		$url = SmartyFaces::getResourcesUrl() ."/bootstrap-combobox/bootstrap-combobox.css";
-    		$_s.='<link type="text/css" rel="stylesheet" href="'.$url.'">';
-    	}
-    	$select->appendAttribute("class", "form-control");
-    	$div=new TagRenderer("div",true);
-    	$div->setAttribute("class", SmartyFacesComponent::getFormControlValidationClass($id));
-    	$div->appendAttribute("class", "div-select-".$class);
-    	if($autocomplete) {
-    		$div->appendAttribute("class", "auto-complete");
-	    	if($block) {
-	    		$div->appendAttribute("class", "auto-complete-block");
-	    	}
-    	}
-    	$div->addHtml($select->render());
-    	if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
-    		$span=new TagRenderer("span",true);
-    		$span->setAttribute("class", "help-block");
-    		$span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
-    		$div->addHtml($span->render());
-    	}
-    	$_s.=$div->render();
-    	if($autocomplete) {
-    		$options=array();
-    		if($free_input) {
-    			$options['freeInput']=true;
-    		}
-    		$_s.=SmartyFaces::addScript('$("#'.$id.'").combobox('.json_encode($options).');');
-    	}
+    static $attached_combobox;
+    if(!$attached_combobox && $autocomplete) {
+        $url = SmartyFaces::getResourcesUrl() ."/choices.js/choices.min.js";
+        $_s.=SmartyFaces::addScript($url, true);
+        $url = SmartyFaces::getResourcesUrl() ."/choices.js/choices.min.css";
+        $_s.='<link type="text/css" rel="stylesheet" href="'.$url.'">';
+    }
+    if($invalid) {
+        $select->appendAttribute("class", "is-invalid");
+    }
+    $div=new TagRenderer("div",true);
+    $div->setAttribute("class", SmartyFacesComponent::getFormControlValidationClass($id));
+    $div->appendAttribute("class", "div-select-".$class);
+    if($autocomplete) {
+        $div->appendAttribute("class", "auto-complete");
+        if($block) {
+            $div->appendAttribute("class", "auto-complete-block");
+        }
+    }
+    $div->addHtml($select->render());
+    if($attachMessage and !$disabled and $invalid) {
+        $span=new TagRenderer("div",true);
+        $span->setAttribute("class", "invalid-feedback");
+        $span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
+        $div->addHtml($span->render());
+    }
+    $_s.=$div->render();
+    if($autocomplete) {
+        $options=array();
+        if($free_input) {
+            $options['freeInput']=true;
+        }
+        $_s.=SmartyFaces::addScript('SF.attachAutocomplete("'.$id.'")');
     }
     return $_s;
 }
-
-?>

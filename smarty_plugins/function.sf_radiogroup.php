@@ -29,7 +29,7 @@ function smarty_function_sf_radiogroup($params, $template)
     $attributes['direction']=array(
     		'required'=>false,
     		'default'=>'horizontal',
-    		'desc'=>'Defines direction for displaying radios. Available are: hirozontal, verical'
+    		'desc'=>'Defines direction for displaying radios. Available are: horizontal, vertical'
     );
     if($params==null and $template==null) return $attributes;
     extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
@@ -45,6 +45,7 @@ function smarty_function_sf_radiogroup($params, $template)
     }
     
     SmartyFacesContext::$bindings[$id]=$value;
+    $invalid = false;
     if(SmartyFaces::$validateFailed and !$disabled) {
     	if(isset(SmartyFacesContext::$formData[$id])) {
     		$value = SmartyFacesContext::$formData[$id];
@@ -52,14 +53,14 @@ function smarty_function_sf_radiogroup($params, $template)
     		$value=null;
     	}
     	if(SmartyFacesComponent::validationFailed($id)) {
-    		if(SmartyFaces::$skin=="default") $class.=" sf-vf";
+            $invalid = true;
     	}
     } else {
     	$value=  SmartyFaces::evalExpression($value);
     }
     
     $onchange="";
-    if(!is_null($action)){
+    if(!is_null($action) && $action!="null"){
     	if($stateless) {
     		$action="'".$action."'";
     		$data=array();
@@ -72,13 +73,13 @@ function smarty_function_sf_radiogroup($params, $template)
     	$onchange='SF.a(this,'.$action.','.$data_str.'); return false;';
     }
     
-    if(SmartyFaces::$skin=="default") $class.=" sf-radio-group";
-    
-    $span=new TagRenderer("span",true);
-    
+    $cont=new TagRenderer("div",true);
+    $cont->setAttributeIfExists("class", $class);
+    $ix=0;
     if(is_array($values) and count($values)) {
-	    foreach($values as $key=>$item){
-	    	$v=null;
+        foreach($values as $key=>$item){
+            $ix++;
+            $v=null;
 	    	$l=null;
 	    	if($var!=null) {
 	    		$$var=$item;
@@ -98,10 +99,12 @@ function smarty_function_sf_radiogroup($params, $template)
 	    	}
 	    	
 	    	
-	    	
+	    	$itemId=$id."-".$ix;
 	    	$radio=new TagRenderer("input");
 	    	$radio->setAttribute("type", "radio");
-	    	$radio->setIdAndName($id);
+	    	$radio->setAttribute("name",$id);
+	    	$radio->setAttribute("id",$itemId);
+            $radio->setAttribute("class","form-check-input ".($invalid ? " is-invalid" : ""));
 	    	$radio->setValue($v);
 	    	$radio->setAttributeIfExists("onchange", $onchange);
 	    	if($disabled){
@@ -110,44 +113,26 @@ function smarty_function_sf_radiogroup($params, $template)
 	    	if($v==$value) {
 	    		$radio->setAttribute("checked", "checked");
 	    	}
+
+            $div=new TagRenderer("div",true);
+            $div->setAttribute("class", "form-check ".($direction == "horizontal" ? " form-check-inline" : "").($invalid ? " is-invalid" : ""));
 	    	
-	    	if(SmartyFaces::$skin=="default") {
-		    	$span->addHtml($radio->render());
-		    	$span->addHtml($l);
-			    if($direction=="vertical"){
-			    	$span->addHtml('<br/>');
-			    }
-	    	} else {
-	    		$tag_label=new TagRenderer("label",true);
-	    		$tag_label->setAttribute("class", $direction=="horizontal" ? "radio-inline" : "");
-	    		$tag_label->addHtml($radio->render());
-	    		$tag_label->addHtml($l);
-	    		if($direction=="vertical") {
-	    			$div=new TagRenderer("div",true);
-	    			$div->setAttribute("class", "radio");
-	    			$div->setValue($tag_label->render());
-		    		$span->addHtml($div->render());
-	    		} else {
-		    		$span->addHtml($tag_label->render());
-	    		}
-	    	}
-	    	
+            $tag_label=new TagRenderer("label",true);
+            $tag_label->setAttribute("class", "form-check-label ");
+            $tag_label->setAttribute("for", $itemId);
+            $tag_label->setValue($l);
+            $div->addHtml($radio->render());
+            $div->addHtml($tag_label->render());
+            $cont->addHtml($div->render());
 	    }
     }
-    if(SmartyFaces::$skin=="default") {
-	    $s=$span->render();
-	    if($attachMessage and !$disabled) $s.=SmartyFacesComponent::renderMessage($id);
-    } else {
-    	$span->appendAttribute("class", SmartyFacesComponent::getFormControlValidationClass($id));
-    	if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
-    		$msg_span=new TagRenderer("span",true);
-    		$msg_span->setAttribute("class", "help-block");
-    		$msg_span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
-    		$span->addHtml($msg_span->render());
-    	}
-    	$s=$span->render();
+    if($attachMessage and !$disabled and $invalid) {
+        $msg_span=new TagRenderer("div",true);
+        $msg_span->setAttribute("class", "invalid-feedback");
+        $msg_span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
+        $cont->addHtml($msg_span->render());
     }
-    return $s;
+    return $cont->render();
 }
 
 ?>

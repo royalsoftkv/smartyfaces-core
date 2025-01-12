@@ -187,7 +187,10 @@ class SmartyFacesComponent {
     		foreach(SmartyFacesMessages::$messages[$id] as $message){
     			$type=$message['type'];
     			$m=$message['message'];
-    			$msg_class="sf-msg-".$type;
+    			$msg_class="d-sf-msg-".$type;
+				if($type=="error") {
+					$msg_class.=" invalid-feedback";
+				}
     			$errors[]='<span class="'.$msg_class.'">'.$m.'</span>';
     		}
     		$s=implode("", $errors);
@@ -198,10 +201,10 @@ class SmartyFacesComponent {
     static function getFormControlValidationClass($id) {
     	if(isset(SmartyFacesMessages::$messages[$id][0])){
     		$type=SmartyFacesMessages::$messages[$id][0]['type'];
-    		if($type==SmartyFacesMessages::ERROR) return "has-error";
-    		if($type==SmartyFacesMessages::WARNING) return "has-warning";
-    		if($type==SmartyFacesMessages::SUCCESS) return "has-success";
-    		if($type==SmartyFacesMessages::INFO) return "has-success";
+    		if($type==SmartyFacesMessages::ERROR) return "";
+    		if($type==SmartyFacesMessages::WARNING) return "";
+    		if($type==SmartyFacesMessages::SUCCESS) return "";
+    		if($type==SmartyFacesMessages::INFO) return "";
     	}
     }
     
@@ -397,7 +400,7 @@ class SmartyFacesComponent {
 			$action="null";
 			$data_str="null";
 		}
-		$s="SF.a(this,".$action.",'".$data_str."');";
+		$s="SF.a(event.target,".$action.",'".$data_str."');";
 		return $s;
 	}
 

@@ -9,6 +9,7 @@
  * @access   public
  * @package  jQuery
  */
+#[\AllowDynamicProperties]
 class jQuery_Action
 {
 	/**

@@ -33,11 +33,7 @@ function smarty_block_sf_tooltip($params, $content, $template, &$repeat) {
     $div->setValue($content);
     $s=$div->render();
 	
-    if(SmartyFaces::$skin=="default") {
-		$script='SF.attachTooltip("'.$for.'","'.$class. '");';
-    } else {
-		$script='SF.bs_attachTooltip("'.$for.'","'.$placement. '");';
-    }
+    $script='SF.bs_attachTooltip("'.$for.'","'.$placement. '");';
 	$s.=SmartyFaces::addScript($script);
 	
 	echo $s;

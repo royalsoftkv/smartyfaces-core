@@ -8,6 +8,7 @@ function smarty_function_sf_fileupload($params, $template)
     $attributes=SmartyFacesComponent::resolveAttributtes($attributes_list);
     $attributes['value']['required']=false;
     $attributes['value']['default']="Send";
+    $attributes['value']['desc']="Used for title of the button";
     $attributes['acceptTypes']=array(
     	'required'=>false,
     	'default'>null,
@@ -16,7 +17,7 @@ function smarty_function_sf_fileupload($params, $template)
     $attributes['resetCtrl']=array(
     	'required'=>false,
     	'default'=>"Reset",
-    	'desc'=>'Label for reset control'
+    	'desc'=>'(deprecated) Label for reset control'
     );
     $attributes['maxSize']=array(
     	'required'=>false,
@@ -50,75 +51,54 @@ function smarty_function_sf_fileupload($params, $template)
     
     $span=new TagRenderer("div",true);
     $span->setId("sf_upload_form");
-    if(SmartyFaces::$skin=="bootstrap") $class.=" input-group upload-group";
+    $class.=" input-group upload-group";
     $span->setAttributeIfExists("class", $class);
     
     $file=new TagRenderer("input");
     $file->setAttribute("type", "file");
     $file->setIdAndName($id, $multiple);
-    if(SmartyFaces::$skin=="bootstrap") $fileClass.=" form-control";
+    $fileClass.=" form-control";
     $file->setAttributeIfExists("class", $fileClass);
     if($multiple) {
     	$file->setAttribute("multiple", "multiple");
     }
     $span->addHtml($file->render());
     
-    if(SmartyFaces::$skin=="bootstrap") {
-    	$group_span=new TagRenderer("span",true);
-    	$group_span->setAttribute("class", "input-group-btn");
-    	$submit=new TagRenderer("button",true);
-    	$submit->setIdAndName($id."_f");
-    	$submit->setAttribute("class", $buttonClass." btn btn-primary");
-    	$submit->setAttribute("type", "submit");
-    	$submit->setValue('<span class="glyphicon glyphicon-upload"/>');
-    	$submit->setAttribute("title", $value);
-    	$submit->setAttribute("onclick", 'SF.upload.submit(this,\''.$id.'\');');
-    	$group_span->setValue($submit->render());
-    	$span->addHtml($group_span->render());
-    } else {
-	    $submit=new TagRenderer("input");
-	    $submit->setAttribute("type", "submit");
-	    $submit->setAttributeIfExists("class", $buttonClass);
-	    $submit->setIdAndName($id."_f");
-	    $submit->setValue($value);
-	    $submit->setAttribute("onclick", 'SF.upload.submit(this,\''.$id.'\');');
-	    $span->addHtml($submit->render());
-    }
-    
+    $submit=new TagRenderer("button",true);
+    $submit->setIdAndName($id."_f");
+    $submit->setAttribute("class", $buttonClass." btn btn-primary");
+    $submit->setAttribute("type", "submit");
+    $submit->setValue('<span class="fa fa-upload"/>');
+    $submit->setAttribute("title", $value);
+    $submit->setAttribute("onclick", 'SF.upload.submit(this,\''.$id.'\'); return false;');
+    $span->addHtml($submit->render());
+
     
     $div_content=$span->render();
     
     $div_content.='<div id="sf_upload_process" style="display:none;">Sending...</div>';
     
-    $sf_upload_error=new TagRenderer("span",true);
+    $sf_upload_error=new TagRenderer("div",true);
     $sf_upload_error->setId("sf_upload_error");
     $sf_upload_error->setAttribute("style", "display:none");
+    $sf_upload_error->setAttribute("class", "invalid-feedback p-2");
     
-    if(SmartyFaces::$skin=="bootstrap") {
-    	$msg_wrapper=new TagRenderer("div",true);
-    	$msg_wrapper->setAttribute("class", "alert alert-danger");
-    	
-    }
-    
+    $msg_wrapper=new TagRenderer("div",true);
+    $msg_wrapper->setAttribute("class", "alert alert-danger");
+
     $sf_upload_error_msg=new TagRenderer("span",true);
     $sf_upload_error_msg->setId("sf_upload_error_msg");
     
     $sf_upload_error->addHtml($sf_upload_error_msg->render());
-    $sf_upload_error->addHtml('&nbsp;');
     $a=new TagRenderer("a",true);
     $a->setAttribute("href", "#");
     $a->setAttribute("onclick", 'SF.upload.reset(\''.$id.'\'); return false;');
-    $a->setValue($resetCtrl);
+    $a->setValue('<span class="fa fa-times"/>');
     
-    if(SmartyFaces::$skin=="bootstrap") {
-    	$msg_wrapper->addHtml($sf_upload_error_msg->render());
-    	$a->setAttribute("class", "alert-link pull-right");
-    	$msg_wrapper->addHtml($a->render());
-    	$sf_upload_error->setValue($msg_wrapper->render());
-    } else {
-	    $sf_upload_error->addHtml($a->render());
-    }
-    
+    $msg_wrapper->addHtml($sf_upload_error_msg->render());
+    $a->setAttribute("class", "text-danger pull-right");
+    $sf_upload_error->addHtml($a->render());
+
     $div_content.=$sf_upload_error->render();
     
     

@@ -42,7 +42,7 @@ function smarty_function_sf_inplace($params, $template)
 	if(SmartyFaces::$validateFailed and !$disabled) {
     	$value = SmartyFacesContext::$formData[$id];
 		if(SmartyFacesComponent::validationFailed($id)) {
-    		if(SmartyFaces::$skin=="default") $class.=" sf-vf";
+    		$class.=" sf-vf is-invalid";
     	}
     } else {
 	    $value=  SmartyFaces::evalExpression($value);
@@ -76,7 +76,7 @@ function smarty_function_sf_inplace($params, $template)
 	}
 	$label=new TagRenderer("label",true);
 	$label_class="sf-inplace-lbl";
-	if(SmartyFaces::$skin=="bootstrap") $label_class.=" text-muted";
+	$label_class.=" text-muted";
 	$label->setAttributeIfExists("class", $label_class);
 	$label->setAttribute("onclick", $onclick);
 	$label->setValue(strlen(trim($value))==0 ? $emptytext : $value);
@@ -89,7 +89,7 @@ function smarty_function_sf_inplace($params, $template)
 		$input->setValue($value);
 		$input_class="";
 		$input_class="sf-inplace-fld";
-		if(SmartyFaces::$skin=="bootstrap") $input_class.=" form-control";
+		$input_class.=" form-control";
 		$input->setAttributeIfExists("class", $input_class);
 		$input->setAttribute("onblur", 'SF.inplace.blur(this,\''.$emptytext.'\');'.$action_str);
 		$span->addHtml($input->render());
@@ -98,7 +98,7 @@ function smarty_function_sf_inplace($params, $template)
 		$textarea->setIdAndName($id);
 		$textarea_class="";
 		$textarea_class="sf-inplace-fld";
-		if(SmartyFaces::$skin=="bootstrap") $textarea_class.=" form-control";
+		$textarea_class.=" form-control";
 		$textarea->setAttributeIfExists("class", $textarea_class);
 		$textarea->setAttribute("onblur", 'SF.inplace.blur(this,\''.$emptytext.'\');'.$action_str);
 		$textarea->setValue($value);
@@ -108,16 +108,11 @@ function smarty_function_sf_inplace($params, $template)
 	$s=$span->render();
 
     if($attachMessage and !$disabled) {
-    	if(SmartyFaces::$skin=="bootstrap" && isset(SmartyFacesMessages::$messages[$id][0])) {
+    	if(SmartyFaces::$validateFailed && isset(SmartyFacesMessages::$messages[$id][0])) {
     		$m_div=new TagRenderer("div",true);
-    		$m_div->setAttribute("class", SmartyFacesComponent::getFormControlValidationClass($id));
-    		$span=new TagRenderer("span",true);
-    		$span->setAttribute("class", "help-block");
-    		$span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
-    		$m_div->setValue($span->render());
+    		$m_div->setAttribute("class", "invalid-feedback");
+            $m_div->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
     		$s.=$m_div->render();
-    	} else {
-	    	$s.=SmartyFacesComponent::renderMessage($id);
     	}
     }
     return $s;
