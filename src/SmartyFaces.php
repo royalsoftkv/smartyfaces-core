@@ -378,7 +378,7 @@ class SmartyFaces {
 		} else {
 			$sf_source=$_POST['sf_source'];
 			$sf_form_data=$_POST['sf_form_data'];
-			parse_str($sf_form_data, $formData);
+			parse_str($sf_form_data??'', $formData);
 			if(isset($formData['sf_view'])) $sf_view=$formData['sf_view'];
 			if(isset($formData['sf_view_id'])) $sf_view_id=$formData['sf_view_id'];
 			if(isset($formData['sf_state_id'])) $sf_state_id=$formData['sf_state_id'];
@@ -645,7 +645,7 @@ class SmartyFaces {
 	static function processStatelessAjax() {
 		SmartyFacesLogger::log("Start processing stateless ajax");
 		$sf_form_data=$_POST['sf_form_data'];
-		parse_str($sf_form_data, $formData);
+		parse_str($sf_form_data??'', $formData);
 		SmartyFacesContext::$formData=&$formData;
 		if(isset($formData['sf_view'])) $sf_view=$formData['sf_view'];
 		if(isset($formData['sf_view_id'])) $sf_view_id=$formData['sf_view_id'];
@@ -810,16 +810,16 @@ class SmartyFaces {
 			$$name=$obj;
 		}
 		//#[EL]
-		if(substr($el, 0,2)=="#[" and substr($el, -1,1)=="]") {
+		if(substr($el ?? "", 0,2)=="#[" and substr($el, -1,1)=="]") {
 			// EL
 			$ret=null;
-			$el=substr($el, 2,-1);
+			$el=substr($el ?? "", 2,-1);
 			@eval("\$ret=$el;");
 			return $ret;
 		}
 		//[bean.property]
-		if(substr($el, 0,1)=="[" and substr($el, -1,1)=="]"){
-			$el=substr($el, 1, -1);
+		if(substr($el ?? "", 0,1)=="[" and substr($el, -1,1)=="]"){
+			$el=substr($el ?? "", 1, -1);
 			$arr=explode(".", $el);
 			if(count($arr)==2){ //[bean.property]]
 				$bean=$arr[0];
@@ -851,16 +851,16 @@ class SmartyFaces {
 		foreach(SmartyFaces::$GLOBALS as $name=>$obj){
 			$$name=$obj;
 		}
-		if(substr($el, 0,2)=="#[" and substr($el, -1,1)=="]") {
+		if(substr($el ?? "", 0,2)=="#[" and substr($el ?? "", -1,1)=="]") {
 			// EL
-			$el=substr($el, 2,-1);
+			$el=substr($el ?? "", 2,-1);
 			self::$SF_ACTION = "updateModelValue: "."$el=\$value;";
 			eval("$el=\$value;");
 			return;
 		}
 		//[bean.property]
-		if(substr($el, 0,1)=="[" and substr($el, -1,1)=="]"){
-			$el=substr($el, 1, -1);
+		if(substr($el ?? "", 0,1)=="[" and substr($el ?? "", -1,1)=="]"){
+			$el=substr($el ?? "", 1, -1);
 			$arr=explode(".", $el);
 			if(count($arr)==2){
 				$bean=$arr[0];
@@ -1169,9 +1169,11 @@ class SmartyFaces {
 			$data = FileUtils::parseLngFile($lng_file);
 		}
 
-		$callbackFunction = @self::$callbackFunctions[self::CALLBACK_LANGUAGE_LOADING_FUNCTION];
-		if(!empty($callbackFunction) && is_callable($callbackFunction)) {
-			$callbackFunction($data);
+		if(isset(self::$callbackFunctions[self::CALLBACK_LANGUAGE_LOADING_FUNCTION])) {
+			$callbackFunction = self::$callbackFunctions[self::CALLBACK_LANGUAGE_LOADING_FUNCTION];
+			if(!empty($callbackFunction) && is_callable($callbackFunction)) {
+				$callbackFunction($data);
+			}
 		}
 
 		if(!empty($data)) {
@@ -1312,22 +1314,13 @@ class SmartyFaces {
 class LanguageArray implements ArrayAccess
 {
 	private $array;
-
-	public function __construct(array $array)
-	{
-		$this->array = $array;
-	}
-
-	public function offsetExists($offset): bool
-	{
-		return isset($this->array[$offset]);
-	}
-
+	public function __construct(array $array){$this->array   = $array;}
 	#[\ReturnTypeWillChange]
-	public function offsetGet($offset)
-	{
-		if (isset($this->array[$offset])) {
-			$val = $this->array[$offset];
+	public function offsetExists($offset): bool{return isset($this->array[$offset]);}
+	#[\ReturnTypeWillChange]
+	public function offsetGet($offset): mixed{
+		if(isset($this->array[$offset])) {
+			$val=$this->array[$offset];
 		} else {
 			$val = $offset;
 			$callbackFunction = @SmartyFaces::$callbackFunctions[SmartyFaces::CALLBACK_LANGUAGE_NOT_FOUND_FUNCTION];
@@ -1342,16 +1335,10 @@ class LanguageArray implements ArrayAccess
 		}
 		return $val;
 	}
-
-	public function offsetSet($offset, $value): void
-	{
-		$this->array[$offset] = $value;
-	}
-
-	public function offsetUnset($offset): void
-	{
-		unset($this->array[$offset]);
-	}
+	#[\ReturnTypeWillChange]
+	public function offsetSet($offset, $value): void{$this->array[$offset] = $value;}
+	#[\ReturnTypeWillChange]
+	public function offsetUnset($offset): void{unset($this->array[$offset]);}
 }
 
 

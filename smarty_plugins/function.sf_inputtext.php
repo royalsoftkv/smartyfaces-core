@@ -45,7 +45,7 @@ function smarty_function_sf_inputtext($params, $template)
     if(!is_null($validator)) {
     	SmartyFacesContext::addValidator($id,$validator);
     }
-	if(!empty($converter)) {
+	if(strlen($converter ?? "")>0) {
     	SmartyFacesContext::addConverter($id,$converter);
     }
     
@@ -62,14 +62,14 @@ function smarty_function_sf_inputtext($params, $template)
     	}
     } else {
     	$value=  SmartyFaces::evalExpression($value);
-		if(!empty($converter)) {
+		if(strlen($converter ?? "")>0) {
 	    	$value=$converter::toString($value);
 	    }
     }
     $value=htmlentities($value ?? "",ENT_QUOTES,"UTF-8");
 
     $events=SmartyFacesComponent::encodeEvents($events,$params,$registered_events);
-    
+
     $input=new TagRenderer("input");
     $input->setCustom($custom);
     $input->setAttributeIfExists("style", $style);

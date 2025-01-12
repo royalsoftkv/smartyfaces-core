@@ -30,7 +30,7 @@ function smarty_function_sf_inputtextarea($params, $template)
     if($validator!=null) {
     	SmartyFacesContext::addValidator($id, $validator);
     }
-    if(strlen($converter)>0) {
+    if(strlen($converter ?? "")>0) {
     	SmartyFacesContext::addConverter($id,$converter);
     }
     
@@ -49,7 +49,7 @@ function smarty_function_sf_inputtextarea($params, $template)
     	}
     } else {
 	    $value=  SmartyFaces::evalExpression($value);
-	    if(strlen($converter)>0) {
+	    if(strlen($converter ?? "")>0) {
 	    	$value=$converter::toString($value);
 	    }
     }

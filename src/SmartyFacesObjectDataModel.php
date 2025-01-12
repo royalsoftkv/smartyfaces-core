@@ -1,6 +1,8 @@
 <?php
 
 use ActiveRecord\Table;
+use ActiveRecord\WhereClause;
+
 abstract class SmartyFacesObjectDataModel extends SmartyFacesDataModel {
 	
 	protected $name='global';
@@ -23,14 +25,16 @@ abstract class SmartyFacesObjectDataModel extends SmartyFacesDataModel {
     }
 	
 	function load($all=false) {
-		
-		$table=Table::load($this->model);
+
 		$options=$this->options;
-		
+
+        $model=$this->model;
+        $rel=$model::where(...$options['conditions']);
+
 		$column=$this->column;
 		$order=($this->asc ? "asc" : "desc");
 		if($column) {
-			$options['order']="$column $order";
+            $rel->order("$column $order");
 		}
 		
 		if(!$all) {
@@ -38,11 +42,11 @@ abstract class SmartyFacesObjectDataModel extends SmartyFacesDataModel {
 			if($this->rows_per_page>0) {
 				$offset=$this->getOffset();
 				$limit=$this->getLimit();
-				$options['limit']=$limit;
-				$options['offset']=$offset;
+                $rel->limit($limit);
+                $rel->offset($offset);
 			}
 		}
-		$list= $table->find($options);
+		$list = $rel->to_a();
 		$this->storeOptions();
 		if(!$this->light) {
 			$this->_list=$list;
@@ -71,11 +75,9 @@ abstract class SmartyFacesObjectDataModel extends SmartyFacesDataModel {
 	}
 	
 	public function count() {
-		$table=Table::load($this->model);
 		$options=$this->options;
-		$options['select']='count(*) as cnt';
-		$list= $table->find($options);
-		$item=$list[0];
+        $model=$this->model;
+        $item = $model::where(...$options['conditions'])->select('count(*) as cnt')->first();
 		return $item->cnt;
 	}
 }

@@ -47,7 +47,7 @@ function smarty_function_sf_datepicker($params, $template)
     if(!is_null($validator)) {
     	SmartyFacesContext::addValidator($id,$validator);
     }
-    if(strlen($converter)>0 and !$disabled) {
+    if(strlen($converter ?? "")>0 and !$disabled) {
     	SmartyFacesContext::addConverter($id,$converter);
     }
     SmartyFacesComponent::createComponent($id, $tag, $params);
@@ -63,13 +63,13 @@ function smarty_function_sf_datepicker($params, $template)
 		}
     } else {
 	    $value=  SmartyFaces::evalExpression($value);
-	    if(strlen($converter)>0) {
+	    if(strlen($converter ?? "")>0) {
 	    	$value=$converter::toString($value);
 	    }
     }
 
 
-    if(strlen($onchange)>0 and substr($onchange, -1, 1)!=";") $onchange.=";";
+    if(strlen($onchange ?? "")>0 and substr($onchange, -1, 1)!=";") $onchange.=";";
     if($action) {
 	    $stateless=SmartyFacesComponent::$stateless;
 	    if($stateless) {

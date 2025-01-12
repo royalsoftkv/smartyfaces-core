@@ -53,7 +53,7 @@ function smarty_block_sf_tabs($params, $content, $template, &$repeat)
                 $a->setAttribute("onclick", 'SF.tabs.bs_action(\'' . $id . '\',' . $index . '); return false;');
             }
             $onclick = $tab['params']['onclick'];
-            if (!empty($onclick)) {
+            if(strlen($onclick ?? '')>0) {
                 $a->setAttribute("onclick", $onclick);
             }
             $a->setValue($tab['params']['header']);
@@ -86,7 +86,7 @@ function smarty_block_sf_tabs($params, $content, $template, &$repeat)
 
 	$s=$div->render();
 	$s.=TagRenderer::renderHidden($id, $value);
-	
+
 	return $s;
 }
 

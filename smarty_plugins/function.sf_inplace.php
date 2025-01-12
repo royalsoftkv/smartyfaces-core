@@ -48,6 +48,7 @@ function smarty_function_sf_inplace($params, $template)
 	    $value=  SmartyFaces::evalExpression($value);
     }
 
+    $value = $value ?? '';
 
     $action_str="";
     if(!is_null($action)){
