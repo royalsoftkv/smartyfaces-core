@@ -95,6 +95,7 @@ class SmartyFacesReordableList {
 		$conn=$class::connection();
 		$sql="update $table set $position = case ";
 		$new_list=array();
+        $ids = [];
 		foreach($pos_list as $index=>$p) {
 			$pos=$index+1;
 			$id=$this->list[$p]->id;
@@ -102,11 +103,14 @@ class SmartyFacesReordableList {
 			$new_list[]=$this->list[$p];
 			if($old_pos!=$pos) {
 				$sql.=" when $primary='$id' then $pos ";
+                $ids[] = $id;
 			}
 		}
 		$this->list=$new_list;
 		$this->reloadPositions();
-		$sql.=" end ";
+		$sql.=" end where $primary in (";
+        $sql.=implode(",",$ids);
+        $sql.=")";
 		$conn->query($sql);
 	}
 	

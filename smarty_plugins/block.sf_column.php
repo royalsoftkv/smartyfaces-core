@@ -42,7 +42,7 @@ function smarty_block_sf_column($params, $content, $template, &$repeat)
 	extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
 	
 	
-	if(strlen($sortby)>0) {
+	if(strlen($sortby ??'')>0) {
 		$params['action']='#['.$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-2][1]['datamodel'].'->sort()]';
 		$col_id=$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-2][2]['table']['attributes']['id']."-".$id;
 		SmartyFacesComponent::createComponent($col_id, $tag, $params, array("sortby"));
@@ -52,7 +52,8 @@ function smarty_block_sf_column($params, $content, $template, &$repeat)
 		$repeat=false;
 		return;
 	}
-	
+
+	$tag_stack = $template->smarty->_cache['_tag_stack'];
 	$parent_tag_stack=&$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-2][2];
 	$this_tag_stack=&$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][2];
     $first_pass=$parent_tag_stack['first_pass'];
@@ -69,7 +70,7 @@ function smarty_block_sf_column($params, $content, $template, &$repeat)
     		$column_index=$column_count;
 	    	$parent_tag_stack['columns'][$column_index]=$params;
 	    	$this_tag_stack['column_index']=$column_index;
-	    	
+
 	    	if($reorder) {
 	    		$params['action']='#['.$reorderlist.'->reorder()]';
 	    		SmartyFacesComponent::createComponent($id, $tag, $params);
@@ -96,14 +97,14 @@ function smarty_block_sf_column($params, $content, $template, &$repeat)
 	    		$parent_tag_stack['columns'][$column_index]['header']=$this_tag_stack['facets']['header']['content'];
 	    	}
     	}
-    }
+	}
+	$parent_tag_stack['col_index']++;
     if($reorder) {
     	$content=_getReorderContent($parent_tag_stack['order_id'],$parent_tag_stack['index'],$parent_tag_stack['count']);
     }
 	if(count($visibleColumns)==0  || in_array($id, $visibleColumns)) {
         $parent_tag_stack['table']['rows'][count($parent_tag_stack['table']['rows'])-1]['cells'][count($parent_tag_stack['table']['rows'][count($parent_tag_stack['table']['rows'])-1]['cells'])-1]['content']=trim($content ?? "");
 	}
-
 
 }
 

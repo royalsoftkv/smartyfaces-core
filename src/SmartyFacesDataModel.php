@@ -34,13 +34,14 @@ abstract class SmartyFacesDataModel {
     
     function __get($name){
     	if($name=='list') {
-    		if($this->light) {
-    			$sql=$this->query(false);
-    			return $this->getList($sql);
-    		} else {
-    			return $this->_list;
-    		}
-    		
+			if ($this->light) {
+				$sql = $this->query(false);
+				return $this->getList($sql);
+			} else {
+				return $this->_list;
+			}
+		} else if ($name=="pList") {
+			return $this->_list;
     	}
     }
     

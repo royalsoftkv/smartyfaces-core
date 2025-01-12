@@ -178,6 +178,7 @@ function smarty_block_sf_datatable($params, $content, $template, &$repeat)
 	    $this_tag_stack['data']=$data;
 	    $template->assign($var,$row);
 	    $this_tag_stack['index']++;
+	    $this_tag_stack['col_index']=0;
 	    $template->assign($index,$this_tag_stack['index']);
 	    if($rowKeyVar!=null){
 	    	$rowKeyVarArr['index']=$this_tag_stack['index'];
@@ -229,7 +230,7 @@ function _getAttributes($attributes) {
 	$attr=array();
 	if(is_array($attributes)) {
 		foreach($attributes as $name=>$value) {
-			if(strlen($value)>0) {
+			if(strlen($value ?? '')>0) {
 				$attr[]="$name=\"$value\"";
 			}
 		}

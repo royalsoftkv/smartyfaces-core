@@ -381,7 +381,7 @@ class SmartyFaces {
 		} else {
 			$sf_source=$_POST['sf_source'];
 			$sf_form_data=$_POST['sf_form_data'];
-			parse_str($sf_form_data, $formData);
+			parse_str($sf_form_data??'', $formData);
 			if(isset($formData['sf_view'])) $sf_view=$formData['sf_view'];
 			if(isset($formData['sf_view_id'])) $sf_view_id=$formData['sf_view_id'];
 			if(isset($formData['sf_state_id'])) $sf_state_id=$formData['sf_state_id'];
@@ -624,7 +624,7 @@ class SmartyFaces {
 	static function processStatelessAjax() {
 		SmartyFacesLogger::log("Start processing stateless ajax");
 		$sf_form_data=$_POST['sf_form_data'];
-		parse_str($sf_form_data, $formData);
+		parse_str($sf_form_data??'', $formData);
 		SmartyFacesContext::$formData=&$formData;
 		if(isset($formData['sf_view'])) $sf_view=$formData['sf_view'];
 		if(isset($formData['sf_view_id'])) $sf_view_id=$formData['sf_view_id'];
@@ -1148,9 +1148,11 @@ class SmartyFaces {
 			$data = FileUtils::parseLngFile($lng_file);
 		}
 
-		$callbackFunction = @self::$callbackFunctions[self::CALLBACK_LANGUAGE_LOADING_FUNCTION];
-		if(!empty($callbackFunction) && is_callable($callbackFunction)) {
-			$callbackFunction($data);
+		if(isset(self::$callbackFunctions[self::CALLBACK_LANGUAGE_LOADING_FUNCTION])) {
+			$callbackFunction = self::$callbackFunctions[self::CALLBACK_LANGUAGE_LOADING_FUNCTION];
+			if(!empty($callbackFunction) && is_callable($callbackFunction)) {
+				$callbackFunction($data);
+			}
 		}
 
 		if(!empty($data)) {

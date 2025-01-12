@@ -114,14 +114,17 @@ class SmartyFacesComponent {
     
     public static function checkNested($id,$template){
     	$repeatable_tags=array("sf_repeat","sf_column");
-    	if(isset($template->smarty->_cache['_tag_stack']) && isset($template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][0])) {
-    		$parent_tag = $template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][0];
+		$tag_stack=$template->smarty->_cache['_tag_stack'];
+    	if(isset($tag_stack) && isset($tag_stack[count($tag_stack)-1][0])) {
+    		$parent_tag = $tag_stack[count($tag_stack)-1][0];
     		if(!in_array($parent_tag, $repeatable_tags)) return $id;
     	
     		if($parent_tag=="sf_repeat") {
-    			$index=$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-1][2]['index'];
+    			$index=$tag_stack[count($tag_stack)-1][2]['index'];
     		} else if ($parent_tag=="sf_column") {
-    			$index=$template->smarty->_cache['_tag_stack'][count($template->smarty->_cache['_tag_stack'])-2][2]['index'];
+    			$row=$tag_stack[count($tag_stack)-2][2]['index'];
+    			$col=$tag_stack[count($tag_stack)-2][2]['col_index'];
+				$index = "$row-$col";
     		}
     		return $id."-".$index;
     	} else {
