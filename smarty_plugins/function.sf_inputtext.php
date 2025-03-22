@@ -34,7 +34,8 @@ function smarty_function_sf_inputtext($params, $template)
 	
     
 	$id=SmartyFacesComponent::checkNested($id,$template);
-	
+
+
 	$events=SmartyFacesComponent::processEvents($id,$events,$params);
 	
     SmartyFacesComponent::createComponent($id, $tag, $params, array("disabled"));
