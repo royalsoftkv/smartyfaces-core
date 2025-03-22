@@ -246,13 +246,13 @@ abstract class SmartyFacesDataModel {
 		$s.='</div>';
 		$s.='<div class="col-md-4 text-center pages col-4 d-flex justify-content-center">';
 
-		$s.='<ul class="pagination">';
+		$s.='<ul class="pagination pagination-sm">';
 
 		$s.='<li class="page-item '.($first ? 'disabled' : '').'">';
 		if($first) {
 			$s.='<span class="page-link">';
 		} else {
-			$s.='<a class="page-link" id="'.$id.'" href="#" onclick="'.(!$first ? 'SF.dm.paginate(this,\'first\'); ' : '').'return false;" title="'.$strings['go_to_first_page'].'">';
+			$s.='<a class="page-link tt" id="'.$id.'" href="#" onclick="'.(!$first ? 'SF.dm.paginate(this,\'first\'); ' : '').'return false;" title="'.$strings['go_to_first_page'].'">';
 		}
 		$s.='<span class="fa fa-angle-double-left"></span>';
 		if($first) {
@@ -266,7 +266,7 @@ abstract class SmartyFacesDataModel {
 		if($first) {
 			$s.='<span class="page-link" >';
 		} else {
-			$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="'.(!$first ? 'SF.dm.paginate(this,\'prev\'); ' : '').'return false;" title="'.$strings['go_to_previous_page'].'">';
+			$s.='<a  class="page-link tt" id="'.$id.'" href="#" onclick="'.(!$first ? 'SF.dm.paginate(this,\'prev\'); ' : '').'return false;" title="'.$strings['go_to_previous_page'].'">';
 		}
 		$s.='<span class="fa fa-angle-left"></span>';
 		if($first) {
@@ -305,7 +305,7 @@ abstract class SmartyFacesDataModel {
 		if($last) {
 			$s.='<span class="page-link" >';
 		} else {
-			$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="'.(!$last ? 'SF.dm.paginate(this,\'next\'); ' : '').'return false;" title="'.$strings['go_to_next_page'].'">';
+			$s.='<a  class="page-link tt" id="'.$id.'" href="#" onclick="'.(!$last ? 'SF.dm.paginate(this,\'next\'); ' : '').'return false;" title="'.$strings['go_to_next_page'].'">';
 		}
 		$s.='<span class="fa fa-angle-right"></span>';
 		if($last) {
@@ -319,7 +319,7 @@ abstract class SmartyFacesDataModel {
 		if($last) {
 			$s.='<span class="page-link" >';
 		} else {
-			$s.='<a  class="page-link" id="'.$id.'" href="#" onclick="'.(!$last ? 'SF.dm.paginate(this,\'last\'); ' : '').'return false;" title="'.$strings['go_to_last_page'].'">';
+			$s.='<a  class="page-link tt" id="'.$id.'" href="#" onclick="'.(!$last ? 'SF.dm.paginate(this,\'last\'); ' : '').'return false;" title="'.$strings['go_to_last_page'].'">';
 		}
 		$s.='<span class="fa fa-angle-double-right"></span>';
 		if($last) {
