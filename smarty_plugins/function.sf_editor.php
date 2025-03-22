@@ -8,7 +8,7 @@ function smarty_function_sf_editor($params, $template)
 	$attributes=SmartyFacesComponent::resolveAttributtes($attributes_list);
 	$attributes['width']=array(
 		'required'=>false,
-		'default'=>null,
+		'default'=>'auto',
 		'desc'=>'Width of editor'
 	);
 	$attributes['height']=array(
@@ -28,7 +28,7 @@ function smarty_function_sf_editor($params, $template)
 	);
 	$attributes['editor']=array(
 		'required'=>false,
-		'default'=>'summernote',
+		'default'=>'ckeditor',
 		'desc'=>'Type of the editor to use. Supported: summernote, CK Editor'
 	);
 	$attributes['editorconfig']=array(

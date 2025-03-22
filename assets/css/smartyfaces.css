@@ -290,6 +290,13 @@ a[disabled] img {
 	height:30px;
 }
 
+.sf-editor.is-invalid .cke{
+	border-color: var(--bs-form-invalid-border-color);
+}
+.has-error .is-invalid{
+	color: var(--bs-form-invalid-border-color);
+}
+
 .sf-editor-disabled {
 	background-color: #fff;
 }
