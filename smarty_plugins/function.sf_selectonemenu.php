@@ -102,14 +102,14 @@ function smarty_function_sf_selectonemenu($params, $template)
     
     
     $select=new TagRenderer("select",true);
-    $select->setAttributeIfExists("class", $class. " form-select");
+    $select->setAttributeIfExists("class", $class. " form-select w-auto");
     $select->passAttributes($attributes_values, array("style","title"));
     $select->setDisabled($disabled);
     $select->setIdAndName($id);
     $select->setAttributeIfExists("onchange", $onchange);
-    if(!$block) {
-    	$select->appendAttribute("class", " width-auto");
-    }
+//    if(!$block) {
+//    	$select->appendAttribute("class", " w-auto");
+//    }
     
     $selected=false;
     if($noselect!=null) {
@@ -170,7 +170,10 @@ function smarty_function_sf_selectonemenu($params, $template)
     }
     $div=new TagRenderer("div",true);
     $div->setAttribute("class", SmartyFacesComponent::getFormControlValidationClass($id));
-    $div->appendAttribute("class", "div-select-".$class);
+    $div->appendAttribute("class", "div-select div-select-".$class);
+    if($invalid) {
+        $div->appendAttribute("class", "is-invalid");
+    }
     if($autocomplete) {
         $div->appendAttribute("class", "auto-complete");
         if($block) {

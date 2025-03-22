@@ -351,3 +351,15 @@ a[disabled] img {
 	background-color: var(--bs-primary) !important;
 	color: var(--bs-white);
 }
+.auto-complete .choices__inner:has(.is-invalid.choices__input) {
+	border-color: var(--bs-form-invalid-border-color);
+}
+.div-select.is-invalid .invalid-feedback {
+	display: block;
+}
+.div-select.is-invalid .choices {
+	margin-bottom: 0;
+}
+.choices__inner:not([readonly],[disabled]){
+	background-color: #FFF !important;
+}
