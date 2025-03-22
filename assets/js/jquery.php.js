@@ -40,7 +40,7 @@ $.extend({
            },
            // Handle the complete event
            complete: function (XMLHttpRequest, textStatus) {
-        	   if(oncomplete) oncomplete(data, XMLHttpRequest.responseText);
+        	   if(oncomplete) oncomplete(params, XMLHttpRequest.responseText);
                return php.complete(XMLHttpRequest, textStatus);
            }
         });
