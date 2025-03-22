@@ -31,7 +31,7 @@ function smarty_function_sf_image($params, $template)
     );
     $attributes['responsive']=array(
     	'required'=>false,
-    	'default'=>false,
+    	'default'=>true,
     	'type'=>'bool', 
     	'desc'=>'Set image to be nicely scaled to the parent element.'
     );
