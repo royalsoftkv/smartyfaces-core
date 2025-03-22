@@ -140,11 +140,13 @@ function smarty_function_sf_datepicker($params, $template)
         //hardcode until fixed conversion from moment
         if($dateFormat=="DD.MM.YYYY") $dateFormat="d.m.Y";
         if(empty($dateFormat)) {
-            $dateFormat = $time ? CommonDateUtils::getDateFormat("datetime") : CommonDateUtils::getDateFormat("date");
+            $datetimeFormat = SmartyFaces::$config['datepicker_default_format_datetime'];
+            $dateFormat =  SmartyFaces::$config['datepicker_default_format_date'];
+            $dateFormat = $time ? $datetimeFormat : $dateFormat;
         }
         $config = [
             'altFormat'=>$dateFormat,
-            'dateFormat'=>$time ? CommonDateUtils::DB_FORMAT_DATETIME_INPUT : CommonDateUtils::DB_FORMAT_DATE,
+            'dateFormat'=>$time ? "Y-m-d H:i" : "Y-m-d",
             'altInput'=>true,
             'allowInput'=>true,
             'enableTime'=>$time,
