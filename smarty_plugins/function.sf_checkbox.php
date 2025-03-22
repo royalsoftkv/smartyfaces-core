@@ -4,7 +4,7 @@ function smarty_function_sf_checkbox($params, $template)
 {
     $tag="sf_checkbox";
     
-    $attributes_list=array("id","value","required","action","immediate","attachMessage","class","title","disabled","rendered","validator");
+    $attributes_list=array("id","value","required","action","immediate","attachMessage","class","title","disabled","rendered","validator","onchange");
     $attributes=SmartyFacesComponent::resolveAttributtes($attributes_list);
     $attributes['checkedValue']=array(
     	'required'=>false,
@@ -78,13 +78,13 @@ function smarty_function_sf_checkbox($params, $template)
     		$action="null";
     		$data_str="null";
     	}
-    	$onchange='SF.a(this,'.$action.','.$data_str.');';
+    	$onchange.='SF.a(this,'.$action.','.$data_str.');';
     } else {
-    	$onchange="";
+    	$onchange.="";
     }
     
 	$div=new TagRenderer("div",true);
-	$div_class="checkbox";
+	$div_class="form-check";
 	if(!$disabled) $div_class.=" ".SmartyFacesComponent::getFormControlValidationClass($id);
 	$div->setAttribute("class", $div_class);
 	$div->setAttributeIfExists("title", $title);
