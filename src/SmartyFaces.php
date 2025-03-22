@@ -87,6 +87,9 @@ class SmartyFaces {
 			'resources_url'=>'/lib',
 			'eval_with_file'=>true,
 			'secure_actions'=>[],
+			'datepicker_default_format_datetime'=>'Y-m-d H:i:s',
+			'datepicker_default_format_date'=>'Y-m-d',
+			'button_default_class'=>''
 	);
 
 	public static $skins = array("default","none","bootstrap");
