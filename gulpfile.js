@@ -48,6 +48,10 @@ gulp.task('copy-resources',  (done) => {
     cpr('node_modules/choices.js/public/assets/scripts/choices.min.js','public/lib/choices.js/choices.min.js');
     cpr('node_modules/choices.js/public/assets/styles/base.min.css','public/lib/choices.js/base.min.css');
     cpr('node_modules/choices.js/public/assets/styles/choices.min.css','public/lib/choices.js/choices.min.css');
+    cpr('node_modules/flatpickr/dist/flatpickr.css','public/lib/flatpickr/flatpickr.css');
+    cpr('node_modules/flatpickr/dist/flatpickr.min.css','public/lib/flatpickr/flatpickr.min.css');
+    cpr('node_modules/flatpickr/dist/flatpickr.js','public/lib/flatpickr/flatpickr.js');
+    cpr('node_modules/flatpickr/dist/flatpickr.min.js','public/lib/flatpickr/flatpickr.min.js');
     done();
 });
 

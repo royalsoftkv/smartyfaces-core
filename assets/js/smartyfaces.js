@@ -30,6 +30,10 @@ php.beforeSend = function (XMLHttpRequest){
     $('#sf-status').css("display","block");
     $(document.body).addClass('sf-ajax');
     SF.onBeforeSend();
+	SF.datepickers.map(dtp => {
+		dtp.destroy()
+	})
+	SF.datepickers=[]
     SF.is_ajax=true;
 };
  
@@ -55,7 +59,8 @@ php.messages.defaultCallBack = function(msg, params) {
 SF = {
 		
 	is_ajax:false,
-			
+	datepickers: [],
+
 	a : function (el,action,actionData,oncomplete) {
 		if(SF.is_ajax) return;
 		SF.ajax.ajaxAction(el,action,actionData,oncomplete);
@@ -201,6 +206,13 @@ SF = {
 				ignoreFieldNorm: true
 			},
 		});
+	},
+
+	attachDatepicker(id, config) {
+		let dtp = flatpickr("#" + id, config);
+		SF.datepickers.push(dtp)
+	},
+
 	attachBsElements() {
 		attachTooltips()
 		attachPopovers()
