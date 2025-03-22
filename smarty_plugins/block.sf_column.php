@@ -66,7 +66,7 @@ function smarty_block_sf_column($params, $content, $template, &$repeat)
 
 	static $attached_sortable_js;
 	if($reorder) {
-		if(!$attached_sortable_js && !SmartyFaces::$ajax) {
+		if(!$attached_sortable_js) {
 			$url = SmartyFaces::getResourcesUrl() ."/sortablejs/Sortable.min.js";
 			SmartyFaces::addScript($url, true);
 			$attached_sortable_js = true;
