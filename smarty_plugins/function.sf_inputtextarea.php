@@ -54,10 +54,6 @@ function smarty_function_sf_inputtextarea($params, $template)
 	    }
     }
 
-
-    $span=new TagRenderer("span",true);
-    $span->setAttributeIfExists("class", SmartyFacesComponent::getFormControlValidationClass($id));
-
     $ta=new TagRenderer("textarea",true);
     $ta->setCustom($custom);
     $ta->setAttributeIfExists("class", $class);
@@ -68,17 +64,15 @@ function smarty_function_sf_inputtextarea($params, $template)
     	$ta->setAttribute("disabled", "disabled");
     }
     $ta->setValue($value);
-    
-    $span->addHtml($ta->render());
+
+    $s = $ta->render();
 
     if($attachMessage and !$disabled and isset(SmartyFacesMessages::$messages[$id][0])) {
         $msg_span=new TagRenderer("span",true);
         $msg_span->setAttribute("class", "invalid-feedback");
         $msg_span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
-        $span->addHtml($msg_span->render());
+        $s.=$msg_span->render();
     }
-
-    $s=$span->render();
 
     return $s;
 }
