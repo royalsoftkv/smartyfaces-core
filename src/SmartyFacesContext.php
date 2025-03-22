@@ -81,10 +81,13 @@ class SmartyFacesContext {
 			}
 		} else {
 			if(SmartyFaces::$config['compress_state']) {
-				self::$state=unserialize(gzinflate(base64_decode(self::$formData['sf_state_data'])));
+				self::$state=unserialize(gzinflate(base64_decode(self::$formData['sf_state_data']??'')));
 			} else {
-				self::$state=unserialize(base64_decode(self::$formData['sf_state_data']));
+				self::$state=unserialize(base64_decode(self::$formData['sf_state_data']??''));
 			}
+		}
+		if(!self::$state) {
+			self::$state=array();
 		}
 
 		self::$components=self::$state["components"];

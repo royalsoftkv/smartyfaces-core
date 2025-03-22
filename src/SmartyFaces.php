@@ -892,7 +892,7 @@ class SmartyFaces {
 	}
 
 	public static function invokeAction($action){
-		if(trim($action)=="") return;
+		if(trim($action??'')=="") return;
 		if(isset($_GET['file_upload'])) {
 			SmartyFaces::processUpload();
 			return;
