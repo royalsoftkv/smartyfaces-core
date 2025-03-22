@@ -51,7 +51,7 @@ function smarty_function_sf_fileupload($params, $template)
     
     $span=new TagRenderer("div",true);
     $span->setId("sf_upload_form");
-    $class.=" input-group upload-group";
+    $class.=" input-group input-group-sm upload-group";
     $span->setAttributeIfExists("class", $class);
     
     $file=new TagRenderer("input");
@@ -104,7 +104,7 @@ function smarty_function_sf_fileupload($params, $template)
     
     
     $div_content.='<iframe id="sf_iframe" name="sf_iframe" style="border: 0px solid rgb(255, 255, 255); height: 0pt; width: 0pt;"></iframe>';
-    $div_content.=TagRenderer::renderHidden("sf_upload_data", "");
+    $div_content.=TagRenderer::renderHidden($id."_f_upload_data", "");
     $div->setValue($div_content);
     
     return $div->render();

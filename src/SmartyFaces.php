@@ -372,7 +372,8 @@ class SmartyFaces {
 			$sf_view_id=$_POST['sf_view_id'];
 			if(isset($_POST['sf_state_id'])) $sf_state_id=$_POST['sf_state_id'];
 			$storestate=$_POST['sf_state_store'];
-			$sf_form_data=$_POST['sf_upload_data'];
+			$sf_form_data=$_POST[$sf_source.'_upload_data'];
+			$sf_form_data = base64_decode($sf_form_data ?? '');
 			parse_str($sf_form_data, $formData);
 			$upload=true;
 		} else {

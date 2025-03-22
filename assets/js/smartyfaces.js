@@ -325,7 +325,7 @@ SF.upload = {
 		form.attr("enctype","multipart/form-data");
 		form.attr("action",SF.ajax.url+"&file_upload=true&sf_source="+el.id+"&form_id="+form.attr("id"));
 		form.find("#sf_upload_form").addClass('upload-sending');
-		form.find("#"+id+"_div #sf_upload_data").val(form.serialize());
+		form.find("#"+id+"_f_upload_data").val(btoa(form.serialize()));
 		form.submit();
 	},
 
