@@ -12,7 +12,7 @@ function smarty_block_sf_tooltip($params, $content, $template, &$repeat) {
 	);
 	$attributes['placement']=array(
 		'required'=>false,
-		'deafult'=>'auto',
+		'default'=>'auto',
 		'desc'=>'Placement of tooltip. can be top | bottom | left | right | auto'		
 	);
 	if($params==null and $template==null) return $attributes;

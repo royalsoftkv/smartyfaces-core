@@ -255,6 +255,7 @@ class SmartyFaces {
 		echo '  <script type="text/javascript">
                     SF.ajax.url="'.$serverUrl.'/'.$index_file.self::$config['ajax_url_param'].'";
                     SF.ajax.key=\''.self::$ajaxkey.'\';
+                    SF.attachBsElements();
                 </script>';
 
 		if(self::$config['progressive_loading'] && !self::$ajax) {

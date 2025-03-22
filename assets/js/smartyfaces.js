@@ -1,4 +1,24 @@
 
+let attachTooltips = () => {
+	const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"],.tt'));
+	tooltipTriggerList.forEach(el => {
+		let t = bootstrap.Tooltip.getInstance(el);
+		if(!t) {
+			t = new bootstrap.Tooltip(el);
+		}
+	})
+}
+
+let attachPopovers = () => {
+	const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+	popoverTriggerList.forEach(el => {
+		let t = bootstrap.Popover.getInstance(el);
+		if(!t) {
+			t = new bootstrap.Popover(el);
+		}
+	})
+}
+
 php.beforeSend = function (XMLHttpRequest){
 	if(typeof SF.ajax.key === 'undefined') {
 		if($('#sf_ajax_key').length>0) {
@@ -18,6 +38,7 @@ php.complete = function (){
 	$('#sf-status').css("display","none");
 	$(document.body).removeClass('sf-ajax');
 	$(document.body).css("padding-right","0px");
+	SF.attachBsElements();
     SF.onComplete();
 	SF.is_ajax=false;
 };
@@ -180,6 +201,9 @@ SF = {
 				ignoreFieldNorm: true
 			},
 		});
+	attachBsElements() {
+		attachTooltips()
+		attachPopovers()
 	}
 	
 };
@@ -202,6 +226,8 @@ SF.ajax = {
 	    if(form) data.sf_form_data=form.serialize();
 	    if(action) data.sf_action=action;
 	    if(actionData) data.sf_action_data=actionData;
+		let tt = bootstrap.Tooltip.getInstance(el);
+		if(tt) tt.dispose();
 	    $.php(SF.ajax.url,data,oncomplete);
 	},
 	
