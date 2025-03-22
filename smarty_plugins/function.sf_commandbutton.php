@@ -18,7 +18,7 @@ function smarty_function_sf_commandbutton($params, $template)
     );
     $attributes['btnclass']=array(
     	'required'=>false,
-    	'default'=>'',
+    	'default'=> SmartyFaces::$config['button_default_class'],
     	'desc'=>'Additional boostrap context class'
     );
     $attributes['button']=array(
