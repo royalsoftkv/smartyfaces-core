@@ -40,7 +40,14 @@ class SmartyFacesValidator {
         if(count(SmartyFacesMessages::$messages)==0){
             return true;
         } else {
-            return false;
+            foreach (SmartyFacesMessages::$messages as $id => $messages) {
+                foreach ($messages as $message) {
+                    if($message['type'] == SmartyFacesMessages::ERROR) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
     

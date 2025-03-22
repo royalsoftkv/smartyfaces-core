@@ -606,6 +606,7 @@ class SmartyFaces {
 				if($immediate or !self::$validateFailed){
 					self::updateModelValues($formData);
 					SmartyFaces::invokeAction($sf_action);
+					self::$validateFailed = !SmartyFacesValidator::passed();
 				}
 				 
 				// render response
@@ -701,6 +702,7 @@ class SmartyFaces {
 			}
 			 
 		}
+		self::$validateFailed = !SmartyFacesValidator::passed();
 		if($immediate or (!$immediate and SmartyFacesValidator::passed())){
 			SmartyFacesLogger::log("Executong action: " . $sf_action);
 
@@ -714,6 +716,7 @@ class SmartyFaces {
 			} else {
 				eval("$sf_action;");
 			}
+			self::$validateFailed = !SmartyFacesValidator::passed();
 
 		}
 		if(isset($formData['sf_var'])) {
@@ -785,7 +788,9 @@ class SmartyFaces {
 					if($component['tag']=="sf_checkbox" and $component['params']['boolean']) {
 						SmartyFaces::updateModelValue($binding,true);
 					} else {
-						SmartyFaces::updateModelValue($binding,$formData[$id]);
+						if(!isset($component['params']['disabled']) || !$component['params']['disabled']) {
+							SmartyFaces::updateModelValue($binding,$formData[$id]);
+						}
 					}
 				} else {
 					//checkbox fix
@@ -910,6 +915,7 @@ class SmartyFaces {
 			} else {
 				eval("$action;");
 			}
+			self::$validateFailed = !SmartyFacesValidator::passed();
 			return;
 		}
 		$arr=explode(".", $action);

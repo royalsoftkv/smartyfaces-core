@@ -37,7 +37,7 @@ function smarty_function_sf_inputtext($params, $template)
 	
 	$events=SmartyFacesComponent::processEvents($id,$events,$params);
 	
-    SmartyFacesComponent::createComponent($id, $tag, $params);
+    SmartyFacesComponent::createComponent($id, $tag, $params, array("disabled"));
     
     if($required and !$disabled){
         SmartyFacesContext::addRequiredValidator($id);
@@ -76,7 +76,7 @@ function smarty_function_sf_inputtext($params, $template)
     $input->setAttribute("type", $type);
     $input->setAttributeIfExists("size", $size);
     if($disabled){
-    	$input->setAttribute("disabled", $disabled);
+    	$input->setAttribute("disabled", "disabled");
     }
     if($readonly){
     	$input->setAttribute("readonly", "readonly");
