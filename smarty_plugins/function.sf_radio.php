@@ -4,8 +4,13 @@ function smarty_function_sf_radio($params, $template)
 {
     $tag="sf_radio";
     
-    $attributes_list=array("id","value","required","action","immediate","attachMessage","class","disabled");
+    $attributes_list=array("id","name","value","required","action","immediate","attachMessage","class","disabled");
     $attributes=SmartyFacesComponent::resolveAttributtes($attributes_list);
+    $attributes['checkedValue']=array(
+    		'required'=>false,
+    		'default'=>"1",
+    		'desc'=>'Value that will be submitted if radio is checked'
+    );
     $attributes['checkedValue']=array(
     		'required'=>false,
     		'default'=>"1",
@@ -28,23 +33,27 @@ function smarty_function_sf_radio($params, $template)
     );
     if($params==null and $template==null) return $attributes;
     extract(SmartyFacesComponent::proccessAttributes($tag, $attributes, $params));
-    
-    SmartyFacesComponent::createComponent($id, $tag, $params);
+
+    if(empty($name)) {
+        $name=$id;
+    }
+
+    SmartyFacesComponent::createComponent($name, $tag, $params);
     
     if($required and !$disabled){
-        SmartyFacesContext::addRequiredValidator($id);
+        SmartyFacesContext::addRequiredValidator($name);
     }
     
-    SmartyFacesContext::$bindings[$id]=$value;
+    SmartyFacesContext::$bindings[$name]=$value;
 
     $invalid = false;
 	if(SmartyFaces::$validateFailed and !$disabled) {
-		if(isset(SmartyFacesContext::$formData[$id])) {
-	    	$value = SmartyFacesContext::$formData[$id];
+		if(isset(SmartyFacesContext::$formData[$name])) {
+	    	$value = SmartyFacesContext::$formData[$name];
 		} else {
 			$value=$unCheckedValue;
 		}
-		if(SmartyFacesComponent::validationFailed($id)) {
+		if(SmartyFacesComponent::validationFailed($name)) {
 			$invalid = true;
 		}
     } else {
@@ -73,7 +82,8 @@ function smarty_function_sf_radio($params, $template)
     if($disabled) {
     	$radio->setAttribute("disabled", "disabled");
     }
-    $radio->setIdAndName($id);
+    $radio->setId($id);
+    $radio->setAttribute("name", $name);
     $radio->setValue($checkedValue);
     $radio->setAttributeIfExists("onclick", $onclick);
     if($value==$checkedValue) {
@@ -82,7 +92,7 @@ function smarty_function_sf_radio($params, $template)
     
     $div=new TagRenderer("div",true);
     $div->setAttribute("class", $class . " form-check");
-    $div->appendAttribute("class", SmartyFacesComponent::getFormControlValidationClass($id));
+    $div->appendAttribute("class", SmartyFacesComponent::getFormControlValidationClass($name));
     $div_label=new TagRenderer("label",true);
     $div_label->setAttribute("class","form-check-label");
     $div_label->setAttribute("for",$id);
@@ -92,7 +102,7 @@ function smarty_function_sf_radio($params, $template)
     if($attachMessage and !$disabled and $invalid) {
         $span=new TagRenderer("div",true);
         $span->setAttribute("class", "invalid-feedback");
-        $span->setValue(SmartyFacesMessages::$messages[$id][0]['message']);
+        $span->setValue(SmartyFacesMessages::$messages[$name][0]['message']);
         $div->addHtml($span->render());
     }
     $s=$div->render();
